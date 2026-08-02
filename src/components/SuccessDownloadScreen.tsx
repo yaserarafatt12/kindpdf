@@ -43,10 +43,11 @@ export const SuccessDownloadScreen: React.FC<SuccessDownloadScreenProps> = ({
     watermark: 11,     // Tanda Air
   };
 
-  // Pull REAL Popular Tools sorted strictly by official iLovePDF usage ranking
+  // Pull REAL Popular Tools sorted strictly by official iLovePDF usage ranking (Top 5 only)
   const realPopularTools: ToolDefinition[] = tools
     .filter((item) => item.popular && item.route !== 'merge')
-    .sort((a, b) => (POPULAR_RANK[a.id] || 99) - (POPULAR_RANK[b.id] || 99));
+    .sort((a, b) => (POPULAR_RANK[a.id] || 99) - (POPULAR_RANK[b.id] || 99))
+    .slice(0, 5);
 
   const handleSaveRename = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
