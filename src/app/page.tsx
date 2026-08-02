@@ -406,7 +406,12 @@ export default function Home() {
 
         {/* VIEW MODE 3: SPLIT PDF WORKSPACE */}
         {activeView === 'split' && (
-          <SplitPdfWorkspace onBack={() => setActiveView('grid')} t={t} lang={lang} />
+          <SplitPdfWorkspace
+            onBack={() => setActiveView('grid')}
+            onSelectTool={(toolId) => setActiveView(toolId)}
+            t={t}
+            lang={lang}
+          />
         )}
 
         {/* VIEW MODE 4: EXTRACT PAGES WORKSPACE */}

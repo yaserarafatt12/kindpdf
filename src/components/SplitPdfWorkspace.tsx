@@ -21,8 +21,13 @@ import {
   Check,
 } from 'lucide-react';
 
+import { downloadBlob } from '@/lib/files/downloadBlob';
+import { ViewMode } from '@/components/Header';
+import SuccessDownloadScreen from './SuccessDownloadScreen';
+
 interface SplitPdfWorkspaceProps {
   onBack: () => void;
+  onSelectTool?: (toolId: ViewMode) => void;
   t: TranslationDictionary;
   lang: 'en' | 'id';
 }
@@ -49,7 +54,7 @@ function formatPagesToRange(pages: number[]): string {
   return ranges.join(', ');
 }
 
-export const SplitPdfWorkspace: React.FC<SplitPdfWorkspaceProps> = ({ onBack, t, lang }) => {
+export const SplitPdfWorkspace: React.FC<SplitPdfWorkspaceProps> = ({ onBack, onSelectTool, t, lang }) => {
   const [file, setFile] = useState<File | null>(null);
   const [pageCount, setPageCount] = useState<number>(0);
   const [splitMode, setSplitMode] = useState<ExtendedSplitMode>('visual');
@@ -58,6 +63,7 @@ export const SplitPdfWorkspace: React.FC<SplitPdfWorkspaceProps> = ({ onBack, t,
   const [selectedPages, setSelectedPages] = useState<number[]>([]);
   const [thumbnails, setThumbnails] = useState<Record<number, string>>({});
   const [isRenderingThumbnails, setIsRenderingThumbnails] = useState(false);
+  const [splitResult, setSplitResult] = useState<{ blob: Blob; filename: string } | null>(null);
 
   const [isProcessing, setIsProcessing] = useState(false);
   const [progressMsg, setProgressMsg] = useState('');
@@ -247,15 +253,10 @@ export const SplitPdfWorkspace: React.FC<SplitPdfWorkspaceProps> = ({ onBack, t,
       );
 
       setIsProcessing(false);
-      const downloadName = result.filename;
-      const downloadUrl = URL.createObjectURL(result.blob);
-      const a = document.createElement('a');
-      a.href = downloadUrl;
-      a.download = downloadName;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(downloadUrl);
+      setSplitResult({
+        blob: result.blob,
+        filename: result.filename,
+      });
     } catch (error: any) {
       setIsProcessing(false);
       setErrorToast({
@@ -264,6 +265,33 @@ export const SplitPdfWorkspace: React.FC<SplitPdfWorkspaceProps> = ({ onBack, t,
       });
     }
   };
+
+  if (splitResult) {
+    return (
+      <SuccessDownloadScreen
+        title={lang === 'en' ? 'PDF Split Successfully!' : 'PDF Berhasil Dipisahkan!'}
+        downloadFileName={splitResult.filename}
+        downloadButtonText={lang === 'en' ? 'Download Split PDF' : 'Unduh PDF Dipisahkan'}
+        onDownload={(customName?: string) =>
+          downloadBlob(splitResult.blob, customName || splitResult.filename)
+        }
+        onStartOver={() => {
+          setSplitResult(null);
+          setFile(null);
+          setPageCount(0);
+          setSelectedPages([]);
+          setThumbnails({});
+        }}
+        onSelectTool={(toolId: ViewMode) => {
+          setSplitResult(null);
+          setFile(null);
+          if (onSelectTool) onSelectTool(toolId);
+        }}
+        t={t}
+        lang={lang}
+      />
+    );
+  }
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
