@@ -66,6 +66,9 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
     setTimeout(() => setFeedbackSent(false), 4000);
   };
 
+  // Theme-aware color helpers
+  const d = isDarkMode;
+
   const guideItems = [
     {
       id: 1,
@@ -126,25 +129,39 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
-      {/* Dark Blurred Backdrop */}
+      {/* Blurred Backdrop */}
       <div
         onClick={onClose}
-        className="fixed inset-0 bg-slate-950/70 backdrop-blur-md animate-fade-in"
+        className={`fixed inset-0 backdrop-blur-md animate-fade-in ${
+          d ? 'bg-slate-950/70' : 'bg-black/40'
+        }`}
       />
 
       {/* Main Settings Modal Box */}
-      <div className="relative w-full max-w-lg bg-slate-900 border-2 border-slate-800 rounded-3xl shadow-2xl overflow-hidden z-50 animate-scale-up my-auto text-slate-100 flex flex-col max-h-[90vh]">
+      <div className={`relative w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden z-50 animate-scale-up flex flex-col max-h-[90vh] border-2 ${
+        d
+          ? 'bg-slate-900 border-slate-800 text-slate-100'
+          : 'bg-white border-gray-200 text-gray-900'
+      }`}>
         {/* Modal Header */}
-        <div className="p-4 sm:p-5 border-b border-slate-800 flex items-center justify-between bg-slate-900/90 shrink-0">
+        <div className={`p-4 sm:p-5 border-b flex items-center justify-between shrink-0 ${
+          d ? 'border-slate-800 bg-slate-900/90' : 'border-gray-200 bg-gray-50/90'
+        }`}>
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-2xl bg-blue-600/20 text-sky-400 border border-blue-500/30">
+            <div className={`p-2.5 rounded-2xl border ${
+              d
+                ? 'bg-blue-600/20 text-sky-400 border-blue-500/30'
+                : 'bg-blue-50 text-blue-600 border-blue-200'
+            }`}>
               <Settings className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-base sm:text-lg font-black tracking-tight text-white">
+              <h3 className={`text-base sm:text-lg font-black tracking-tight ${
+                d ? 'text-white' : 'text-gray-900'
+              }`}>
                 {lang === 'en' ? 'Settings & User Manual' : 'Pengaturan & Buku Panduan'}
               </h3>
-              <p className="text-xs text-slate-400 font-medium">
+              <p className={`text-xs font-medium ${d ? 'text-slate-400' : 'text-gray-500'}`}>
                 {lang === 'en'
                   ? 'Manage session, appearance, and feature guides'
                   : 'Kelola sesi, tampilan, dan panduan fitur'}
@@ -155,7 +172,11 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors btn-press-effect"
+            className={`p-2 rounded-xl transition-colors btn-press-effect ${
+              d
+                ? 'text-slate-400 hover:text-white hover:bg-slate-800'
+                : 'text-gray-400 hover:text-gray-900 hover:bg-gray-200'
+            }`}
           >
             <X className="w-5 h-5" />
           </button>
@@ -187,35 +208,47 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           </div>
 
           {/* Guest User Session Badge */}
-          <div className="p-3.5 rounded-2xl bg-slate-800/80 border border-slate-700/80 flex items-center justify-between gap-3">
+          <div className={`p-3.5 rounded-2xl border flex items-center justify-between gap-3 ${
+            d
+              ? 'bg-slate-800/80 border-slate-700/80'
+              : 'bg-gray-50 border-gray-200'
+          }`}>
             <div className="flex items-center gap-2.5">
-              <div className="p-2 rounded-xl bg-slate-700 text-sky-400">
+              <div className={`p-2 rounded-xl ${
+                d ? 'bg-slate-700 text-sky-400' : 'bg-gray-200 text-blue-600'
+              }`}>
                 <UserCheck className="w-4 h-4" />
               </div>
-              <span className="text-xs font-black text-slate-200">
+              <span className={`text-xs font-black ${d ? 'text-slate-200' : 'text-gray-700'}`}>
                 {lang === 'en' ? 'Guest User Session' : 'Profil Pengguna Tamu'}
               </span>
             </div>
-            <span className="text-xs font-black px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+            <span className="text-xs font-black px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
               {lang === 'en' ? '100% Private RAM' : '100% Privat RAM'}
             </span>
           </div>
 
           {/* APPLICATION SETTINGS */}
           <div className="space-y-3">
-            <h4 className="text-[11px] font-black tracking-wider text-slate-400 uppercase px-1">
+            <h4 className={`text-[11px] font-black tracking-wider uppercase px-1 ${
+              d ? 'text-slate-400' : 'text-gray-500'
+            }`}>
               {lang === 'en' ? 'APPLICATION SETTINGS' : 'PENGATURAN APLIKASI'}
             </h4>
 
             {/* Theme Toggle Option */}
-            <div className="p-3.5 rounded-2xl bg-slate-800/50 border border-slate-700/60 flex items-center justify-between gap-3">
+            <div className={`p-3.5 rounded-2xl border flex items-center justify-between gap-3 ${
+              d
+                ? 'bg-slate-800/50 border-slate-700/60'
+                : 'bg-gray-50 border-gray-200'
+            }`}>
               <div className="flex items-center gap-3">
                 {isDarkMode ? (
-                  <Moon className="w-4 h-4 text-sky-400" />
+                  <Moon className={`w-4 h-4 ${d ? 'text-sky-400' : 'text-blue-600'}`} />
                 ) : (
-                  <Sun className="w-4 h-4 text-amber-400" />
+                  <Sun className="w-4 h-4 text-amber-500" />
                 )}
-                <span className="text-xs font-extrabold text-slate-200">
+                <span className={`text-xs font-extrabold ${d ? 'text-slate-200' : 'text-gray-700'}`}>
                   {lang === 'en' ? 'Appearance & Theme' : 'Tampilan & Tema'}
                 </span>
               </div>
@@ -229,10 +262,14 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             </div>
 
             {/* Language Switch Option */}
-            <div className="p-3.5 rounded-2xl bg-slate-800/50 border border-slate-700/60 flex items-center justify-between gap-3">
+            <div className={`p-3.5 rounded-2xl border flex items-center justify-between gap-3 ${
+              d
+                ? 'bg-slate-800/50 border-slate-700/60'
+                : 'bg-gray-50 border-gray-200'
+            }`}>
               <div className="flex items-center gap-3">
-                <Globe className="w-4 h-4 text-sky-400" />
-                <span className="text-xs font-extrabold text-slate-200">
+                <Globe className={`w-4 h-4 ${d ? 'text-sky-400' : 'text-blue-600'}`} />
+                <span className={`text-xs font-extrabold ${d ? 'text-slate-200' : 'text-gray-700'}`}>
                   {lang === 'en' ? 'App Language' : 'Bahasa Aplikasi'}
                 </span>
               </div>
@@ -247,16 +284,20 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           </div>
 
           {/* BUG REPORT & FEEDBACK FORM (Direct to Email yaserarafatt03@gmail.com) */}
-          <div className="p-4 rounded-2xl bg-slate-800/60 border border-slate-700/80 space-y-3">
+          <div className={`p-4 rounded-2xl border space-y-3 ${
+            d
+              ? 'bg-slate-800/60 border-slate-700/80'
+              : 'bg-gray-50 border-gray-200'
+          }`}>
             <div className="flex items-center gap-2">
-              <Send className="w-4 h-4 text-sky-400" />
-              <h4 className="text-xs font-black text-slate-200">
+              <Send className={`w-4 h-4 ${d ? 'text-sky-400' : 'text-blue-600'}`} />
+              <h4 className={`text-xs font-black ${d ? 'text-slate-200' : 'text-gray-700'}`}>
                 {lang === 'en' ? 'Bug Report & Feedback' : 'Laporan Bug & Masukan Pengembang'}
               </h4>
             </div>
 
             {feedbackSent && (
-              <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold flex items-center gap-2 animate-fade-in">
+              <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-500 text-xs font-bold flex items-center gap-2 animate-fade-in">
                 <CheckCircle2 className="w-4 h-4 shrink-0" />
                 <span>
                   {lang === 'en'
@@ -276,7 +317,11 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                     ? 'Type any bug report or feature request here...'
                     : 'Tuliskan laporan kendala atau masukan Anda di sini...'
                 }
-                className="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs font-medium text-slate-100 outline-none focus:border-sky-400 resize-none placeholder:text-slate-500"
+                className={`w-full px-3 py-2 rounded-xl border text-xs font-medium outline-none resize-none transition-colors ${
+                  d
+                    ? 'bg-slate-900 border-slate-700 text-slate-100 focus:border-sky-400 placeholder:text-slate-500'
+                    : 'bg-white border-gray-300 text-gray-900 focus:border-blue-500 placeholder:text-gray-400'
+                }`}
               />
 
               <button
@@ -291,8 +336,10 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
 
           {/* USER HELP MANUAL ACCORDION */}
           <div className="space-y-3">
-            <h4 className="text-[11px] font-black tracking-wider text-slate-400 uppercase px-1 flex items-center gap-1.5">
-              <BookOpen className="w-3.5 h-3.5 text-sky-400" />
+            <h4 className={`text-[11px] font-black tracking-wider uppercase px-1 flex items-center gap-1.5 ${
+              d ? 'text-slate-400' : 'text-gray-500'
+            }`}>
+              <BookOpen className={`w-3.5 h-3.5 ${d ? 'text-sky-400' : 'text-blue-600'}`} />
               <span>{lang === 'en' ? 'FULL USER MANUAL' : 'BUKU PANDUAN PENGGUNAAN LENGKAP'}</span>
             </h4>
 
@@ -300,22 +347,36 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               {guideItems.map((item, idx) => (
                 <div
                   key={item.id}
-                  className="rounded-2xl bg-slate-800/40 border border-slate-800 overflow-hidden transition-all"
+                  className={`rounded-2xl border overflow-hidden transition-all ${
+                    d
+                      ? 'bg-slate-800/40 border-slate-800'
+                      : 'bg-gray-50 border-gray-200'
+                  }`}
                 >
                   <button
                     type="button"
                     onClick={() => setOpenGuideIndex(openGuideIndex === idx ? null : idx)}
-                    className="w-full p-3.5 text-left text-xs font-extrabold text-slate-200 flex items-center justify-between hover:bg-slate-800/70 transition-colors"
+                    className={`w-full p-3.5 text-left text-xs font-extrabold flex items-center justify-between transition-colors ${
+                      d
+                        ? 'text-slate-200 hover:bg-slate-800/70'
+                        : 'text-gray-700 hover:bg-gray-100'
+                    }`}
                   >
                     <span>{item.title}</span>
                     <ChevronRight
-                      className={`w-4 h-4 text-slate-400 transition-transform ${
-                        openGuideIndex === idx ? 'rotate-90 text-sky-400' : ''
+                      className={`w-4 h-4 transition-transform ${
+                        openGuideIndex === idx
+                          ? `rotate-90 ${d ? 'text-sky-400' : 'text-blue-600'}`
+                          : `${d ? 'text-slate-400' : 'text-gray-400'}`
                       }`}
                     />
                   </button>
                   {openGuideIndex === idx && (
-                    <div className="px-3.5 pb-3.5 text-[11px] font-medium text-slate-400 leading-relaxed border-t border-slate-800/80 pt-2.5 animate-fade-in">
+                    <div className={`px-3.5 pb-3.5 text-[11px] font-medium leading-relaxed border-t pt-2.5 animate-fade-in ${
+                      d
+                        ? 'text-slate-400 border-slate-800/80'
+                        : 'text-gray-500 border-gray-200'
+                    }`}>
                       {item.content}
                     </div>
                   )}
@@ -325,13 +386,15 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           </div>
 
           {/* FOOTER AUTHOR CREDIT (Matching Project 1 specification) */}
-          <div className="pt-4 border-t border-slate-800 text-center space-y-1.5 shrink-0">
-            <p className="text-xs font-black text-slate-200">Kindpdf Suite v1.0.0</p>
-            <p className="text-[11px] font-bold text-slate-400">
+          <div className={`pt-4 border-t text-center space-y-1.5 shrink-0 ${
+            d ? 'border-slate-800' : 'border-gray-200'
+          }`}>
+            <p className={`text-xs font-black ${d ? 'text-slate-200' : 'text-gray-800'}`}>Kindpdf Suite v1.0.0</p>
+            <p className={`text-[11px] font-bold ${d ? 'text-slate-400' : 'text-gray-500'}`}>
               Built with Next.js 14, TypeScript & Tailwind CSS by{' '}
-              <span className="font-black text-sky-400">Yaser Arafat</span>.
+              <span className={`font-black ${d ? 'text-sky-400' : 'text-blue-600'}`}>Yaser Arafat</span>.
             </p>
-            <p className="text-[10px] font-semibold text-slate-500">
+            <p className={`text-[10px] font-semibold ${d ? 'text-slate-500' : 'text-gray-400'}`}>
               Licensed under MIT © 2026. Zero 'eval()', 100% Local-First.
             </p>
           </div>
