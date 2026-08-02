@@ -34,7 +34,11 @@
 - [x] **Task 5.4**: Implement Repair PDF engine (`repairPdf.ts`) with xref stream recovery & clean object re-serialization UI.
 - [x] **Task 5.5**: Implement Compress PDF engine (`compressPdf.ts`) with object stream optimization & delta calculation UI.
 
-## Checkpoint 5: Sprint 5 Verification
-- [x] Run `npm test` and verify 100% unit tests pass (30/30 passed).
+## Sprint 6: Client-Side Conversion Extras (100% COMPLETE)
+- [x] **Task 6.1**: Implement HTML to PDF engine (`htmlToPdf.ts`) with rich text/HTML document formatting & UI workspace.
+- [x] **Task 6.2**: Implement PDF to PDF/A engine (`pdfToPdfA.ts`) with ISO 19005 metadata & archival compliance UI.
+
+## Checkpoint 6: Full Suite Verification
+- [x] Run `npm test` and verify 100% unit tests pass (32/32 passed).
 - [x] Run `npm run build` and verify clean static page generation.
-- [x] Sprint 5 (PDF Utility & Security Suite) 100% COMPLETE!
+- [x] Total **20 Local PDF Tools** 100% COMPLETE!

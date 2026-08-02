@@ -9,7 +9,7 @@ import {
   ExtractPagesIcon,
   ImageToPdfIcon,
 } from './icons/CustomPdfIcons';
-import { FileImage, Lock, Unlock, Hash, Stamp, Crop, Edit3, Camera, PenTool, EyeOff, GitCompare, Wrench, Minimize2 } from 'lucide-react';
+import { FileImage, Lock, Unlock, Hash, Stamp, Crop, Edit3, Camera, PenTool, EyeOff, GitCompare, Wrench, Minimize2, Code, Archive } from 'lucide-react';
 import { ViewMode } from './Header';
 
 export type ToolId = Extract<
@@ -32,6 +32,8 @@ export type ToolId = Extract<
   | 'compare'
   | 'repair'
   | 'compress'
+  | 'html-to-pdf'
+  | 'pdf-to-pdfa'
 >;
 
 interface ToolGridProps {
@@ -200,6 +202,24 @@ export const ToolGrid: React.FC<ToolGridProps> = ({ onSelectTool, t }) => {
       description: 'Reduce PDF file size while maintaining document quality.',
       icon: <Minimize2 className="w-6 h-6 text-teal-600 dark:text-teal-400" />,
       iconBg: 'bg-teal-50 dark:bg-teal-950/80 border border-teal-200 dark:border-teal-900',
+      badge: 'NEW',
+      isReady: true,
+    },
+    {
+      id: 'html-to-pdf' as ToolId,
+      title: 'HTML to PDF',
+      description: 'Convert text and HTML formatting into clean PDF documents.',
+      icon: <Code className="w-6 h-6 text-blue-600 dark:text-sky-400" />,
+      iconBg: 'bg-blue-50 dark:bg-blue-950/80 border border-blue-200 dark:border-blue-900',
+      badge: 'NEW',
+      isReady: true,
+    },
+    {
+      id: 'pdf-to-pdfa' as ToolId,
+      title: 'PDF to PDF/A',
+      description: 'Convert PDF to ISO 19005 compliant archival format.',
+      icon: <Archive className="w-6 h-6 text-indigo-600 dark:text-indigo-400" />,
+      iconBg: 'bg-indigo-50 dark:bg-indigo-950/80 border border-indigo-200 dark:border-indigo-900',
       badge: 'NEW',
       isReady: true,
     },

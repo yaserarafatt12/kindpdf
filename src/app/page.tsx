@@ -23,6 +23,8 @@ import RedactPdfWorkspace from '@/components/RedactPdfWorkspace';
 import ComparePdfWorkspace from '@/components/ComparePdfWorkspace';
 import RepairPdfWorkspace from '@/components/RepairPdfWorkspace';
 import CompressPdfWorkspace from '@/components/CompressPdfWorkspace';
+import HtmlToPdfWorkspace from '@/components/HtmlToPdfWorkspace';
+import PdfToPdfAWorkspace from '@/components/PdfToPdfAWorkspace';
 
 import { validatePdfFile } from '@/lib/files/validateFile';
 import { mergePdfFiles } from '@/lib/pdf/mergePdfs';
@@ -419,6 +421,16 @@ export default function Home() {
         {/* VIEW MODE 19: COMPRESS PDF WORKSPACE */}
         {activeView === 'compress' && (
           <CompressPdfWorkspace onBack={() => setActiveView('grid')} t={t} lang={lang} />
+        )}
+
+        {/* VIEW MODE 20: HTML TO PDF WORKSPACE */}
+        {activeView === 'html-to-pdf' && (
+          <HtmlToPdfWorkspace onBack={() => setActiveView('grid')} t={t} lang={lang} />
+        )}
+
+        {/* VIEW MODE 21: PDF TO PDF/A WORKSPACE */}
+        {activeView === 'pdf-to-pdfa' && (
+          <PdfToPdfAWorkspace onBack={() => setActiveView('grid')} t={t} lang={lang} />
         )}
       </main>
 

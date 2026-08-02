@@ -39,7 +39,9 @@ export type ViewMode =
   | 'redact'
   | 'compare'
   | 'repair'
-  | 'compress';
+  | 'compress'
+  | 'html-to-pdf'
+  | 'pdf-to-pdfa';
 
 interface HeaderProps {
   onViewChange: (view: ViewMode) => void;
