@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Download, ArrowLeft, ChevronRight, Edit3 } from 'lucide-react';
+import { Download, ArrowLeft, ChevronRight } from 'lucide-react';
 import { TranslationDictionary, Language } from '@/lib/i18n/translations';
 import { tools, ToolDefinition } from '@/lib/tools/manifest';
 import { getToolIcon, getIconBg } from './ToolGrid';
@@ -63,29 +63,16 @@ export const SuccessDownloadScreen: React.FC<SuccessDownloadScreenProps> = ({
           {title}
         </h2>
 
-        {/* Big Prominent High-Impact Download Button + Rename Icon */}
+        {/* Big Prominent High-Impact Download Button */}
         <div className="pt-2 max-w-lg mx-auto space-y-4">
-          <div className="flex items-center gap-2.5">
-            {/* Download CTA Button */}
-            <button
-              type="button"
-              onClick={() => onDownload(fileName)}
-              className="flex-1 py-5 sm:py-6 px-6 sm:px-8 rounded-2xl bg-gradient-to-r from-blue-600 via-sky-600 to-blue-700 hover:from-blue-500 hover:to-sky-500 text-white font-black text-base sm:text-xl flex items-center justify-center gap-3 shadow-2xl shadow-blue-600/35 hover:shadow-blue-500/50 scale-[1.01] hover:scale-[1.02] transition-all duration-200 btn-press-effect"
-            >
-              <Download className="w-6 h-6 sm:w-7 sm:h-7 stroke-[3] shrink-0" />
-              <span>{lang === 'en' ? 'Download Merged PDF' : 'Unduh Merged PDF'}</span>
-            </button>
-
-            {/* Rename Icon Button */}
-            <button
-              type="button"
-              onClick={() => setIsEditing(!isEditing)}
-              title={lang === 'en' ? 'Rename output PDF' : 'Ubah nama berkas PDF'}
-              className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-sky-400 hover:border-blue-500 dark:hover:border-sky-500 shadow-md transition-all btn-press-effect shrink-0"
-            >
-              <Edit3 className="w-6 h-6" />
-            </button>
-          </div>
+          <button
+            type="button"
+            onClick={() => onDownload(fileName)}
+            className="w-full py-5 sm:py-6 px-8 sm:px-10 rounded-2xl bg-gradient-to-r from-blue-600 via-sky-600 to-blue-700 hover:from-blue-500 hover:to-sky-500 text-white font-black text-lg sm:text-xl flex items-center justify-center gap-3.5 shadow-2xl shadow-blue-600/35 hover:shadow-blue-500/50 scale-[1.01] hover:scale-[1.03] transition-all duration-200 btn-press-effect"
+          >
+            <Download className="w-7 h-7 stroke-[3] shrink-0" />
+            <span>{lang === 'en' ? 'Download Merged PDF' : 'Unduh Merged PDF'}</span>
+          </button>
 
           {/* Output Filename (Enlarged Text & Inline Rename Mode) */}
           <div className="px-2">
