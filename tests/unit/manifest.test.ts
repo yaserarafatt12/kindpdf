@@ -21,7 +21,7 @@ describe('Kindpdf Single Source of Truth Tool Manifest', () => {
       expect(t.description).toBeTruthy();
       expect(['organize', 'convert-to', 'convert-from', 'edit', 'security', 'utilities']).toContain(t.category);
       expect(['stable', 'beta', 'experimental']).toContain(t.status);
-      expect(t.processingMode).toBe('local');
+      expect(t.processingMode).toBe('Client-side browser processing');
     });
   });
 });
