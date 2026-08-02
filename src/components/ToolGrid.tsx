@@ -61,8 +61,8 @@ export const ToolGrid: React.FC<ToolGridProps> = ({ onSelectTool, t }) => {
       description: 'Convert JPG, PNG, and WEBP images to PDF with custom page size and margins.',
       icon: <ImageToPdfIcon className="w-6 h-6" />,
       iconBg: 'bg-rose-50 dark:bg-rose-950/80 border border-rose-200 dark:border-rose-900',
-      badge: t.soon,
-      isReady: false,
+      badge: null,
+      isReady: true,
     },
   ];
 
