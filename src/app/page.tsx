@@ -1,8 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
-import Header, { ToolTab } from '@/components/Header';
+import Header, { ViewMode } from '@/components/Header';
 import PrivacyNotice from '@/components/PrivacyNotice';
+import ToolGrid, { ToolId } from '@/components/ToolGrid';
 import FileDropzone from '@/components/FileDropzone';
 import FileCard, { PdfFileItem } from '@/components/FileCard';
 import ProcessingProgress from '@/components/ProcessingProgress';
@@ -18,10 +19,11 @@ import {
   X,
   ArrowRight,
   ShieldCheck,
+  ArrowLeft,
 } from 'lucide-react';
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<ToolTab>('merge');
+  const [activeView, setActiveView] = useState<ViewMode>('grid');
   const [files, setFiles] = useState<PdfFileItem[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
   const [progressMsg, setProgressMsg] = useState('');
@@ -140,120 +142,153 @@ export default function Home() {
   return (
     <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100">
       {/* Header Bar */}
-      <Header activeTab={activeTab} onTabChange={setActiveTab} />
+      <Header activeView={activeView} onViewChange={setActiveView} />
 
       {/* Main Workspace */}
-      <main className="flex-1 max-w-4xl w-full mx-auto px-4 py-6 sm:py-8 space-y-6">
+      <main className="flex-1 max-w-6xl w-full mx-auto px-4 py-6 sm:py-10 space-y-6">
         {/* Privacy Banner */}
         <PrivacyNotice />
 
-        {/* Hero Section */}
-        <div className="text-center space-y-2 py-2">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-600 dark:text-sky-400 text-xs font-black">
-            <FileStack className="w-3.5 h-3.5" />
-            <span>Alat Gabungkan PDF (PDF Merge Tool)</span>
-          </div>
-          <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900 dark:text-white">
-            Gabungkan Beberapa Berkas PDF Menjadi Satu
-          </h2>
-          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium max-w-xl mx-auto">
-            Urutkan dokumen sesuai keinginan Anda dan gabungkan secara instan tanpa perlu mengunggah berkas ke server mana pun.
-          </p>
-        </div>
-
-        {/* Error Toast Banner */}
-        {errorToast && (
-          <div className="w-full p-4 rounded-2xl bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-800 text-rose-900 dark:text-rose-200 flex items-start justify-between gap-3 shadow-md animate-fade-in">
-            <div className="flex items-start gap-3">
-              <AlertCircle className="w-5 h-5 text-rose-600 dark:text-rose-400 shrink-0 mt-0.5" />
-              <div>
-                <h4 className="text-xs font-extrabold">{errorToast.title}</h4>
-                <p className="text-xs font-medium text-rose-700 dark:text-rose-300 mt-0.5">
-                  {errorToast.message}
-                </p>
-              </div>
+        {/* VIEW MODE 1: GRID LANDING PAGE (iLovePDF Style) */}
+        {activeView === 'grid' && (
+          <div className="space-y-6">
+            {/* Main Landing Hero */}
+            <div className="text-center space-y-3 py-6 sm:py-8 max-w-3xl mx-auto">
+              <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-slate-900 dark:text-white leading-tight">
+                Setiap Peralatan PDF Yang Anda Butuhkan Dalam Satu Tempat
+              </h2>
+              <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 font-medium leading-relaxed">
+                Kelola, gabungkan, pisahkan, dan atur dokumen PDF secara instan di peramban Anda. 100% GRATIS, 100% PRIVAT, dan tanpa unggahan server.
+              </p>
             </div>
-            <button
-              type="button"
-              onClick={() => setErrorToast(null)}
-              className="p-1 rounded-lg hover:bg-rose-100 dark:hover:bg-rose-900/60 transition-colors"
-            >
-              <X className="w-4 h-4 text-rose-500" />
-            </button>
+
+            {/* Tool Grid Cards */}
+            <ToolGrid onSelectTool={(toolId: ToolId) => setActiveView(toolId)} />
           </div>
         )}
 
-        {/* Dropzone Upload Section */}
-        <FileDropzone onFilesSelected={handleFilesSelected} disabled={isProcessing} />
+        {/* VIEW MODE 2: MERGE PDF WORKSPACE */}
+        {activeView === 'merge' && (
+          <div className="max-w-4xl mx-auto space-y-6">
+            {/* Back Button */}
+            <button
+              type="button"
+              onClick={() => setActiveView('grid')}
+              className="inline-flex items-center gap-2 text-xs font-extrabold text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-sky-400 transition-colors btn-press-effect"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              <span>Kembali ke Semua Alat</span>
+            </button>
 
-        {/* Selected Documents Workspace */}
-        {files.length > 0 && (
-          <div className="space-y-4 pt-2">
-            {/* Header Toolbar Summary */}
-            <div className="flex flex-wrap items-center justify-between gap-3 p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
-              <div className="space-y-0.5">
-                <div className="flex items-center gap-2">
-                  <span className="px-2.5 py-0.5 rounded-full bg-blue-600 text-white text-xs font-black">
-                    {files.length} Dokumen
-                  </span>
-                  <span className="text-xs font-extrabold text-slate-700 dark:text-slate-300">
-                    • {totalPages} Halaman Total
-                  </span>
-                </div>
-                <p className="text-[11px] font-semibold text-slate-500 dark:text-slate-400">
-                  Total Ukuran: {formatFileSize(totalSizeBytes)} (Tarik untuk mengubah urutan)
-                </p>
+            {/* Merge Hero Section */}
+            <div className="text-center space-y-2 py-2">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-600 dark:text-sky-400 text-xs font-black">
+                <FileStack className="w-3.5 h-3.5" />
+                <span>Alat Gabungkan PDF (PDF Merge Tool)</span>
               </div>
+              <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900 dark:text-white">
+                Gabungkan Beberapa Berkas PDF Menjadi Satu
+              </h2>
+              <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium max-w-xl mx-auto">
+                Urutkan dokumen sesuai keinginan Anda dan gabungkan secara instan tanpa perlu mengunggah berkas ke server mana pun.
+              </p>
+            </div>
 
-              <div className="flex items-center gap-2">
+            {/* Error Toast Banner */}
+            {errorToast && (
+              <div className="w-full p-4 rounded-2xl bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-800 text-rose-900 dark:text-rose-200 flex items-start justify-between gap-3 shadow-md animate-fade-in">
+                <div className="flex items-start gap-3">
+                  <AlertCircle className="w-5 h-5 text-rose-600 dark:text-rose-400 shrink-0 mt-0.5" />
+                  <div>
+                    <h4 className="text-xs font-extrabold">{errorToast.title}</h4>
+                    <p className="text-xs font-medium text-rose-700 dark:text-rose-300 mt-0.5">
+                      {errorToast.message}
+                    </p>
+                  </div>
+                </div>
                 <button
                   type="button"
-                  onClick={handleClearAll}
-                  className="px-3 py-1.5 rounded-xl text-xs font-extrabold text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/50 transition-colors flex items-center gap-1.5 btn-press-effect"
+                  onClick={() => setErrorToast(null)}
+                  className="p-1 rounded-lg hover:bg-rose-100 dark:hover:bg-rose-900/60 transition-colors"
                 >
-                  <Trash2 className="w-3.5 h-3.5" />
-                  <span>Hapus Semua</span>
+                  <X className="w-4 h-4 text-rose-500" />
                 </button>
               </div>
-            </div>
+            )}
 
-            {/* Document Queue List */}
-            <div className="space-y-2.5">
-              {files.map((item, index) => (
-                <FileCard
-                  key={item.id}
-                  item={item}
-                  index={index}
-                  totalItems={files.length}
-                  onRemove={handleRemoveFile}
-                  onMoveUp={handleMoveUp}
-                  onMoveDown={handleMoveDown}
-                />
-              ))}
-            </div>
+            {/* Dropzone Upload Section */}
+            <FileDropzone onFilesSelected={handleFilesSelected} disabled={isProcessing} />
 
-            {/* Merge Action CTA Bar */}
-            <div className="pt-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-              <div className="flex items-center gap-2 text-xs font-semibold text-slate-500 dark:text-slate-400">
-                <ShieldCheck className="w-4 h-4 text-emerald-500 shrink-0" />
-                <span>Dokumen akan digabungkan secara instan di peramban Anda.</span>
+            {/* Selected Documents Workspace */}
+            {files.length > 0 && (
+              <div className="space-y-4 pt-2">
+                {/* Header Toolbar Summary */}
+                <div className="flex flex-wrap items-center justify-between gap-3 p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
+                  <div className="space-y-0.5">
+                    <div className="flex items-center gap-2">
+                      <span className="px-2.5 py-0.5 rounded-full bg-blue-600 text-white text-xs font-black">
+                        {files.length} Dokumen
+                      </span>
+                      <span className="text-xs font-extrabold text-slate-700 dark:text-slate-300">
+                        • {totalPages} Halaman Total
+                      </span>
+                    </div>
+                    <p className="text-[11px] font-semibold text-slate-500 dark:text-slate-400">
+                      Total Ukuran: {formatFileSize(totalSizeBytes)} (Gunakan tombol # untuk mengubah urutan)
+                    </p>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={handleClearAll}
+                      className="px-3 py-1.5 rounded-xl text-xs font-extrabold text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/50 transition-colors flex items-center gap-1.5 btn-press-effect"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                      <span>Hapus Semua</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Document Queue List */}
+                <div className="space-y-2.5">
+                  {files.map((item, index) => (
+                    <FileCard
+                      key={item.id}
+                      item={item}
+                      index={index}
+                      totalItems={files.length}
+                      onRemove={handleRemoveFile}
+                      onMoveUp={handleMoveUp}
+                      onMoveDown={handleMoveDown}
+                    />
+                  ))}
+                </div>
+
+                {/* Merge Action CTA Bar */}
+                <div className="pt-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+                  <div className="flex items-center gap-2 text-xs font-semibold text-slate-500 dark:text-slate-400">
+                    <ShieldCheck className="w-4 h-4 text-emerald-500 shrink-0" />
+                    <span>Dokumen akan digabungkan secara instan di peramban Anda.</span>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={handleMergePdfs}
+                    disabled={files.length < 2 || isProcessing}
+                    className={`w-full sm:w-auto px-8 py-3.5 rounded-2xl font-black text-sm flex items-center justify-center gap-2 text-white shadow-xl transition-all duration-200 btn-press-effect ${
+                      files.length >= 2 && !isProcessing
+                        ? 'bg-gradient-to-r from-blue-600 to-sky-500 hover:from-blue-500 hover:to-sky-400 shadow-blue-500/30 scale-[1.02]'
+                        : 'bg-slate-300 dark:bg-slate-800 text-slate-500 dark:text-slate-500 cursor-not-allowed shadow-none'
+                    }`}
+                  >
+                    <FileStack className="w-4 h-4" />
+                    <span>Gabungkan PDF Sekarang</span>
+                    <ArrowRight className="w-4 h-4 ml-1" />
+                  </button>
+                </div>
               </div>
-
-              <button
-                type="button"
-                onClick={handleMergePdfs}
-                disabled={files.length < 2 || isProcessing}
-                className={`w-full sm:w-auto px-8 py-3.5 rounded-2xl font-black text-sm flex items-center justify-center gap-2 text-white shadow-xl transition-all duration-200 btn-press-effect ${
-                  files.length >= 2 && !isProcessing
-                    ? 'bg-gradient-to-r from-blue-600 to-sky-500 hover:from-blue-500 hover:to-sky-400 shadow-blue-500/30 scale-[1.02]'
-                    : 'bg-slate-300 dark:bg-slate-800 text-slate-500 dark:text-slate-500 cursor-not-allowed shadow-none'
-                }`}
-              >
-                <FileStack className="w-4 h-4" />
-                <span>Gabungkan PDF Sekarang</span>
-                <ArrowRight className="w-4 h-4 ml-1" />
-              </button>
-            </div>
+            )}
           </div>
         )}
       </main>
