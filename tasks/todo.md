@@ -38,7 +38,12 @@
 - [x] **Task 6.1**: Implement HTML to PDF engine (`htmlToPdf.ts`) with rich text/HTML document formatting & UI workspace.
 - [x] **Task 6.2**: Implement PDF to PDF/A engine (`pdfToPdfA.ts`) with ISO 19005 metadata & archival compliance UI.
 
-## Checkpoint 6: Full Suite Verification
-- [x] Run `npm test` and verify 100% unit tests pass (32/32 passed).
+## Sprint 7: Office & OCR Conversion Suite (100% COMPLETE)
+- [x] **Task 7.1**: Implement Word to PDF engine (`wordToPdf.ts`) parsing `.docx` XML container text streams & UI workspace.
+- [x] **Task 7.2**: Implement PDF to Word engine (`pdfToWord.ts`) extracting text content into editable `.docx` & UI workspace.
+- [x] **Task 7.3**: Implement OCR PDF engine (`ocrPdf.ts`) with browser OCR text extraction, copy, and `.txt` export UI.
+
+## Checkpoint 7: Full Suite Verification
+- [x] Run `npm test` and verify 100% unit tests pass (35/35 passed).
 - [x] Run `npm run build` and verify clean static page generation.
-- [x] Total **20 Local PDF Tools** 100% COMPLETE!
+- [x] Total **23 Active Tools** 100% COMPLETE!
