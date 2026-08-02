@@ -224,7 +224,7 @@ export default function Home() {
       />
 
       {/* Main Workspace */}
-      <main className="flex-1 max-w-6xl w-full mx-auto px-4 py-4 sm:py-6 space-y-4">
+      <main className="flex-1 max-w-6xl w-full mx-auto px-4 py-4 sm:py-6 space-y-4 flex flex-col">
         {/* VIEW MODE 1: GRID LANDING PAGE */}
         {activeView === 'grid' && (
           <div className="space-y-4">

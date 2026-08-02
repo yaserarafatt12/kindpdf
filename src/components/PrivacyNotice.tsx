@@ -8,7 +8,7 @@ interface PrivacyNoticeProps {
 
 export const PrivacyNotice: React.FC<PrivacyNoticeProps> = ({ t }) => {
   return (
-    <div className="w-full p-3.5 sm:p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 shadow-sm">
+    <div className="w-full mt-auto p-3.5 sm:p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 shadow-sm">
       <div className="flex flex-wrap items-center justify-between gap-3 text-xs text-slate-700 dark:text-slate-200 font-medium">
         <div className="flex items-center gap-2 font-extrabold text-slate-900 dark:text-white">
           <div className="p-1.5 rounded-xl bg-blue-600 text-white shadow-sm shrink-0">
