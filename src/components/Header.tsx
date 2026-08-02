@@ -38,11 +38,9 @@ export const Header: React.FC<HeaderProps> = ({
   }, []);
 
   const languages = [
-    { code: 'en' as Language, label: 'English' },
-    { code: 'id' as Language, label: 'Bahasa Indonesia' },
+    { code: 'en' as Language, label: 'EN' },
+    { code: 'id' as Language, label: 'ID' },
   ];
-
-  const currentLangLabel = lang === 'en' ? 'English' : 'Bahasa Indonesia';
 
   return (
     <header className="w-full bg-white dark:bg-slate-900 border-b-2 border-slate-300 dark:border-slate-800 sticky top-0 z-40 shadow-sm">
@@ -70,21 +68,21 @@ export const Header: React.FC<HeaderProps> = ({
             <span>GitHub</span>
           </a>
 
-          {/* Interactive Language Dropdown - Clean Text Labels */}
+          {/* Interactive Language Dropdown - Short Clean ID / EN */}
           <div className="relative" ref={dropdownRef}>
             <button
               type="button"
               onClick={() => setIsLangDropdownOpen(!isLangDropdownOpen)}
-              className="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border-2 border-slate-300 dark:border-slate-700 text-xs font-black text-slate-800 dark:text-slate-100 flex items-center gap-1.5 transition-colors btn-press-effect shadow-sm"
+              className="px-2.5 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border-2 border-slate-300 dark:border-slate-700 text-xs font-black text-slate-800 dark:text-slate-100 flex items-center gap-1 transition-colors btn-press-effect shadow-sm"
             >
               <Globe className="w-4 h-4 text-blue-600 dark:text-sky-400" />
-              <span>{currentLangLabel}</span>
+              <span>{lang.toUpperCase()}</span>
               <ChevronDown className={`w-3.5 h-3.5 text-slate-500 transition-transform ${isLangDropdownOpen ? 'rotate-180' : ''}`} />
             </button>
 
             {/* Dropdown Options Menu */}
             {isLangDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-48 rounded-2xl bg-white dark:bg-slate-900 border-2 border-slate-300 dark:border-slate-700 shadow-xl py-1.5 z-50 animate-fade-in">
+              <div className="absolute right-0 mt-2 w-28 rounded-2xl bg-white dark:bg-slate-900 border-2 border-slate-300 dark:border-slate-700 shadow-xl py-1.5 z-50 animate-fade-in">
                 {languages.map((item) => (
                   <button
                     key={item.code}
@@ -93,14 +91,14 @@ export const Header: React.FC<HeaderProps> = ({
                       onLangChange(item.code);
                       setIsLangDropdownOpen(false);
                     }}
-                    className={`w-full px-3.5 py-2 text-xs font-bold flex items-center justify-between transition-colors ${
+                    className={`w-full px-3 py-2 text-xs font-extrabold flex items-center justify-between transition-colors ${
                       lang === item.code
                         ? 'bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-sky-400 font-black'
                         : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
                     }`}
                   >
                     <span>{item.label}</span>
-                    {lang === item.code && <Check className="w-4 h-4 text-blue-600 dark:text-sky-400" />}
+                    {lang === item.code && <Check className="w-3.5 h-3.5 text-blue-600 dark:text-sky-400" />}
                   </button>
                 ))}
               </div>
