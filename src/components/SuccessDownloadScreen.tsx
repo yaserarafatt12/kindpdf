@@ -10,6 +10,8 @@ import { ViewMode } from './Header';
 interface SuccessDownloadScreenProps {
   title: string;
   downloadFileName: string;
+  downloadButtonText?: string;
+  statBadge?: { label: string; detail?: string };
   onDownload: (customName?: string) => void;
   onStartOver: () => void;
   onSelectTool: (toolId: ViewMode) => void;
@@ -20,6 +22,8 @@ interface SuccessDownloadScreenProps {
 export const SuccessDownloadScreen: React.FC<SuccessDownloadScreenProps> = ({
   title,
   downloadFileName,
+  downloadButtonText,
+  statBadge,
   onDownload,
   onStartOver,
   onSelectTool,
@@ -74,10 +78,20 @@ export const SuccessDownloadScreen: React.FC<SuccessDownloadScreenProps> = ({
       </div>
 
       {/* Hero Success Download Area */}
-      <div className="text-center space-y-6 py-2 sm:py-4">
+      <div className="text-center space-y-4 py-2 sm:py-4">
         <h2 className="text-2xl sm:text-4xl font-black tracking-tight text-slate-900 dark:text-white">
           {title}
         </h2>
+
+        {/* Optional Stats Badge (e.g. Compression Results) */}
+        {statBadge && (
+          <div className="inline-flex items-center gap-3 px-4 py-2 rounded-2xl bg-emerald-50 dark:bg-emerald-950/80 border border-emerald-300 dark:border-emerald-800 text-emerald-900 dark:text-emerald-200 font-extrabold text-xs sm:text-sm shadow-xs">
+            <span className="px-2.5 py-0.5 rounded-full bg-emerald-600 text-white font-black text-xs">
+              {statBadge.label}
+            </span>
+            {statBadge.detail && <span>{statBadge.detail}</span>}
+          </div>
+        )}
 
         {/* Big Prominent High-Impact Download Button */}
         <div className="pt-2 max-w-lg mx-auto space-y-4">
@@ -87,7 +101,9 @@ export const SuccessDownloadScreen: React.FC<SuccessDownloadScreenProps> = ({
             className="w-full py-5 sm:py-6 px-8 sm:px-10 rounded-2xl bg-gradient-to-r from-blue-600 via-sky-600 to-blue-700 hover:from-blue-500 hover:to-sky-500 text-white font-black text-lg sm:text-xl flex items-center justify-center gap-3.5 shadow-2xl shadow-blue-600/35 hover:shadow-blue-500/50 scale-[1.01] hover:scale-[1.03] transition-all duration-200 btn-press-effect"
           >
             <Download className="w-7 h-7 stroke-[3] shrink-0" />
-            <span>{lang === 'en' ? 'Download Merged PDF' : 'Unduh Merged PDF'}</span>
+            <span>
+              {downloadButtonText || (lang === 'en' ? 'Download PDF' : 'Unduh PDF')}
+            </span>
           </button>
 
           {/* Output Filename (Enlarged Text & Inline Rename Mode) */}

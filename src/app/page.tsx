@@ -486,7 +486,12 @@ export default function Home() {
 
         {/* VIEW MODE 19: COMPRESS PDF WORKSPACE */}
         {activeView === 'compress' && (
-          <CompressPdfWorkspace onBack={() => setActiveView('grid')} t={t} lang={lang} />
+          <CompressPdfWorkspace
+            onBack={() => setActiveView('grid')}
+            onSelectTool={(toolId) => setActiveView(toolId)}
+            t={t}
+            lang={lang}
+          />
         )}
 
         {/* VIEW MODE 20: HTML TO PDF WORKSPACE */}
