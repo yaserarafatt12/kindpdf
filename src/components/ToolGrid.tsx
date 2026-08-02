@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { TranslationDictionary } from '@/lib/i18n/translations';
 import {
   MergePdfIcon,
@@ -9,9 +9,13 @@ import {
   ExtractPagesIcon,
   ImageToPdfIcon,
 } from './icons/CustomPdfIcons';
-import { FileImage } from 'lucide-react';
+import { FileImage, Lock, Unlock, Hash, Stamp } from 'lucide-react';
+import { ViewMode } from './Header';
 
-export type ToolId = 'merge' | 'split' | 'organize' | 'extract' | 'image-to-pdf' | 'pdf-to-image';
+export type ToolId = Extract<
+  ViewMode,
+  'merge' | 'split' | 'organize' | 'extract' | 'image-to-pdf' | 'pdf-to-image' | 'protect' | 'unlock' | 'page-numbers' | 'watermark'
+>;
 
 interface ToolGridProps {
   onSelectTool: (toolId: ToolId) => void;
@@ -71,6 +75,42 @@ export const ToolGrid: React.FC<ToolGridProps> = ({ onSelectTool, t }) => {
       description: 'Render and extract all PDF pages into high-DPI PNG or JPG image files.',
       icon: <FileImage className="w-6 h-6 text-indigo-600 dark:text-indigo-400" />,
       iconBg: 'bg-indigo-50 dark:bg-indigo-950/80 border border-indigo-200 dark:border-indigo-900',
+      badge: null,
+      isReady: true,
+    },
+    {
+      id: 'protect' as ToolId,
+      title: 'Protect PDF',
+      description: 'Encrypt your PDF with password security to prevent unauthorized access.',
+      icon: <Lock className="w-6 h-6 text-slate-700 dark:text-slate-300" />,
+      iconBg: 'bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700',
+      badge: null,
+      isReady: true,
+    },
+    {
+      id: 'unlock' as ToolId,
+      title: 'Unlock PDF',
+      description: 'Remove password encryption and security restrictions from your PDF.',
+      icon: <Unlock className="w-6 h-6 text-teal-600 dark:text-teal-400" />,
+      iconBg: 'bg-teal-50 dark:bg-teal-950/80 border border-teal-200 dark:border-teal-900',
+      badge: null,
+      isReady: true,
+    },
+    {
+      id: 'page-numbers' as ToolId,
+      title: 'Add Page Numbers',
+      description: 'Insert customizable page numbers with flexible alignment into your PDF.',
+      icon: <Hash className="w-6 h-6 text-sky-600 dark:text-sky-400" />,
+      iconBg: 'bg-sky-50 dark:bg-sky-950/80 border border-sky-200 dark:border-sky-900',
+      badge: null,
+      isReady: true,
+    },
+    {
+      id: 'watermark' as ToolId,
+      title: 'Add Watermark',
+      description: 'Overlay custom text watermarks across every page of your PDF.',
+      icon: <Stamp className="w-6 h-6 text-violet-600 dark:text-violet-400" />,
+      iconBg: 'bg-violet-50 dark:bg-violet-950/80 border border-violet-200 dark:border-violet-900',
       badge: null,
       isReady: true,
     },

@@ -11,6 +11,11 @@ import ExtractPagesWorkspace from '@/components/ExtractPagesWorkspace';
 import OrganizePagesWorkspace from '@/components/OrganizePagesWorkspace';
 import ImagesToPdfWorkspace from '@/components/ImagesToPdfWorkspace';
 import PdfToImagesWorkspace from '@/components/PdfToImagesWorkspace';
+import ProtectPdfWorkspace from '@/components/ProtectPdfWorkspace';
+import UnlockPdfWorkspace from '@/components/UnlockPdfWorkspace';
+import PageNumbersWorkspace from '@/components/PageNumbersWorkspace';
+import WatermarkWorkspace from '@/components/WatermarkWorkspace';
+
 import { validatePdfFile } from '@/lib/files/validateFile';
 import { mergePdfFiles } from '@/lib/pdf/mergePdfs';
 import { downloadBlob } from '@/lib/files/downloadBlob';
@@ -346,6 +351,26 @@ export default function Home() {
         {/* VIEW MODE 7: PDF TO IMAGES WORKSPACE */}
         {activeView === 'pdf-to-image' && (
           <PdfToImagesWorkspace onBack={() => setActiveView('grid')} t={t} lang={lang} />
+        )}
+
+        {/* VIEW MODE 8: PROTECT PDF WORKSPACE */}
+        {activeView === 'protect' && (
+          <ProtectPdfWorkspace onBack={() => setActiveView('grid')} t={t} lang={lang} />
+        )}
+
+        {/* VIEW MODE 9: UNLOCK PDF WORKSPACE */}
+        {activeView === 'unlock' && (
+          <UnlockPdfWorkspace onBack={() => setActiveView('grid')} t={t} lang={lang} />
+        )}
+
+        {/* VIEW MODE 10: PAGE NUMBERS WORKSPACE */}
+        {activeView === 'page-numbers' && (
+          <PageNumbersWorkspace onBack={() => setActiveView('grid')} t={t} lang={lang} />
+        )}
+
+        {/* VIEW MODE 11: WATERMARK WORKSPACE */}
+        {activeView === 'watermark' && (
+          <WatermarkWorkspace onBack={() => setActiveView('grid')} t={t} lang={lang} />
         )}
       </main>
 
