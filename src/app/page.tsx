@@ -7,6 +7,7 @@ import FileDropzone from '@/components/FileDropzone';
 import FileCard, { PdfFileItem } from '@/components/FileCard';
 import ProcessingProgress from '@/components/ProcessingProgress';
 import SplitPdfWorkspace from '@/components/SplitPdfWorkspace';
+import ExtractPagesWorkspace from '@/components/ExtractPagesWorkspace';
 import { validatePdfFile } from '@/lib/files/validateFile';
 import { mergePdfFiles } from '@/lib/pdf/mergePdfs';
 import { downloadBlob } from '@/lib/files/downloadBlob';
@@ -322,6 +323,11 @@ export default function Home() {
         {/* VIEW MODE 3: SPLIT PDF WORKSPACE */}
         {activeView === 'split' && (
           <SplitPdfWorkspace onBack={() => setActiveView('grid')} t={t} lang={lang} />
+        )}
+
+        {/* VIEW MODE 4: EXTRACT PAGES WORKSPACE */}
+        {activeView === 'extract' && (
+          <ExtractPagesWorkspace onBack={() => setActiveView('grid')} t={t} lang={lang} />
         )}
       </main>
 
