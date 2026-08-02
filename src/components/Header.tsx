@@ -11,9 +11,11 @@ import {
   Menu,
   X,
   FileText,
+  Settings,
 } from 'lucide-react';
 import { Language, TranslationDictionary } from '@/lib/i18n/translations';
 import { tools } from '@/lib/tools/manifest';
+import SettingsModal from './SettingsModal';
 
 export type ViewMode =
   | 'grid'
@@ -60,6 +62,7 @@ export const Header: React.FC<HeaderProps> = ({
 }) => {
   const [isLangDropdownOpen, setIsLangDropdownOpen] = useState(false);
   const [isAppDrawerOpen, setIsAppDrawerOpen] = useState(false);
+  const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Close dropdown on outside click
@@ -114,7 +117,7 @@ export const Header: React.FC<HeaderProps> = ({
             </div>
           </div>
 
-          {/* Right Side Controls: Language Dropdown, Theme, & GitHub */}
+          {/* Right Side Controls: Language Dropdown, Settings, & GitHub */}
           <div className="flex items-center gap-1.5 sm:gap-2">
             {/* GitHub Link (Desktop) */}
             <a
@@ -163,18 +166,29 @@ export const Header: React.FC<HeaderProps> = ({
               )}
             </div>
 
-            {/* Theme Toggle Button */}
+            {/* Settings & User Guide Button */}
             <button
               type="button"
-              onClick={onThemeToggle}
+              onClick={() => setIsSettingsModalOpen(true)}
               className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border-2 border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-100 transition-colors btn-press-effect shadow-sm"
-              title="Toggle Light / Dark Mode"
+              title="Settings & User Guide"
             >
-              {isDarkMode ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-blue-600" />}
+              <Settings className="w-4 h-4 text-blue-600 dark:text-sky-400" />
             </button>
           </div>
         </div>
       </header>
+
+      {/* SETTINGS & USER GUIDE MODAL */}
+      <SettingsModal
+        isOpen={isSettingsModalOpen}
+        onClose={() => setIsSettingsModalOpen(false)}
+        lang={lang}
+        onLangChange={onLangChange}
+        isDarkMode={isDarkMode}
+        onThemeToggle={onThemeToggle}
+        t={t}
+      />
 
       {/* FULL CATEGORIZED APP DRAWER MENU */}
       {isAppDrawerOpen && (

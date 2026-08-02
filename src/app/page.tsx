@@ -621,12 +621,16 @@ export default function Home() {
       </main>
 
       {/* Footer */}
-      <footer className="w-full border-t border-slate-300 dark:border-slate-800 py-6 mt-12 text-center text-xs font-semibold text-slate-600 dark:text-slate-400 space-y-1">
+      <footer className="w-full border-t border-slate-300 dark:border-slate-800 py-6 mt-12 text-center text-xs font-semibold text-slate-600 dark:text-slate-400 space-y-1.5">
         <p className="font-black text-slate-900 dark:text-white">
-          Kind<span className="text-blue-600 dark:text-sky-400">pdf</span> — Privacy-First PDF Tools
+          Kind<span className="text-blue-600 dark:text-sky-400">pdf</span> — Privacy-First PDF Tools v1.0.0
         </p>
-        <p className="text-[11px] text-slate-500 dark:text-slate-500">
-          Process documents locally inside your web browser. 100% Zero-Server Upload.
+        <p className="text-[11px] text-slate-500 dark:text-slate-400">
+          Built with Next.js 14, TypeScript & Tailwind CSS by{' '}
+          <span className="font-black text-blue-600 dark:text-sky-400">Yaser Arafat</span>.
+        </p>
+        <p className="text-[10px] text-slate-400 dark:text-slate-500">
+          Process documents 100% locally inside your web browser. Zero 'eval()', 100% Local-First.
         </p>
       </footer>
 
