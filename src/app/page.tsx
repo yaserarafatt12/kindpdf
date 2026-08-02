@@ -10,6 +10,7 @@ import SplitPdfWorkspace from '@/components/SplitPdfWorkspace';
 import ExtractPagesWorkspace from '@/components/ExtractPagesWorkspace';
 import OrganizePagesWorkspace from '@/components/OrganizePagesWorkspace';
 import ImagesToPdfWorkspace from '@/components/ImagesToPdfWorkspace';
+import PdfToImagesWorkspace from '@/components/PdfToImagesWorkspace';
 import { validatePdfFile } from '@/lib/files/validateFile';
 import { mergePdfFiles } from '@/lib/pdf/mergePdfs';
 import { downloadBlob } from '@/lib/files/downloadBlob';
@@ -340,6 +341,11 @@ export default function Home() {
         {/* VIEW MODE 6: IMAGES TO PDF WORKSPACE */}
         {activeView === 'image-to-pdf' && (
           <ImagesToPdfWorkspace onBack={() => setActiveView('grid')} t={t} lang={lang} />
+        )}
+
+        {/* VIEW MODE 7: PDF TO IMAGES WORKSPACE */}
+        {activeView === 'pdf-to-image' && (
+          <PdfToImagesWorkspace onBack={() => setActiveView('grid')} t={t} lang={lang} />
         )}
       </main>
 

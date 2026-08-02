@@ -20,7 +20,7 @@ import {
   ImageToPdfIcon,
 } from './icons/CustomPdfIcons';
 
-export type ViewMode = 'grid' | 'merge' | 'split' | 'organize' | 'extract' | 'image-to-pdf';
+export type ViewMode = 'grid' | 'merge' | 'split' | 'organize' | 'extract' | 'image-to-pdf' | 'pdf-to-image';
 
 interface HeaderProps {
   onViewChange: (view: ViewMode) => void;

@@ -9,8 +9,9 @@ import {
   ExtractPagesIcon,
   ImageToPdfIcon,
 } from './icons/CustomPdfIcons';
+import { FileImage } from 'lucide-react';
 
-export type ToolId = 'merge' | 'split' | 'organize' | 'extract' | 'image-to-pdf';
+export type ToolId = 'merge' | 'split' | 'organize' | 'extract' | 'image-to-pdf' | 'pdf-to-image';
 
 interface ToolGridProps {
   onSelectTool: (toolId: ToolId) => void;
@@ -61,6 +62,15 @@ export const ToolGrid: React.FC<ToolGridProps> = ({ onSelectTool, t }) => {
       description: 'Convert JPG, PNG, and WEBP images to PDF with custom page size and margins.',
       icon: <ImageToPdfIcon className="w-6 h-6" />,
       iconBg: 'bg-rose-50 dark:bg-rose-950/80 border border-rose-200 dark:border-rose-900',
+      badge: null,
+      isReady: true,
+    },
+    {
+      id: 'pdf-to-image' as ToolId,
+      title: 'PDF to Images',
+      description: 'Render and extract all PDF pages into high-DPI PNG or JPG image files.',
+      icon: <FileImage className="w-6 h-6 text-indigo-600 dark:text-indigo-400" />,
+      iconBg: 'bg-indigo-50 dark:bg-indigo-950/80 border border-indigo-200 dark:border-indigo-900',
       badge: null,
       isReady: true,
     },
