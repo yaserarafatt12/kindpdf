@@ -256,15 +256,15 @@ export const SignPdfWorkspace: React.FC<SignPdfWorkspaceProps> = ({
       {file && (
         <div className="space-y-5">
           {/* File Card */}
-          <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border-2 border-slate-300 dark:border-slate-800 shadow-sm flex items-center justify-between">
-            <div>
+          <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border-2 border-slate-300 dark:border-slate-800 shadow-sm flex items-center justify-between gap-3 min-w-0">
+            <div className="min-w-0 flex-1">
               <p className="text-sm font-black text-slate-900 dark:text-white truncate">{file.name}</p>
-              <p className="text-xs text-slate-500 font-medium">{pageCount} {lang === 'en' ? 'pages' : 'halaman'}</p>
+              <p className="text-xs text-slate-500 font-medium truncate">{pageCount} {lang === 'en' ? 'pages' : 'halaman'}</p>
             </div>
             <button
               type="button"
               onClick={() => setFile(null)}
-              className="text-xs font-extrabold text-rose-600 hover:text-rose-700 px-3 py-1.5 rounded-xl border border-rose-200 dark:border-rose-800 hover:bg-rose-50 dark:hover:bg-rose-950/50 btn-press-effect"
+              className="text-xs font-extrabold text-rose-600 hover:text-rose-700 px-3 py-1.5 rounded-xl border border-rose-200 dark:border-rose-800 hover:bg-rose-50 dark:hover:bg-rose-950/50 btn-press-effect shrink-0"
             >
               {lang === 'en' ? 'Change File' : 'Ganti File'}
             </button>

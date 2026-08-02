@@ -146,10 +146,10 @@ export const CompressPdfWorkspace: React.FC<CompressPdfWorkspaceProps> = ({ onBa
       {file && (
         <div className="space-y-5">
           {/* File Selected Card */}
-          <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border-2 border-slate-300 dark:border-slate-800 shadow-sm flex items-center justify-between">
-            <div className="flex-1 min-w-0 pr-4">
+          <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border-2 border-slate-300 dark:border-slate-800 shadow-sm flex items-center justify-between gap-3 min-w-0">
+            <div className="flex-1 min-w-0">
               <p className="text-sm font-black text-slate-900 dark:text-white truncate">{file.name}</p>
-              <p className="text-xs text-slate-500 font-semibold mt-0.5">
+              <p className="text-xs text-slate-500 font-semibold mt-0.5 truncate">
                 {lang === 'en' ? 'Original Size:' : 'Ukuran Asli:'} <span className="font-extrabold text-slate-700 dark:text-slate-300">{formatFileSize(file.size)}</span>
               </p>
             </div>

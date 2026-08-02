@@ -204,16 +204,16 @@ export const ExtractPagesWorkspace: React.FC<ExtractPagesWorkspaceProps> = ({
       ) : (
         <div className="space-y-6">
           {/* Active File Summary Box */}
-          <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border-2 border-slate-300 dark:border-slate-800 flex items-center justify-between gap-3 shadow-sm">
-            <div className="flex items-center gap-3 min-w-0">
+          <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border-2 border-slate-300 dark:border-slate-800 flex items-center justify-between gap-3 shadow-sm min-w-0">
+            <div className="flex items-center gap-3 min-w-0 flex-1">
               <div className="p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/80 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-900 shrink-0">
                 <FileText className="w-6 h-6" />
               </div>
-              <div className="min-w-0">
+              <div className="min-w-0 flex-1">
                 <h4 className="text-sm font-black text-slate-900 dark:text-white truncate">
                   {file.name}
                 </h4>
-                <p className="text-xs font-medium text-slate-500 dark:text-slate-400">
+                <p className="text-xs font-medium text-slate-500 dark:text-slate-400 truncate">
                   {pageCount} {lang === 'en' ? 'Pages' : 'Halaman'} • {formatFileSize(file.size)}
                 </p>
               </div>
@@ -225,7 +225,7 @@ export const ExtractPagesWorkspace: React.FC<ExtractPagesWorkspaceProps> = ({
                 setFile(null);
                 setPageCount(0);
               }}
-              className="p-2 rounded-xl text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/50 transition-colors btn-press-effect"
+              className="p-2 rounded-xl text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/50 transition-colors btn-press-effect shrink-0"
               title="Remove File"
             >
               <Trash2 className="w-5 h-5" />

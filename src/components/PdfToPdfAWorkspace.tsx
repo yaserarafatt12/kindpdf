@@ -154,8 +154,8 @@ export const PdfToPdfAWorkspace: React.FC<PdfToPdfAWorkspaceProps> = ({
       {/* Conversion Options */}
       {file && (
         <div className="space-y-5">
-          <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border-2 border-slate-300 dark:border-slate-800 shadow-sm flex items-center justify-between">
-            <div>
+          <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border-2 border-slate-300 dark:border-slate-800 shadow-sm flex items-center justify-between gap-3 min-w-0">
+            <div className="min-w-0 flex-1">
               <p className="text-sm font-black text-slate-900 dark:text-white truncate">{file.name}</p>
             </div>
             <button
@@ -163,7 +163,7 @@ export const PdfToPdfAWorkspace: React.FC<PdfToPdfAWorkspaceProps> = ({
               onClick={() => {
                 setFile(null);
               }}
-              className="text-xs font-extrabold text-rose-600 hover:text-rose-700 px-3 py-1.5 rounded-xl border border-rose-200 dark:border-rose-800 hover:bg-rose-50 dark:hover:bg-rose-950/50 btn-press-effect"
+              className="text-xs font-extrabold text-rose-600 hover:text-rose-700 px-3 py-1.5 rounded-xl border border-rose-200 dark:border-rose-800 hover:bg-rose-50 dark:hover:bg-rose-950/50 btn-press-effect shrink-0"
             >
               {lang === 'en' ? 'Change File' : 'Ganti File'}
             </button>
