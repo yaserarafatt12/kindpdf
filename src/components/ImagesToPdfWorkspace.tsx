@@ -20,45 +20,77 @@ import {
   MoveRight,
   Settings2,
 } from 'lucide-react';
+import SuccessDownloadScreen from './SuccessDownloadScreen';
+import { ViewMode } from '@/components/Header';
+
+interface ImageCardItem {
+  id: string;
+  file: File;
+  previewUrl: string;
+  rotation: number;
+}
 
 interface ImagesToPdfWorkspaceProps {
   onBack: () => void;
+  onSelectTool?: (toolId: ViewMode) => void;
   t: TranslationDictionary;
   lang: 'en' | 'id';
 }
 
-export const ImagesToPdfWorkspace: React.FC<ImagesToPdfWorkspaceProps> = ({ onBack, t, lang }) => {
-  const [images, setImages] = useState<File[]>([]);
+export const ImagesToPdfWorkspace: React.FC<ImagesToPdfWorkspaceProps> = ({
+  onBack,
+  onSelectTool,
+  t,
+  lang,
+}) => {
+  const [images, setImages] = useState<ImageCardItem[]>([]);
   const [options, setOptions] = useState<ImageToPdfOptions>({
     pageSize: 'A4',
     orientation: 'portrait',
     margin: 'small',
   });
+  const [convertResult, setConvertResult] = useState<{ blob: Blob; filename: string } | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [progressMsg, setProgressMsg] = useState('');
   const [currentStep, setCurrentStep] = useState(0);
   const [totalSteps, setTotalSteps] = useState(0);
   const [errorToast, setErrorToast] = useState<{ title: string; message: string } | null>(null);
 
-  const handleFilesSelected = (filesList: File[]) => {
+  const handleFilesChange = (selectedFiles: File[]) => {
+    if (!selectedFiles || selectedFiles.length === 0) return;
     setErrorToast(null);
-    const validImages = filesList.filter(
-      (f) => f.type.startsWith('image/') || /\.(jpg|jpeg|png|webp)$/i.test(f.name)
-    );
 
-    if (validImages.length === 0) {
-      setErrorToast({
-        title: lang === 'en' ? 'Invalid File Type' : 'Tipe Berkas Tidak Valid',
-        message: lang === 'en' ? 'Please select valid image files (JPG, PNG, WEBP).' : 'Pilih berkas gambar yang valid (JPG, PNG, WEBP).',
+    const newItems: ImageCardItem[] = [];
+    selectedFiles.forEach((file) => {
+      const url = URL.createObjectURL(file);
+      newItems.push({
+        id: `${file.name}-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
+        file,
+        previewUrl: url,
+        rotation: 0,
       });
-      return;
-    }
+    });
 
-    setImages((prev) => [...prev, ...validImages]);
+    setImages((prev) => [...prev, ...newItems]);
   };
 
-  const handleRemoveImage = (index: number) => {
-    setImages((prev) => prev.filter((_, i) => i !== index));
+  const handleRemoveImage = (id: string) => {
+    setImages((prev) => {
+      const target = prev.find((img) => img.id === id);
+      if (target) URL.revokeObjectURL(target.previewUrl);
+      return prev.filter((img) => img.id !== id);
+    });
+  };
+
+  const handleRotateImage = (id: string) => {
+    setImages((prev) =>
+      prev.map((img) => {
+        if (img.id === id) {
+          return { ...img, rotation: (img.rotation + 90) % 360 };
+        }
+        return img;
+      })
+    );
   };
 
   const handleMoveLeft = (index: number) => {
@@ -93,17 +125,17 @@ export const ImagesToPdfWorkspace: React.FC<ImagesToPdfWorkspaceProps> = ({ onBa
     setProgressMsg(lang === 'en' ? 'Converting images to PDF...' : 'Mengonversi gambar ke PDF...');
 
     try {
-      const result = await convertImagesToPdf(images, options, (curr, tot, msg) => {
+      const result = await convertImagesToPdf(images.map(i => i.file), options, (curr, tot, msg) => {
         setCurrentStep(curr);
         setTotalSteps(tot);
         setProgressMsg(msg);
       });
 
-      downloadBlob(result.blob, result.filename);
-
-      setTimeout(() => {
-        setIsProcessing(false);
-      }, 500);
+      setIsProcessing(false);
+      setConvertResult({
+        blob: result.blob,
+        filename: result.filename,
+      });
     } catch (err: any) {
       setIsProcessing(false);
       setErrorToast({
@@ -113,9 +145,32 @@ export const ImagesToPdfWorkspace: React.FC<ImagesToPdfWorkspaceProps> = ({ onBa
     }
   };
 
+  if (convertResult) {
+    return (
+      <SuccessDownloadScreen
+        title={lang === 'en' ? 'PDF Created Successfully!' : 'PDF Berhasil Dibuat dari Gambar!'}
+        downloadFileName={convertResult.filename}
+        downloadButtonText={lang === 'en' ? 'Download Converted PDF' : 'Unduh PDF Hasil Konversi'}
+        onDownload={(customName?: string) =>
+          downloadBlob(convertResult.blob, customName || convertResult.filename)
+        }
+        onStartOver={() => {
+          setConvertResult(null);
+          setImages([]);
+        }}
+        onSelectTool={(toolId: ViewMode) => {
+          setConvertResult(null);
+          setImages([]);
+          if (onSelectTool) onSelectTool(toolId);
+        }}
+        t={t}
+        lang={lang}
+      />
+    );
+  }
+
   return (
     <div className="max-w-4xl mx-auto space-y-6">
-      {/* Back Button */}
       <button
         type="button"
         onClick={onBack}
@@ -168,7 +223,7 @@ export const ImagesToPdfWorkspace: React.FC<ImagesToPdfWorkspaceProps> = ({ onBa
             input.accept = 'image/jpeg,image/png,image/webp';
             input.multiple = true;
             input.onchange = (e: any) => {
-              if (e.target.files) handleFilesSelected(Array.from(e.target.files));
+              if (e.target.files) handleFilesChange(Array.from(e.target.files));
             };
             input.click();
           }}
@@ -258,7 +313,7 @@ export const ImagesToPdfWorkspace: React.FC<ImagesToPdfWorkspaceProps> = ({ onBa
                   input.accept = 'image/jpeg,image/png,image/webp';
                   input.multiple = true;
                   input.onchange = (e: any) => {
-                    if (e.target.files) handleFilesSelected(Array.from(e.target.files));
+                    if (e.target.files) handleFilesChange(Array.from(e.target.files));
                   };
                   input.click();
                 }}
@@ -282,14 +337,14 @@ export const ImagesToPdfWorkspace: React.FC<ImagesToPdfWorkspaceProps> = ({ onBa
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3.5">
             {images.map((img, idx) => (
               <div
-                key={`${img.name}-${idx}`}
+                key={img.id || `${img.file.name}-${idx}`}
                 className="p-3 rounded-2xl bg-white dark:bg-slate-900 border-2 border-slate-300 dark:border-slate-800 shadow-sm flex flex-col items-center justify-between gap-2.5 relative group hover:border-rose-500 transition-all"
               >
                 <div className="w-full aspect-square rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 overflow-hidden flex items-center justify-center">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src={URL.createObjectURL(img)}
-                    alt={img.name}
+                    src={img.previewUrl || URL.createObjectURL(img.file)}
+                    alt={img.file.name}
                     className="w-full h-full object-cover"
                   />
                 </div>
@@ -316,7 +371,7 @@ export const ImagesToPdfWorkspace: React.FC<ImagesToPdfWorkspaceProps> = ({ onBa
 
                   <button
                     type="button"
-                    onClick={() => handleRemoveImage(idx)}
+                    onClick={() => handleRemoveImage(img.id)}
                     className="p-1 rounded-lg hover:bg-rose-50 dark:hover:bg-rose-950/50 text-rose-600 dark:text-rose-400"
                   >
                     <Trash2 className="w-3.5 h-3.5" />

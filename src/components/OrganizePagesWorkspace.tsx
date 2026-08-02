@@ -24,6 +24,9 @@ import {
   RefreshCw,
 } from 'lucide-react';
 
+import SuccessDownloadScreen from './SuccessDownloadScreen';
+import { ViewMode } from '@/components/Header';
+
 interface PageCardItem {
   id: string;
   originalPageNumber: number; // 1-indexed
@@ -32,6 +35,7 @@ interface PageCardItem {
 
 interface OrganizePagesWorkspaceProps {
   onBack: () => void;
+  onSelectTool?: (toolId: ViewMode) => void;
   t: TranslationDictionary;
   lang: 'en' | 'id';
   mode?: 'organize' | 'remove';
@@ -39,6 +43,7 @@ interface OrganizePagesWorkspaceProps {
 
 export const OrganizePagesWorkspace: React.FC<OrganizePagesWorkspaceProps> = ({
   onBack,
+  onSelectTool,
   t,
   lang,
   mode = 'organize',
@@ -46,6 +51,8 @@ export const OrganizePagesWorkspace: React.FC<OrganizePagesWorkspaceProps> = ({
   const [file, setFile] = useState<File | null>(null);
   const [pageCount, setPageCount] = useState<number>(0);
   const [pages, setPages] = useState<PageCardItem[]>([]);
+  const [thumbnails, setThumbnails] = useState<Record<number, string>>({});
+  const [organizeResult, setOrganizeResult] = useState<{ blob: Blob; filename: string } | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [progressMsg, setProgressMsg] = useState('');
   const [currentStep, setCurrentStep] = useState(0);
@@ -166,11 +173,11 @@ export const OrganizePagesWorkspace: React.FC<OrganizePagesWorkspaceProps> = ({
         }
       );
 
-      downloadBlob(result.blob, result.filename);
-
-      setTimeout(() => {
-        setIsProcessing(false);
-      }, 500);
+      setIsProcessing(false);
+      setOrganizeResult({
+        blob: result.blob,
+        filename: result.filename,
+      });
     } catch (err: any) {
       setIsProcessing(false);
       setErrorToast({
@@ -179,6 +186,32 @@ export const OrganizePagesWorkspace: React.FC<OrganizePagesWorkspaceProps> = ({
       });
     }
   };
+
+  if (organizeResult) {
+    return (
+      <SuccessDownloadScreen
+        title={lang === 'en' ? 'PDF Organized Successfully!' : 'PDF Berhasil Diatur!'}
+        downloadFileName={organizeResult.filename}
+        downloadButtonText={lang === 'en' ? 'Download Organized PDF' : 'Unduh PDF Terorganisasi'}
+        onDownload={(customName?: string) =>
+          downloadBlob(organizeResult.blob, customName || organizeResult.filename)
+        }
+        onStartOver={() => {
+          setOrganizeResult(null);
+          setFile(null);
+          setPageCount(0);
+          setPages([]);
+        }}
+        onSelectTool={(toolId: ViewMode) => {
+          setOrganizeResult(null);
+          setFile(null);
+          if (onSelectTool) onSelectTool(toolId);
+        }}
+        t={t}
+        lang={lang}
+      />
+    );
+  }
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">

@@ -9,35 +9,43 @@ import { downloadBlob } from '@/lib/files/downloadBlob';
 import { formatFileSize } from '@/lib/files/formatFileSize';
 import ProcessingProgress from './ProcessingProgress';
 import FileDropzone from './FileDropzone';
+import SuccessDownloadScreen from './SuccessDownloadScreen';
+import { ViewMode } from '@/components/Header';
 import {
-  FileOutput,
-  UploadCloud,
+  Copy,
   FileText,
   Trash2,
   AlertCircle,
   X,
-  ArrowRight,
   ShieldCheck,
   ArrowLeft,
-  CheckCircle2,
+  CheckSquare,
 } from 'lucide-react';
 
 interface ExtractPagesWorkspaceProps {
   onBack: () => void;
+  onSelectTool?: (toolId: ViewMode) => void;
   t: TranslationDictionary;
   lang: 'en' | 'id';
 }
 
-export const ExtractPagesWorkspace: React.FC<ExtractPagesWorkspaceProps> = ({ onBack, t, lang }) => {
+export const ExtractPagesWorkspace: React.FC<ExtractPagesWorkspaceProps> = ({
+  onBack,
+  onSelectTool,
+  t,
+  lang,
+}) => {
   const [file, setFile] = useState<File | null>(null);
   const [pageCount, setPageCount] = useState<number>(0);
-  const [pageInput, setPageInput] = useState<string>('1');
+  const [rangeInput, setRangeInput] = useState<string>('1');
   const [separateFiles, setSeparateFiles] = useState<boolean>(false);
+
   const [isProcessing, setIsProcessing] = useState(false);
   const [progressMsg, setProgressMsg] = useState('');
   const [currentStep, setCurrentStep] = useState(0);
   const [totalSteps, setTotalSteps] = useState(0);
   const [errorToast, setErrorToast] = useState<{ title: string; message: string } | null>(null);
+  const [extractResult, setExtractResult] = useState<{ blob: Blob; filename: string } | null>(null);
 
   const handleFileChange = async (selectedFiles: File[]) => {
     if (!selectedFiles || selectedFiles.length === 0) return;
@@ -56,7 +64,7 @@ export const ExtractPagesWorkspace: React.FC<ExtractPagesWorkspaceProps> = ({ on
 
     setFile(targetFile);
     setPageCount(validation.pageCount);
-    setPageInput(`1-${Math.min(2, validation.pageCount)}`);
+    setRangeInput(`1-${Math.min(2, validation.pageCount)}`);
   };
 
   const handleExecuteExtract = async () => {
@@ -65,13 +73,12 @@ export const ExtractPagesWorkspace: React.FC<ExtractPagesWorkspaceProps> = ({ on
 
     let pagesToExtract: number[] = [];
     try {
-      const ranges = parseRangeString(pageInput, pageCount);
+      const ranges = parseRangeString(rangeInput, pageCount);
       for (const r of ranges) {
         for (let p = r.start; p <= r.end; p++) {
           pagesToExtract.push(p);
         }
       }
-      // Remove duplicates
       pagesToExtract = Array.from(new Set(pagesToExtract)).sort((a, b) => a - b);
 
       if (pagesToExtract.length === 0) {
@@ -106,11 +113,11 @@ export const ExtractPagesWorkspace: React.FC<ExtractPagesWorkspaceProps> = ({ on
         }
       );
 
-      downloadBlob(result.blob, result.filename);
-
-      setTimeout(() => {
-        setIsProcessing(false);
-      }, 500);
+      setIsProcessing(false);
+      setExtractResult({
+        blob: result.blob,
+        filename: result.filename,
+      });
     } catch (err: any) {
       setIsProcessing(false);
       setErrorToast({
@@ -119,6 +126,31 @@ export const ExtractPagesWorkspace: React.FC<ExtractPagesWorkspaceProps> = ({ on
       });
     }
   };
+
+  if (extractResult) {
+    return (
+      <SuccessDownloadScreen
+        title={lang === 'en' ? 'Pages Extracted Successfully!' : 'Halaman PDF Berhasil Diekstrak!'}
+        downloadFileName={extractResult.filename}
+        downloadButtonText={lang === 'en' ? 'Download Extracted PDF' : 'Unduh PDF Hasil Ekstrak'}
+        onDownload={(customName?: string) =>
+          downloadBlob(extractResult.blob, customName || extractResult.filename)
+        }
+        onStartOver={() => {
+          setExtractResult(null);
+          setFile(null);
+          setPageCount(0);
+        }}
+        onSelectTool={(toolId: ViewMode) => {
+          setExtractResult(null);
+          setFile(null);
+          if (onSelectTool) onSelectTool(toolId);
+        }}
+        t={t}
+        lang={lang}
+      />
+    );
+  }
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">
@@ -200,42 +232,45 @@ export const ExtractPagesWorkspace: React.FC<ExtractPagesWorkspaceProps> = ({ on
             </button>
           </div>
 
-          {/* Extract Configuration Options Box */}
-          <div className="p-6 rounded-3xl bg-white dark:bg-slate-900 border-2 border-slate-300 dark:border-slate-800 space-y-5 shadow-sm">
-            <h3 className="text-sm font-black text-slate-900 dark:text-white flex items-center gap-2">
-              <FileOutput className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-              <span>{lang === 'en' ? 'Pages To Extract' : 'Halaman Yang Ingin Diekstrak'}</span>
-            </h3>
-
+          {/* Configuration Card */}
+          <div className="p-6 rounded-3xl bg-white dark:bg-slate-900 border-2 border-slate-300 dark:border-slate-800 space-y-4 shadow-sm">
             <div className="space-y-1.5">
               <label className="text-xs font-extrabold text-slate-800 dark:text-slate-200">
-                {lang === 'en' ? 'Enter Page Numbers or Ranges' : 'Masukkan Nomor Halaman / Rentang'}
+                {lang === 'en' ? 'Pages to Extract' : 'Halaman yang Diekstrak'}
               </label>
               <input
                 type="text"
-                value={pageInput}
-                onChange={(e) => setPageInput(e.target.value)}
-                placeholder="e.g. 1-3, 5"
+                value={rangeInput}
+                onChange={(e) => setRangeInput(e.target.value)}
+                placeholder="e.g. 1-3, 5, 8-10"
                 className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-700 text-xs font-bold text-slate-900 dark:text-white focus:outline-none focus:border-emerald-500"
               />
               <p className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">
-                {lang === 'en' ? `Document contains ${pageCount} pages.` : `Dokumen memiliki ${pageCount} halaman.`}
+                {lang === 'en'
+                  ? `Enter single pages or ranges. Total available pages: ${pageCount}.`
+                  : `Masukkan nomor halaman atau rentang. Total halaman: ${pageCount}.`}
               </p>
             </div>
 
             {/* Separate Files Checkbox Option */}
-            <div className="pt-2">
-              <label className="flex items-center gap-2.5 cursor-pointer text-xs font-bold text-slate-800 dark:text-slate-200">
-                <input
-                  type="checkbox"
-                  checked={separateFiles}
-                  onChange={(e) => setSeparateFiles(e.target.checked)}
-                  className="w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500"
-                />
-                <span>
+            <div className="pt-2 border-t border-slate-200 dark:border-slate-800">
+              <label
+                onClick={() => setSeparateFiles(!separateFiles)}
+                className="inline-flex items-center gap-2.5 cursor-pointer select-none"
+              >
+                <div
+                  className={`w-5 h-5 rounded-lg border-2 flex items-center justify-center transition-colors ${
+                    separateFiles
+                      ? 'bg-emerald-600 border-emerald-600 text-white'
+                      : 'border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800'
+                  }`}
+                >
+                  {separateFiles && <CheckSquare className="w-3.5 h-3.5 stroke-[3]" />}
+                </div>
+                <span className="text-xs font-extrabold text-slate-800 dark:text-slate-200">
                   {lang === 'en'
-                    ? 'Export extracted pages into separate individual PDFs (ZIP)'
-                    : 'Ekstrak setiap halaman menjadi berkas PDF terpisah (ZIP)'}
+                    ? 'Extract into separate individual PDF files (ZIP)'
+                    : 'Ekstrak menjadi berkas PDF terpisah masing-masing (ZIP)'}
                 </span>
               </label>
             </div>
@@ -254,9 +289,8 @@ export const ExtractPagesWorkspace: React.FC<ExtractPagesWorkspaceProps> = ({ on
               disabled={isProcessing}
               className="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-black text-sm shadow-xl shadow-emerald-500/30 transition-all btn-press-effect flex items-center justify-center gap-2"
             >
-              <FileOutput className="w-4 h-4" />
+              <Copy className="w-4 h-4" />
               <span>{lang === 'en' ? 'Extract Pages Now' : 'Ekstrak Halaman Sekarang'}</span>
-              <ArrowRight className="w-4 h-4 ml-1" />
             </button>
           </div>
         </div>

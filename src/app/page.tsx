@@ -416,17 +416,32 @@ export default function Home() {
 
         {/* VIEW MODE 4: EXTRACT PAGES WORKSPACE */}
         {activeView === 'extract' && (
-          <ExtractPagesWorkspace onBack={() => setActiveView('grid')} t={t} lang={lang} />
+          <ExtractPagesWorkspace
+            onBack={() => setActiveView('grid')}
+            onSelectTool={(toolId) => setActiveView(toolId)}
+            t={t}
+            lang={lang}
+          />
         )}
 
         {/* VIEW MODE 5: ORGANIZE PAGES WORKSPACE */}
         {activeView === 'organize' && (
-          <OrganizePagesWorkspace onBack={() => setActiveView('grid')} t={t} lang={lang} />
+          <OrganizePagesWorkspace
+            onBack={() => setActiveView('grid')}
+            onSelectTool={(toolId) => setActiveView(toolId)}
+            t={t}
+            lang={lang}
+          />
         )}
 
         {/* VIEW MODE 6: IMAGES TO PDF WORKSPACE */}
         {activeView === 'image-to-pdf' && (
-          <ImagesToPdfWorkspace onBack={() => setActiveView('grid')} t={t} lang={lang} />
+          <ImagesToPdfWorkspace
+            onBack={() => setActiveView('grid')}
+            onSelectTool={(toolId) => setActiveView(toolId)}
+            t={t}
+            lang={lang}
+          />
         )}
 
         {/* VIEW MODE 7: PDF TO IMAGES WORKSPACE */}
