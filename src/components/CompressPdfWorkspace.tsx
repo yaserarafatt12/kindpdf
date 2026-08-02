@@ -165,6 +165,15 @@ export const CompressPdfWorkspace: React.FC<CompressPdfWorkspaceProps> = ({ onBa
             </button>
           </div>
 
+          {/* Small File Info Notice */}
+          {file.size < 20 * 1024 && (
+            <p className="text-[11px] text-amber-800 dark:text-amber-300 font-semibold bg-amber-50 dark:bg-amber-950/60 p-3 rounded-xl border border-amber-200 dark:border-amber-900 leading-relaxed">
+              💡 {lang === 'en'
+                ? 'Note: Small text PDFs (< 20 KB) are already near the minimum PDF structure size limit (~3-5 KB). Compression has the highest impact on documents (> 50 KB) containing photos, images, or scanned pages.'
+                : 'Catatan: Berkas PDF teks kecil (< 20 KB) sudah mendekati batas minimum struktur spesifikasi PDF (~3-5 KB). Kompresi berdampak paling besar pada dokumen (> 50 KB) yang berisi foto, gambar, atau hasil scan.'}
+            </p>
+          )}
+
           {/* Clean Minimalist Level Selector with Badges & Descriptions */}
           <div className="p-5 rounded-2xl bg-white dark:bg-slate-900 border-2 border-slate-300 dark:border-slate-800 shadow-sm space-y-4">
             <label className="text-xs font-extrabold text-slate-700 dark:text-slate-300">
