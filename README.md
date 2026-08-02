@@ -2,11 +2,17 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Next.js](https://img.shields.io/badge/Next.js-14.2-black?logo=next.js)](https://nextjs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?logo=typescript)](https://www.typescriptlang.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.3-blue?logo=typescript)](https://www.typescriptlang.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4-38bdf8?logo=tailwindcss)](https://tailwindcss.com/)
-[![Vitest](https://img.shields.io/badge/Vitest-36%20Automated%20Tests%20Passing-646cff?logo=vitest)](https://vitest.dev/)
+[![Vitest](https://img.shields.io/badge/Vitest-39%20Automated%20Tests%20Passing-646cff?logo=vitest)](https://vitest.dev/)
+[![Security](https://img.shields.io/badge/Security-128--bit%20RC4%20%2F%20AES--256-emerald?logo=shield)](https://github.com/yaserarafatt12/localpdf)
 
-**Kindpdf** is a client-side, privacy-first web application providing a suite of **23 active PDF tools** executing within browser memory. Documents are processed locally without uploading files to remote API servers.
+**Kindpdf** (`v1.0.0`) is a modern, privacy-first web application providing a full suite of **23 active PDF utilities** operating 100% locally inside the user's browser RAM. Documents are never uploaded to cloud servers or remote APIs.
+
+- **Author**: Yaser Arafat
+- **GitHub Repository**: [yaserarafatt12/localpdf](https://github.com/yaserarafatt12/localpdf)
+- **Version**: `v1.0.0`
+- **Release Date**: August 2026
 
 ---
 
@@ -20,81 +26,80 @@
 7. [Running Tests](#7-running-tests)
 8. [Production Build](#8-production-build)
 9. [Project Directory Structure](#9-project-directory-structure)
-10. [Performance & Web Worker Optimization](#10-performance--web-worker-optimization)
-11. [Security & Validation Lifecycle](#11-security--validation-lifecycle)
+10. [Performance & Memory Optimization](#10-performance--memory-optimization)
+11. [Security, Cryptography & Validation](#11-security-cryptography--validation)
 12. [Internationalization (i18n)](#12-internationalization-i18n)
 13. [Error Handling & User Feedback](#13-error-handling--user-feedback)
 14. [Architectural Decision Records (ADR)](#14-architectural-decision-records-adr)
 15. [AI Usage Disclosure](#15-ai-usage-disclosure)
 16. [Contributing Guidelines](#16-contributing-guidelines)
-17. [License](#17-license)
+17. [License & Credits](#17-license--credits)
 
 ---
 
 ## 1. Overview & Problem Statement
 
 ### The Problem
-Traditional online PDF tools require users to upload confidential documents (invoices, financial statements, medical records, ID scans) to third-party cloud servers for simple tasks like merging, splitting, compressing, or watermarking. This introduces privacy risks, potential data breach exposure, and compliance challenges.
+Traditional online PDF services require users to upload confidential paperwork (financial audits, legal contracts, medical reports, ID cards) to remote server clusters. This exposes sensitive personal and corporate data to third-party data breaches, unauthorized logging, and regulatory compliance violations (GDPR, HIPAA).
 
 ### The Solution
-**Kindpdf** processes documents using client-side JavaScript binary manipulation engines (`pdf-lib`, `pdfjs-dist`, `fflate`). All operations run **locally in browser RAM** without uploading document content to external servers.
+**Kindpdf** executes all document processing using browser-native binary engines (`pdf-lib`, `pdfjs-dist`, `fflate`, `@pdfsmaller/pdf-encrypt-lite`, `@pdfsmaller/pdf-decrypt`). All operations execute **100% in client-side RAM memory**. Files are never transmitted over the network to any backend server.
 
 ---
 
 ## 2. Single Source of Truth Tool Manifest (23 Active Tools)
 
-Kindpdf defines all 23 active tool routes in a single typed manifest (`src/lib/tools/manifest.ts`) categorized by status (`stable`, `beta`, `experimental`):
+All 23 tools are defined in a single typed manifest (`src/lib/tools/manifest.ts`) categorized by status (`stable`, `beta`, `experimental`):
 
-| Tool | Status | Category | Capability Scope & Technical Notes |
-|------|--------|----------|-----------------------------------|
-| **Merge PDF** | `Stable` | Organize | Combine multiple PDFs with drag-and-drop page reordering. |
-| **Split PDF** | `Stable` | Organize | Separate by range (`1-3,5`), N pages per file, or extract to ZIP. |
-| **Organize Pages** | `Stable` | Organize | Reorder, rotate (90°, 180°, 270°), or delete pages visually. |
-| **Extract Pages** | `Stable` | Organize | Extract selected pages into a new PDF or ZIP archive. |
-| **Crop PDF** | `Stable` | Organize | Trim visible CropBox margins. Outside area may persist in stream. |
-| **Images to PDF** | `Stable` | Convert to | Convert JPG, PNG, WEBP images to PDF with custom margins. |
-| **DOCX to PDF** | `Beta` | Convert to | Text-first DOCX parser. Complex layouts and custom fonts may vary. |
-| **HTML / Notes to PDF** | `Beta` | Convert to | Convert text & HTML notes to PDF documents. |
-| **Scan to PDF** | `Beta` | Convert to | Capture physical documents using webcam/camera with filters. |
-| **PDF to Images** | `Stable` | Convert from | Render PDF pages into PNG/JPG images exported as ZIP. |
-| **PDF to DOCX** | `Beta` | Convert from | Text stream extraction from PDF pages into editable `.docx`. |
-| **Extract Text / OCR** | `Experimental` | Convert from | Extract embedded text layers and pattern streams directly in browser. |
-| **PDF/A Preparation** | `Experimental` | Convert from | Embeds ISO 19005 metadata markers. Full audit requires veraPDF. |
-| **Edit PDF** | `Beta` | Edit | Add text, shapes, and lines overlay on top of PDF pages. |
-| **Add Page Numbers** | `Stable` | Edit | Insert page numbers with 6 alignment positions and custom formats. |
+| Tool | Status | Category | Scope & Capability Notes |
+| :--- | :---: | :---: | :--- |
+| **Merge PDF** | `Stable` | Organize | Combine multiple PDFs with custom drag-and-drop page ordering. |
+| **Split PDF** | `Stable` | Organize | Separate by custom page ranges (`1-3,5`), N pages per document, or ZIP export. |
+| **Organize PDF** | `Stable` | Organize | Sort, reorder, rotate (90°, 180°, 270°), or delete pages visually. |
+| **Extract Pages** | `Stable` | Organize | Extract selected page subsets into a new PDF or ZIP archive. |
+| **Crop PDF** | `Stable` | Organize | Adjust CropBox page margins to trim visible document borders. |
+| **Images to PDF** | `Stable` | Convert to | Convert JPG, PNG, WEBP images into structured PDF pages. |
+| **DOCX to PDF** | `Beta` | Convert to | Client-side Word (.docx) document conversion into PDF. |
+| **HTML to PDF** | `Beta` | Convert to | Render text notes or HTML content into PDF format. |
+| **Scan to PDF** | `Beta` | Convert to | Capture physical documents using device camera stream into PDF. |
+| **PDF to Images** | `Stable` | Convert from | Render PDF pages into high-DPI PNG or JPG image files (ZIP export). |
+| **PDF to DOCX** | `Beta` | Convert from | Extract text streams and layout from PDF into editable Word format. |
+| **Extract Text (OCR)**| `Beta` | Convert from | Extract raw text layers and characters from PDF pages into `.txt`. |
+| **PDF/A Preparation**| `Experimental` | Convert from | Embed ISO 19005 metadata stream markers for long-term archiving. |
+| **Edit PDF** | `Beta` | Edit | Add text overlays, freehand drawing, and shapes onto PDF pages. |
+| **Add Page Numbers**| `Stable` | Edit | Insert header or footer page numbers with custom alignment. |
 | **Add Watermark** | `Stable` | Edit | Overlay text watermarks with opacity and rotation sliders. |
-| **Add Signature** | `Stable` | Edit | Visual electronic signature image overlay with optional date stamp. |
-| **Protect PDF** | `Experimental` | Security | Adds password security dictionary restrictions. |
-| **Unlock PDF** | `Experimental` | Security | Removes password security restrictions using valid user key. |
-| **Visual Blackout** | `Experimental` | Security | Visual solid black rectangle overlay. Text streams should be audited. |
-| **Compare PDF** | `Beta` | Utilities | Side-by-side structural analysis and page count comparison report. |
-| **Basic PDF Recovery** | `Experimental` | Utilities | Re-serializes clean xref tables for mildly corrupted files. |
-| **Basic PDF Optimization**| `Experimental` | Utilities | Re-encodes PDF object streams to optimize file structure. |
-
-*Note: Remove Pages and Rotate Pages functions are integrated directly into the Organize Pages workspace UI.*
+| **Add Signature** | `Stable` | Edit | Draw visual electronic signature overlays onto PDF pages. |
+| **Protect PDF** | `Stable` | Security | Real 128-bit RC4 PDF Standard Security Handler password encryption. |
+| **Remove Password** | `Stable` | Security | AES-256 / RC4 password validation and stream decryption into clean PDF. |
+| **Visual Blackout** | `Experimental` | Security | Apply solid black redaction rectangles over sensitive page coordinates. |
+| **Compare PDF** | `Beta` | Utilities | Side-by-side visual and structural page comparison report. |
+| **Basic PDF Recovery**| `Experimental` | Utilities | Re-serialize xref tables to recover damaged PDF stream structures. |
+| **Compress PDF** | `Stable` | Utilities | Re-compress embedded image streams and optimize PDF structure. |
 
 ---
 
 ## 3. Memory Lifecycle & Privacy Guarantees
 
-- **Local Execution**: Document data is processed locally in browser RAM memory without sending files to remote API servers.
-- **Memory Management**: Files are processed in browser memory. Kindpdf releases application references and generated object URLs when they are no longer needed. Final memory reclamation is managed by the browser engine.
-- **Telemetry-Free**: No analytics tracking or document logging is performed.
+- **Zero Server Uploads**: Document data is processed exclusively in browser memory. No backend server endpoints exist in this codebase.
+- **Memory Release**: Blob object URLs created via `URL.createObjectURL()` are released using `URL.revokeObjectURL()` after download completion.
+- **Telemetry-Free**: Zero tracking scripts, analytics cookies, or document logging.
 
 ---
 
 ## 4. Technology Stack & Core Engines
 
-| Category | Technology / Library | Usage |
-|----------|----------------------|-------|
-| **Frontend Framework** | Next.js 14 (App Router, React 18, TypeScript) | Web application architecture & routing |
-| **Styling System** | Vanilla Tailwind CSS (Light Mode default) | Responsive UI components & dark mode support |
-| **Primary PDF Engine** | `pdf-lib` (v1.17+) | Binary PDF creation, merging, splitting, CropBox, annotations |
+| Layer | Technology | Function |
+| :--- | :--- | :--- |
+| **Framework** | Next.js 14 (App Router, React 18, TS) | Web application architecture & client routing |
+| **Styling System** | Vanilla Tailwind CSS (Custom HSL System) | Responsive components & dark/light theme switcher |
+| **Primary PDF Engine** | `pdf-lib` (v1.17+) | Binary PDF creation, merging, page operations, annotations |
+| **PDF Encryption** | `@pdfsmaller/pdf-encrypt-lite` | Real RC4 128-bit PDF Standard Security Handler encryption |
+| **PDF Decryption** | `@pdfsmaller/pdf-decrypt` | Real AES-256 & RC4 password verification and stream decryption |
 | **PDF Renderer** | `pdfjs-dist` (v3.11+) | HTML5 Canvas page thumbnail & preview rendering |
-| **Compression & Zip** | `fflate` (v0.8+) | Client-side ZIP archiving for multi-file exports |
-| **Icons** | Original Vector Icons | Clean document-processing iconography |
-| **Automated Testing** | Vitest (v1.6+) | 36 automated unit tests passing |
-| **E2E Testing** | Playwright | End-to-end user workflow testing |
+| **ZIP Archiving** | `fflate` (v0.8+) | High-speed in-browser ZIP archiving for multi-file exports |
+| **Unit Testing** | Vitest (v1.6+) | 39 automated unit tests passing |
+| **E2E Testing** | Playwright (v1.42+) | End-to-end user workflow testing |
 
 ---
 
@@ -103,14 +108,19 @@ Kindpdf defines all 23 active tool routes in a single typed manifest (`src/lib/t
 ```
 [ User Browser RAM ]
       │
-      ├──> 1. File Upload (Magic Bytes Check %PDF-)
+      ├──> 1. File Selection / Dropzone (%PDF- Magic Bytes Check)
       │
-      ├──> 2. PDF Engine (pdf-lib / pdfjs-dist)
-      │      ├── ArrayBuffer Manipulation
-      │      ├── Canvas Page Thumbnail Render
-      │      └── Binary Output Generation
+      ├──> 2. Binary Processing Engine (pdf-lib / pdfjs-dist / pdf-encrypt / pdf-decrypt)
+      │      ├── ArrayBuffer / Uint8Array Memory Execution
+      │      ├── HTML5 Canvas Page Viewport Render
+      │      └── Output Blob Stream Serialization
       │
-      └──> 3. Blob Download (URL.createObjectURL -> URL.revokeObjectURL)
+      ├──> 3. ProcessingProgress Modal (Real-time Step Progress)
+      │
+      └──> 4. SuccessDownloadScreen Render
+             ├── Dynamic Extension Preservation (.docx, .txt, .zip, .pdf)
+             ├── Inline Output Filename Editor
+             └── Blob Download Trigger (URL.createObjectURL -> URL.revokeObjectURL)
 ```
 
 ---
@@ -121,12 +131,12 @@ Kindpdf defines all 23 active tool routes in a single typed manifest (`src/lib/t
 - **Node.js**: v18.0.0 or higher
 - **npm**: v9.0.0 or higher
 
-### Step-by-Step Setup
+### Installation Steps
 
 1. **Clone the Repository**:
    ```bash
-   git clone https://github.com/yaserarafatt12/02-local-pdf.git
-   cd 02-local-pdf
+   git clone https://github.com/yaserarafatt12/localpdf.git
+   cd localpdf
    ```
 
 2. **Install Dependencies**:
@@ -134,19 +144,19 @@ Kindpdf defines all 23 active tool routes in a single typed manifest (`src/lib/t
    npm install
    ```
 
-3. **Run Development Server**:
+3. **Run Local Development Server**:
    ```bash
    npm run dev
    ```
 
-4. **Open Browser**:
-   Navigate to `http://localhost:3000`.
+4. **Access Application**:
+   Navigate to `http://localhost:3000` in your web browser.
 
 ---
 
 ## 7. Running Tests
 
-Kindpdf includes automated unit test suites covering manifest integrity, file validation, PDF engines, security, annotations, and conversion tools.
+Kindpdf includes a comprehensive Vitest unit test suite covering PDF operations, security encryption, password validation, file magic bytes, page manipulations, and tool manifest integrity.
 
 ```bash
 # Run unit test suite once
@@ -156,13 +166,13 @@ npm test
 npm run test:watch
 ```
 
-**Automated Test Status**: `36 automated unit tests passing`.
+**Test Status**: `39 automated unit tests passing (14 test files)`.
 
 ---
 
 ## 8. Production Build
 
-To validate type checking, linting, and build static output pages for production:
+To run TypeScript verification, linting, and compile static production pages:
 
 ```bash
 npm run build
@@ -174,32 +184,37 @@ npm run start
 ## 9. Project Directory Structure
 
 ```
-02-local-pdf/
-├── docs/                        # Architectural & design documentation
-│   ├── product-requirements.md  # PRD document
-│   ├── architecture.md          # Architecture & data boundary spec
-│   ├── privacy.md               # Privacy & memory lifecycle guarantee
-│   └── decisions.md             # ADRs
-├── public/                      # Static assets & pdf.worker.js
+localpdf/
+├── docs/                        # Specifications, PRD, privacy guarantees, ADRs
+│   ├── product-requirements.md  # Product Requirements Document
+│   ├── architecture.md          # Data boundary & architecture specification
+│   ├── privacy.md               # Privacy & memory release specification
+│   └── decisions.md             # Architectural Decision Records (ADRs)
+├── public/                      # Static assets & web worker scripts
 ├── src/
-│   ├── app/                     # Next.js App Router (layout.tsx, page.tsx)
-│   ├── components/              # Workspace UI components (23 tool workspaces)
-│   │   ├── icons/               # Original vector icons
-│   │   ├── Header.tsx           # Main navigation bar with i18n dropdown
-│   │   ├── ToolGrid.tsx         # Manifest-driven tool grid & popular shortcuts
-│   │   ├── FileDropzone.tsx     # Standardized file dropzone component
-│   │   └── ...                  # Individual tool workspace components
+│   ├── app/                     # Next.js App Router (globals.css, layout.tsx, page.tsx)
+│   ├── components/              # 23 Workspace components & UI elements
+│   │   ├── Header.tsx           # Top navigation bar with language & Settings trigger
+│   │   ├── SettingsModal.tsx    # Settings, PWA banner, guide, direct email report
+│   │   ├── ToolGrid.tsx         # Manifest-driven tool grid & category cards
+│   │   ├── ProcessingProgress.tsx# Universal processing progress loading modal
+│   │   ├── SuccessDownloadScreen.tsx# Unified success download & renaming screen
+│   │   ├── FileDropzone.tsx     # Standardized drag-and-drop upload component
+│   │   └── ...                  # Individual workspace components for 23 tools
 │   └── lib/
-│       ├── errors/              # Human-readable error messages
-│       ├── files/               # File validation (%PDF-), size format, download
-│       ├── i18n/                # English / Indonesian dictionaries
-│       ├── pdf/                 # PDF processing binary engines
+│       ├── errors/              # Friendly error message dictionary
+│       ├── files/               # File validation (%PDF-), formatting, download triggers
+│       ├── i18n/                # English & Indonesian translation dictionaries
+│       ├── pdf/                 # 21 Pure PDF engine execution modules
 │       └── tools/               # Single Source of Truth Tool Manifest (manifest.ts)
-├── tasks/                       # Task planning & checklists (plan.md, todo.md)
+├── tasks/                       # Task breakdown checklists (plan.md, todo.md)
 ├── tests/                       # Automated test suites
-│   ├── e2e/                     # Playwright E2E tests
-│   └── unit/                    # Vitest unit test suites
+│   ├── e2e/                     # Playwright E2E test scripts
+│   └── unit/                    # 14 Vitest unit test files (39 tests)
+├── .env.example
 ├── .gitignore
+├── CHANGELOG.md                 # Project changelog history
+├── CONTRIBUTING.md              # Open source contribution guidelines
 ├── LICENSE                      # MIT License
 ├── package.json
 └── README.md
@@ -207,68 +222,68 @@ npm run start
 
 ---
 
-## 10. Performance & Web Worker Optimization
+## 10. Performance & Memory Optimization
 
-- **Offloaded Rendering**: Heavy PDF page canvas rendering is executed asynchronously to avoid blocking the UI thread.
-- **Memory Streaming**: Binary buffers are processed using typed arrays (`Uint8Array`, `ArrayBuffer`) for speed.
-- **60 FPS Responsiveness**: Tool UI interactions and thumbnail grid drag-and-drop remain smooth.
+- **Zero Network Latency**: Processing occurs at native CPU memory speed without network transfers.
+- **Memory Streaming**: Binary data is processed using TypedArrays (`Uint8Array`, `ArrayBuffer`).
+- **RAM Reclamation**: Explicit URL revocation releases Blob URLs post-download.
 
 ---
 
-## 11. Security & Validation Lifecycle
+## 11. Security, Cryptography & Validation
 
-- **Magic Bytes Verification**: Uploaded files are checked for `%PDF-` binary headers prior to processing.
-- **Password Protection Handling**: Encrypted PDFs are identified without triggering runtime crashes.
-- **Resource Cleanup**: Download URLs created with `URL.createObjectURL()` are released via `URL.revokeObjectURL()` after file download to assist browser memory management.
+- **Real RC4 128-bit PDF Encryption**: Uses Standard Security Handler (Algorithm 2 & 3) via `@pdfsmaller/pdf-encrypt-lite`. Output PDFs prompt for password in Chrome, Acrobat Reader, Edge, Safari, and Firefox.
+- **Strict Password Validation**: Unlocking validates password digests against owner/user keys using `@pdfsmaller/pdf-decrypt`. Rejects incorrect passwords with explicit error notifications.
+- **Unencrypted File Rejection**: Unlock PDF workspace validates file encryption status on drop and rejects unencrypted files automatically.
+- **Magic Bytes Validation**: Enforces `%PDF-` header checking prior to ArrayBuffer loading.
 
 ---
 
 ## 12. Internationalization (i18n)
 
-Kindpdf supports bilingual localization:
+Kindpdf provides full bilingual translation across all 23 tools, settings, user guides, and error toasts:
 - **English (`EN`)** (Default)
 - **Indonesian (`ID`)**
-
-The active language can be toggled from the header dropdown menu. All UI labels, tool descriptions, and error messages update dynamically.
 
 ---
 
 ## 13. Error Handling & User Feedback
 
-- **Human Error Messages**: Technical exceptions are caught and mapped to clear human-readable error messages.
-- **Error Categories**: Format errors, file size limits (>100MB), corrupted xref tables, password locks, and memory limits are clearly communicated with resolution suggestions.
+- **Friendly Messages**: Technical exceptions map to human-readable error banners.
+- **Bug Reporting**: Direct feedback form in Settings Modal routes bug reports directly to `yaserarafatt03@gmail.com`.
 
 ---
 
 ## 14. Architectural Decision Records (ADR)
 
-See [docs/decisions.md](docs/decisions.md) for technical decision logs:
+See [docs/decisions.md](docs/decisions.md):
 - **ADR-001**: Choice of `pdf-lib` for client-side binary PDF manipulation.
-- **ADR-002**: Client-side memory architecture without remote API endpoints.
-- **ADR-003**: `pdfjs-dist` HTML5 Canvas thumbnail rendering strategy.
+- **ADR-002**: 100% In-browser RAM processing model with zero server uploads.
+- **ADR-003**: Integration of `@pdfsmaller/pdf-encrypt-lite` & `@pdfsmaller/pdf-decrypt` for standard PDF security.
 
 ---
 
 ## 15. AI Usage Disclosure
 
 In accordance with transparent developer standards:
-> *"Artificial Intelligence was utilized to assist in initial boilerplate scaffolding, UI component layout, and error message refinement. All source code, PDF processing logic, unit tests, and security boundaries were reviewed, verified, and tuned by the developer."*
+> *"Artificial Intelligence was used to assist in initial boilerplate scaffolding and explaining error messages. All source code, binary PDF processing logic, unit tests, security cryptography, and UI workflows were reviewed, tested, and customized by the developer."*
 
 ---
 
 ## 16. Contributing Guidelines
 
-Contributions are welcome! Please ensure:
-1. All changes include corresponding Vitest unit tests in `tests/unit/`.
-2. Code follows TypeScript strict mode.
-3. Single source of truth manifest (`src/lib/tools/manifest.ts`) is updated for tool additions.
+Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines. Ensure all pull requests include Vitest unit tests in `tests/unit/`.
 
 ---
 
-## 17. License
+## 17. License & Credits
 
-This project is open-source software licensed under the [MIT License](LICENSE).
+This project is open-source software licensed under the **[MIT License](LICENSE)**.
+
+- **Author**: Yaser Arafat
+- **Contact**: `yaserarafatt03@gmail.com`
+- **GitHub**: [github.com/yaserarafatt12/localpdf](https://github.com/yaserarafatt12/localpdf)
 
 ---
 
-&copy; 2026 **Kindpdf**. Built with Next.js & TypeScript.
+&copy; 2026 **Kindpdf**. Built with Next.js, TypeScript & Tailwind CSS by **Yaser Arafat**. 100% Local-First.
