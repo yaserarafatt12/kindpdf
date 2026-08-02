@@ -223,24 +223,63 @@ export default function Home() {
         {/* VIEW MODE 2: MERGE PDF WORKSPACE */}
         {activeView === 'merge' && (
           <div className="max-w-3xl mx-auto space-y-6">
-            {/* Back Button */}
-            <button
-              type="button"
-              onClick={() => setActiveView('grid')}
-              className="inline-flex items-center gap-2 text-xs font-black text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-sky-400 transition-colors btn-press-effect"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              <span>{t.backToAllTools}</span>
-            </button>
+            {/* Top Toolbar Navigation */}
+            <div className="flex items-center justify-between gap-3">
+              <button
+                type="button"
+                onClick={() => setActiveView('grid')}
+                className="inline-flex items-center gap-2 text-xs font-black text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-sky-400 transition-colors btn-press-effect"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                <span>{t.backToAllTools}</span>
+              </button>
 
-            {/* Merge Hero Section */}
-            <div className="text-center space-y-2 py-2 max-w-lg mx-auto">
-              <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900 dark:text-white">
-                {t.mergeHeroTitle}
-              </h2>
-              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 font-medium leading-relaxed">
-                {t.mergeHeroSubtitle}
-              </p>
+              {/* Top Action Buttons when files selected */}
+              {files.length > 0 && (
+                <div className="flex items-center gap-2">
+                  {/* Floating Add More Files Button */}
+                  <label className="relative cursor-pointer px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-black flex items-center gap-1.5 shadow-md shadow-blue-500/20 btn-press-effect">
+                    <span className="text-sm font-black">+</span>
+                    <span className="hidden sm:inline">{lang === 'en' ? 'Add PDF' : 'Tambah PDF'}</span>
+                    <span className="w-5 h-5 rounded-full bg-white/20 text-white text-[10px] font-extrabold flex items-center justify-center">
+                      {files.length}
+                    </span>
+                    <input
+                      type="file"
+                      multiple
+                      accept=".pdf"
+                      className="hidden"
+                      onChange={(e) => {
+                        if (e.target.files && e.target.files.length > 0) {
+                          handleFilesSelected(Array.from(e.target.files));
+                        }
+                      }}
+                    />
+                  </label>
+
+                  {/* Sort A-Z Button */}
+                  <button
+                    type="button"
+                    title={lang === 'en' ? 'Sort A-Z' : 'Urutkan A-Z'}
+                    onClick={() => {
+                      setFiles((prev) => [...prev].sort((a, b) => a.name.localeCompare(b.name)));
+                    }}
+                    className="px-2.5 py-1.5 rounded-xl bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-black border border-slate-300 dark:border-slate-700 transition-colors btn-press-effect"
+                  >
+                    A-Z
+                  </button>
+
+                  {/* Clear All */}
+                  <button
+                    type="button"
+                    onClick={handleClearAll}
+                    title={t.clearAll}
+                    className="p-1.5 rounded-xl text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/50 border border-rose-200 dark:border-rose-900/50 transition-colors btn-press-effect"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
+              )}
             </div>
 
             {/* Error Toast Banner */}
@@ -265,41 +304,33 @@ export default function Home() {
               </div>
             )}
 
-            {/* Dropzone Upload Section */}
-            <FileDropzone onFilesSelected={handleFilesSelected} disabled={isProcessing} t={t} />
+            {/* Initial Hero & Big Dropzone (Only shown when NO files selected) */}
+            {files.length === 0 && (
+              <>
+                <div className="text-center space-y-2 py-2 max-w-lg mx-auto">
+                  <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900 dark:text-white">
+                    {t.mergeHeroTitle}
+                  </h2>
+                  <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 font-medium leading-relaxed">
+                    {t.mergeHeroSubtitle}
+                  </p>
+                </div>
+                <FileDropzone onFilesSelected={handleFilesSelected} disabled={isProcessing} t={t} colorTheme="blue" />
+              </>
+            )}
 
-            {/* Selected Documents Workspace */}
+            {/* Minimalist Selected Documents View (When files selected) */}
             {files.length > 0 && (
-              <div className="space-y-4 pt-2">
-                {/* Header Toolbar Summary */}
-                <div className="flex flex-wrap items-center justify-between gap-3 p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 shadow-sm">
-                  <div className="space-y-0.5">
-                    <div className="flex items-center gap-2">
-                      <span className="px-2.5 py-0.5 rounded-full bg-blue-600 text-white text-xs font-black">
-                        {files.length} {t.documentsCount}
-                      </span>
-                      <span className="text-xs font-extrabold text-slate-800 dark:text-slate-200">
-                        • {totalPages} {t.pagesTotal}
-                      </span>
-                    </div>
-                    <p className="text-[11px] font-semibold text-slate-600 dark:text-slate-400">
-                      {t.totalSize}: {formatFileSize(totalSizeBytes)} ({t.reorderHint})
-                    </p>
-                  </div>
-
-                  <div className="flex items-center gap-2">
-                    <button
-                      type="button"
-                      onClick={handleClearAll}
-                      className="px-3 py-1.5 rounded-xl text-xs font-extrabold text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/50 border border-rose-200 dark:border-rose-900/50 transition-colors flex items-center gap-1.5 btn-press-effect"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                      <span>{t.clearAll}</span>
-                    </button>
-                  </div>
+              <div className="space-y-4">
+                {/* File Count Summary Sub-bar */}
+                <div className="flex items-center justify-between text-xs font-extrabold text-slate-600 dark:text-slate-400 px-1">
+                  <span>
+                    {files.length} {t.documentsCount} • {totalPages} {t.pagesTotal} ({formatFileSize(totalSizeBytes)})
+                  </span>
+                  <span className="text-[11px] text-slate-600 dark:text-slate-400">{t.reorderHint}</span>
                 </div>
 
-                {/* Document Queue List */}
+                {/* Document Cards List */}
                 <div className="space-y-2.5">
                   {files.map((item, index) => (
                     <FileCard
@@ -314,18 +345,13 @@ export default function Home() {
                   ))}
                 </div>
 
-                {/* Merge Action CTA Bar */}
-                <div className="pt-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-                  <div className="flex items-center gap-2 text-xs font-semibold text-slate-600 dark:text-slate-400">
-                    <ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
-                    <span>{t.ramProcessing}</span>
-                  </div>
-
+                {/* Clean Sticky/Bottom Action Bar */}
+                <div className="pt-4 flex items-center justify-center">
                   <button
                     type="button"
                     onClick={handleMergePdfs}
                     disabled={files.length < 2 || isProcessing}
-                    className={`w-full sm:w-auto px-8 py-3.5 rounded-2xl font-black text-sm flex items-center justify-center gap-2 text-white shadow-xl transition-all duration-200 btn-press-effect ${
+                    className={`w-full sm:w-auto min-w-[240px] px-8 py-3.5 rounded-2xl font-black text-sm flex items-center justify-center gap-2 text-white shadow-xl transition-all duration-200 btn-press-effect ${
                       files.length >= 2 && !isProcessing
                         ? 'bg-gradient-to-r from-blue-600 to-sky-500 hover:from-blue-500 hover:to-sky-400 shadow-blue-500/30 scale-[1.02]'
                         : 'bg-slate-300 dark:bg-slate-800 text-slate-500 dark:text-slate-500 cursor-not-allowed shadow-none'
