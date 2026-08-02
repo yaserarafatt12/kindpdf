@@ -165,17 +165,37 @@ export const CompressPdfWorkspace: React.FC<CompressPdfWorkspaceProps> = ({ onBa
             </button>
           </div>
 
-          {/* Clean Minimalist Level Selector */}
-          <div className="p-5 rounded-2xl bg-white dark:bg-slate-900 border-2 border-slate-300 dark:border-slate-800 shadow-sm space-y-3">
-            <label className="text-xs font-extrabold text-slate-700 dark:text-slate-300">
-              {lang === 'en' ? 'Compression Level' : 'Tingkat Kompresi'}
-            </label>
+          {/* Clean Minimalist Level Selector with Badges & Descriptions */}
+          <div className="p-5 rounded-2xl bg-white dark:bg-slate-900 border-2 border-slate-300 dark:border-slate-800 shadow-sm space-y-4">
+            <div className="flex items-center justify-between">
+              <label className="text-xs font-extrabold text-slate-700 dark:text-slate-300">
+                {lang === 'en' ? 'Compression Level' : 'Tingkat Kompresi'}
+              </label>
+              <span className="text-[11px] font-extrabold text-blue-600 dark:text-sky-400 bg-blue-50 dark:bg-blue-950/80 px-2.5 py-0.5 rounded-full border border-blue-200 dark:border-blue-900">
+                {lang === 'en' ? 'Selected:' : 'Dipilih:'} {level === 'recommended' ? '~50%' : level === 'extreme' ? '~70%' : '~20%'} {lang === 'en' ? 'Saved' : 'Hemat'}
+              </span>
+            </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               {[
-                { id: 'recommended', title: lang === 'en' ? 'Recommended' : 'Rekomendasi', desc: lang === 'en' ? 'Good quality & compression' : 'Kualitas bagus & kompresi' },
-                { id: 'extreme', title: lang === 'en' ? 'Extreme' : 'Ekstrem', desc: lang === 'en' ? 'Max size reduction' : 'Kompresi maksimal' },
-                { id: 'less', title: lang === 'en' ? 'Less Compression' : 'Kompresi Ringan', desc: lang === 'en' ? 'Highest document quality' : 'Kualitas dokumen tinggi' },
+                {
+                  id: 'recommended',
+                  title: lang === 'en' ? 'Recommended' : 'Rekomendasi',
+                  desc: lang === 'en' ? 'Good quality & high compression' : 'Kualitas bagus & kompresi tinggi',
+                  badge: '~50%',
+                },
+                {
+                  id: 'extreme',
+                  title: lang === 'en' ? 'Extreme' : 'Ekstrem',
+                  desc: lang === 'en' ? 'Less quality, max compression' : 'Kualitas standar, kompresi maksimal',
+                  badge: '~70%',
+                },
+                {
+                  id: 'less',
+                  title: lang === 'en' ? 'Less Compression' : 'Kompresi Ringan',
+                  desc: lang === 'en' ? 'High quality, low compression' : 'Kualitas tinggi, kompresi ringan',
+                  badge: '~20%',
+                },
               ].map((item) => (
                 <div
                   key={item.id}
@@ -186,10 +206,27 @@ export const CompressPdfWorkspace: React.FC<CompressPdfWorkspaceProps> = ({ onBa
                       : 'border-slate-200 dark:border-slate-800 hover:border-slate-300'
                   }`}
                 >
-                  <h4 className="text-xs font-black text-slate-900 dark:text-white">{item.title}</h4>
-                  <p className="text-[11px] text-slate-500 font-medium mt-1">{item.desc}</p>
+                  <div className="flex items-center justify-between gap-1">
+                    <h4 className="text-xs font-black text-slate-900 dark:text-white">{item.title}</h4>
+                    <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded-md shrink-0 ${
+                      level === item.id
+                        ? 'bg-blue-600 text-white'
+                        : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400'
+                    }`}>
+                      {item.badge}
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-slate-500 font-medium mt-1.5 leading-snug">{item.desc}</p>
                 </div>
               ))}
+            </div>
+
+            {/* Target Size Estimate Banner */}
+            <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 flex items-center justify-between text-xs font-bold text-slate-700 dark:text-slate-300">
+              <span>{lang === 'en' ? 'Estimated Target Size:' : 'Perkiraan Ukuran Hasil:'}</span>
+              <span className="font-extrabold text-blue-600 dark:text-sky-400">
+                {formatFileSize(file.size)} ➔ <span className="underline font-black">{formatFileSize(Math.max(500, file.size * (1 - (level === 'recommended' ? 0.5 : level === 'extreme' ? 0.7 : 0.2))))}</span> ({level === 'recommended' ? '-50%' : level === 'extreme' ? '-70%' : '-20%'})
+              </span>
             </div>
           </div>
 
