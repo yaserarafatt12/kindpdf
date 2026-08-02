@@ -24,6 +24,8 @@ import {
 import SuccessDownloadScreen from './SuccessDownloadScreen';
 import { ViewMode } from '@/components/Header';
 
+import { isEncrypted } from '@pdfsmaller/pdf-decrypt';
+
 interface UnlockPdfWorkspaceProps {
   onBack: () => void;
   onSelectTool?: (toolId: ViewMode) => void;
@@ -63,6 +65,23 @@ export const UnlockPdfWorkspace: React.FC<UnlockPdfWorkspaceProps> = ({
         message: validation.error.message,
       });
       return;
+    }
+
+    try {
+      const buffer = await targetFile.arrayBuffer();
+      const check = await isEncrypted(new Uint8Array(buffer));
+      if (!check.encrypted) {
+        setErrorToast({
+          title: lang === 'en' ? 'PDF Not Encrypted' : 'PDF Tidak Terenkripsi',
+          message:
+            lang === 'en'
+              ? 'This PDF file is not password-protected. No unlock required.'
+              : 'Dokumen PDF ini tidak memiliki kata sandi / proteksi enkripsi. Tidak perlu dibuka.',
+        });
+        return;
+      }
+    } catch {
+      // If error checking encryption, let standard handler catch it
     }
 
     setFile(targetFile);
