@@ -68,8 +68,8 @@ export const tools: ToolDefinition[] = [
   {
     id: 'organize',
     route: 'organize',
-    title: 'Rotate PDF',
-    description: 'Rotate PDF pages (90°, 180°, 270°), reorder, or delete pages visually.',
+    title: 'Organize PDF',
+    description: 'Sort, reorder, rotate, or delete PDF pages visually.',
     category: 'organize',
     status: 'stable',
     processingMode: 'Client-side browser processing',

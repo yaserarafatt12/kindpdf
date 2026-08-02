@@ -230,7 +230,7 @@ export const OrganizePagesWorkspace: React.FC<OrganizePagesWorkspaceProps> = ({
         <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900 dark:text-white">
           {mode === 'remove'
             ? lang === 'en' ? 'Remove PDF Pages' : 'Hapus Halaman PDF'
-            : lang === 'en' ? 'Organize & Rotate Pages' : 'Atur & Putar Halaman'}
+            : lang === 'en' ? 'Organize PDF Pages' : 'Atur & Urutkan Halaman PDF'}
         </h2>
         <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 font-medium leading-relaxed">
           {lang === 'en'
