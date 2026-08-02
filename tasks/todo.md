@@ -16,7 +16,13 @@
 - [x] **Task 2.1**: Implement Images to PDF engine (`imagesToPdf.ts`) converting JPG, PNG, WEBP with page size (A4/Fit), orientation, margin controls & Vitest tests (2 unit tests passing).
 - [x] **Task 2.2**: Implement PDF to Images engine (`pdfToImages.ts`) rendering PDF pages to high-DPI PNG/JPG images and exporting as ZIP & Vitest tests (1 unit test passing).
 
-## Checkpoint 2: Sprint 2 Verification
-- [x] Run `npm test` and verify 100% unit tests pass (17/17 passed).
+## Sprint 3: PDF Security & Annotations Suite (100% COMPLETE)
+- [x] **Task 3.1**: Implement Protect PDF engine (`pdfSecurity.ts`) with user password encryption & UI workspace.
+- [x] **Task 3.2**: Implement Unlock PDF engine (`pdfSecurity.ts`) with password decryption & UI workspace.
+- [x] **Task 3.3**: Implement Add Page Numbers engine (`pdfAnnotations.ts`) with 6 alignment positions, format, font size controls & UI workspace.
+- [x] **Task 3.4**: Implement Add Watermark engine (`pdfAnnotations.ts`) with text overlay, opacity, rotation angle, font size controls & UI workspace.
+
+## Checkpoint 3: Sprint 3 Verification
+- [x] Run `npm test` and verify 100% unit tests pass (21/21 passed).
 - [x] Run `npm run build` and verify clean static generation.
-- [x] Sprint 2 (Convert to/from PDF & Image Tools) 100% COMPLETE!
+- [x] Sprint 3 (PDF Security & Annotations Suite) 100% COMPLETE!
