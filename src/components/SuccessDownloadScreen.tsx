@@ -51,11 +51,11 @@ export const SuccessDownloadScreen: React.FC<SuccessDownloadScreenProps> = ({
     watermark: 11,     // Tanda Air
   };
 
-  // Pull REAL Popular Tools sorted strictly by official iLovePDF usage ranking (Top 5 only)
+  // Pull REAL Popular Tools sorted strictly by official iLovePDF usage ranking (Top 4 only for balanced 2x2 grid)
   const realPopularTools: ToolDefinition[] = tools
     .filter((item) => item.popular && item.route !== 'merge')
     .sort((a, b) => (POPULAR_RANK[a.id] || 99) - (POPULAR_RANK[b.id] || 99))
-    .slice(0, 5);
+    .slice(0, 4);
 
   const getExtension = (name: string): string => {
     const match = name.match(/\.[a-zA-Z0-9]+$/);
@@ -85,7 +85,7 @@ export const SuccessDownloadScreen: React.FC<SuccessDownloadScreenProps> = ({
   };
 
   return (
-    <div className="max-w-3xl mx-auto py-4 sm:py-6 space-y-6 sm:space-y-8 animate-fade-in px-2 sm:px-0">
+    <div className="max-w-3xl mx-auto py-4 sm:py-6 space-y-8 sm:space-y-12 animate-fade-in px-2 sm:px-0">
       {/* Top Bar Navigation */}
       <div className="flex items-center justify-between">
         <button
@@ -99,7 +99,7 @@ export const SuccessDownloadScreen: React.FC<SuccessDownloadScreenProps> = ({
       </div>
 
       {/* Hero Success Download Area */}
-      <div className="text-center space-y-4 py-2 sm:py-4">
+      <div className="text-center space-y-4 py-4 sm:py-8">
         <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900 dark:text-white">
           {title}
         </h2>
@@ -115,11 +115,11 @@ export const SuccessDownloadScreen: React.FC<SuccessDownloadScreenProps> = ({
         )}
 
         {/* Ideal Compact Download Button */}
-        <div className="pt-2 max-w-md mx-auto space-y-4">
+        <div className="pt-3 max-w-md mx-auto space-y-4">
           <button
             type="button"
             onClick={() => onDownload(fileName)}
-            className="w-full py-3.5 sm:py-4 px-6 sm:px-8 rounded-2xl bg-gradient-to-r from-blue-600 via-sky-600 to-blue-700 hover:from-blue-500 hover:to-sky-500 text-white font-black text-sm sm:text-base flex items-center justify-center gap-3 shadow-xl shadow-blue-600/30 hover:shadow-blue-500/40 scale-[1.01] hover:scale-[1.02] transition-all duration-200 btn-press-effect"
+            className="w-full py-4 sm:py-4.5 px-6 sm:px-8 rounded-2xl bg-gradient-to-r from-blue-600 via-sky-600 to-blue-700 hover:from-blue-500 hover:to-sky-500 text-white font-black text-base flex items-center justify-center gap-3 shadow-xl shadow-blue-600/30 hover:shadow-blue-500/40 scale-[1.01] hover:scale-[1.02] transition-all duration-200 btn-press-effect"
           >
             <Download className="w-5 h-5 stroke-[2.5] shrink-0" />
             <span>
@@ -128,7 +128,7 @@ export const SuccessDownloadScreen: React.FC<SuccessDownloadScreenProps> = ({
           </button>
 
           {/* Output Filename (Truncated text + ALWAYS Visible (Edit name) link) */}
-          <div className="px-2">
+          <div className="px-2 pt-1">
             {isEditing ? (
               <form onSubmit={handleSaveRename} className="flex items-center gap-2 max-w-md mx-auto">
                 <input
@@ -163,10 +163,10 @@ export const SuccessDownloadScreen: React.FC<SuccessDownloadScreenProps> = ({
         </div>
       </div>
 
-      {/* "Continue to..." Recommendations Box (REAL Popular Tools from Manifest) */}
-      <div className="p-5 sm:p-7 rounded-3xl bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
-        <div className="flex items-center justify-between">
-          <h3 className="text-sm font-black text-slate-900 dark:text-white">
+      {/* "Continue to..." Recommendations Box (Pushed down with generous spacing & 2x2 grid) */}
+      <div className="mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-slate-200/80 dark:border-slate-800/80 space-y-4">
+        <div className="flex items-center justify-between px-1">
+          <h3 className="text-xs sm:text-sm font-black text-slate-900 dark:text-white tracking-wide">
             {lang === 'en' ? 'Continue to...' : 'Lanjutkan ke alur kerja populer...'}
           </h3>
           <span className="text-[10px] font-extrabold text-blue-600 dark:text-sky-400 uppercase tracking-wider">
@@ -180,13 +180,13 @@ export const SuccessDownloadScreen: React.FC<SuccessDownloadScreenProps> = ({
               key={item.id}
               type="button"
               onClick={() => onSelectTool(item.route)}
-              className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border-2 border-slate-200/80 dark:border-slate-700/80 hover:border-blue-500 dark:hover:border-sky-500 hover:bg-blue-50/50 dark:hover:bg-slate-800 transition-all flex items-center justify-between text-left group btn-press-effect"
+              className="p-3.5 sm:p-4 rounded-2xl bg-white dark:bg-slate-900 border-2 border-slate-200/90 dark:border-slate-800 hover:border-blue-500 dark:hover:border-sky-500 hover:bg-blue-50/40 dark:hover:bg-slate-800/60 transition-all flex items-center justify-between text-left group btn-press-effect shadow-xs"
             >
-              <div className="flex items-center gap-3.5 min-w-0">
+              <div className="flex items-center gap-3 min-w-0 flex-1">
                 <div className={`p-2.5 rounded-xl ${getIconBg(item.id)} shrink-0 group-hover:scale-105 transition-transform shadow-xs`}>
                   {getToolIcon(item.id)}
                 </div>
-                <div className="min-w-0">
+                <div className="min-w-0 flex-1">
                   <h4 className="text-xs sm:text-sm font-black text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-sky-400 truncate">
                     {item.title}
                   </h4>
