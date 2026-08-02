@@ -28,10 +28,25 @@ export const SuccessDownloadScreen: React.FC<SuccessDownloadScreenProps> = ({
   const [fileName, setFileName] = React.useState(downloadFileName);
   const [isEditing, setIsEditing] = React.useState(false);
 
-  // Pull REAL Popular Tools directly from Single Source of Truth Manifest (manifest.ts)
-  const realPopularTools: ToolDefinition[] = tools.filter(
-    (item) => item.popular && item.route !== 'merge'
-  );
+  // Official iLovePDF Popular Hierarchy Rank
+  const POPULAR_RANK: Record<string, number> = {
+    compress: 1,       // Kompres PDF (#1 Most Used)
+    'pdf-to-word': 2,  // PDF ke Word (#2 Most Used)
+    split: 3,          // Pisahkan PDF (#3 Most Used)
+    'word-to-pdf': 4,  // Word ke PDF
+    'image-to-pdf': 5, // JPG ke PDF
+    'pdf-to-image': 6, // PDF ke JPG
+    organize: 7,       // Atur / Putar PDF
+    protect: 8,        // Lindungi PDF
+    unlock: 9,         // Buka Kunci PDF
+    'page-numbers': 10,// Nomor Halaman
+    watermark: 11,     // Tanda Air
+  };
+
+  // Pull REAL Popular Tools sorted strictly by official iLovePDF usage ranking
+  const realPopularTools: ToolDefinition[] = tools
+    .filter((item) => item.popular && item.route !== 'merge')
+    .sort((a, b) => (POPULAR_RANK[a.id] || 99) - (POPULAR_RANK[b.id] || 99));
 
   const handleSaveRename = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
