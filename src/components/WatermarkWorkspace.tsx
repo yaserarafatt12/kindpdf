@@ -7,6 +7,7 @@ import { addWatermarkToPdf } from '@/lib/pdf/pdfAnnotations';
 import { downloadBlob } from '@/lib/files/downloadBlob';
 import { formatFileSize } from '@/lib/files/formatFileSize';
 import ProcessingProgress from './ProcessingProgress';
+import FileDropzone from './FileDropzone';
 import {
   Stamp,
   UploadCloud,
@@ -148,29 +149,7 @@ export const WatermarkWorkspace: React.FC<WatermarkWorkspaceProps> = ({ onBack, 
 
       {/* Upload CTA or Workspace */}
       {!file ? (
-        <div
-          onClick={() => {
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = '.pdf';
-            input.onchange = (e: any) => {
-              if (e.target.files) handleFileChange(Array.from(e.target.files));
-            };
-            input.click();
-          }}
-          className="w-full max-w-xl mx-auto rounded-3xl border-2 border-dashed border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 p-8 sm:p-12 text-center flex flex-col items-center justify-center gap-5 hover:border-blue-600 transition-all cursor-pointer shadow-sm"
-        >
-          <button
-            type="button"
-            className="px-8 py-4 rounded-2xl bg-gradient-to-r from-violet-600 to-purple-500 hover:from-violet-500 hover:to-purple-400 text-white font-black text-base sm:text-lg shadow-lg shadow-violet-500/30 transition-all btn-press-effect flex items-center justify-center gap-2.5"
-          >
-            <UploadCloud className="w-5 h-5 sm:w-6 sm:h-6" />
-            <span>{t.dropzoneClick}</span>
-          </button>
-          <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
-            {t.dropzoneTitle}
-          </p>
-        </div>
+        <FileDropzone onFilesSelected={handleFileChange} disabled={isProcessing} t={t} />
       ) : (
         <div className="space-y-6">
           {/* Active File Summary Box */}
