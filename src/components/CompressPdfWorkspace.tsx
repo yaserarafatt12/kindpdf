@@ -1,13 +1,12 @@
 'use client';
 
 import React, { useState } from 'react';
-import { ArrowLeft, Minimize2, ShieldCheck, ArrowRight, AlertCircle, X, CheckCircle2 } from 'lucide-react';
+import { ArrowLeft, Minimize2, ArrowRight, AlertCircle, X, CheckCircle2, Download, Edit2, RefreshCw } from 'lucide-react';
 import { Language, TranslationDictionary } from '@/lib/i18n/translations';
 import { validatePdfFile } from '@/lib/files/validateFile';
 import { downloadBlob } from '@/lib/files/downloadBlob';
 import { formatFileSize } from '@/lib/files/formatFileSize';
 import FileDropzone from './FileDropzone';
-import PrivacyNotice from './PrivacyNotice';
 import { compressPdf, CompressionLevel, CompressResult } from '@/lib/pdf/compressPdf';
 import { HumanError } from '@/lib/errors/messages';
 
@@ -23,6 +22,8 @@ export const CompressPdfWorkspace: React.FC<CompressPdfWorkspaceProps> = ({ onBa
   const [isProcessing, setIsProcessing] = useState(false);
   const [result, setResult] = useState<CompressResult | null>(null);
   const [errorToast, setErrorToast] = useState<HumanError | null>(null);
+  const [customName, setCustomName] = useState<string>('');
+  const [isEditingName, setIsEditingName] = useState(false);
 
   const handleFileSelected = async (files: File[]) => {
     setErrorToast(null);
@@ -37,6 +38,8 @@ export const CompressPdfWorkspace: React.FC<CompressPdfWorkspaceProps> = ({ onBa
     }
 
     setFile(selected);
+    const baseName = selected.name.replace(/\.pdf$/i, '');
+    setCustomName(`${baseName}_Compressed.pdf`);
   };
 
   const handleCompress = async () => {
@@ -49,9 +52,9 @@ export const CompressPdfWorkspace: React.FC<CompressPdfWorkspaceProps> = ({ onBa
       const res = await compressPdf(file, level);
       setResult(res);
 
+      const downloadName = customName.trim() ? customName.trim() : `${file.name.replace(/\.pdf$/i, '')}_Compressed.pdf`;
       const blob = new Blob([res.pdfBytes.buffer as ArrayBuffer], { type: 'application/pdf' });
-      const baseName = file.name.replace(/\.pdf$/i, '');
-      downloadBlob(blob, `Kindpdf_${baseName}_Compressed.pdf`);
+      downloadBlob(blob, downloadName.endsWith('.pdf') ? downloadName : `${downloadName}.pdf`);
     } catch (err: any) {
       setErrorToast({
         type: 'CORRUPTED',
@@ -61,6 +64,24 @@ export const CompressPdfWorkspace: React.FC<CompressPdfWorkspaceProps> = ({ onBa
     } finally {
       setIsProcessing(false);
     }
+  };
+
+  const getEstimatedPercent = (lvl: CompressionLevel) => {
+    switch (lvl) {
+      case 'extreme':
+        return 70;
+      case 'less':
+        return 20;
+      case 'recommended':
+      default:
+        return 50;
+    }
+  };
+
+  const getEstimatedSize = (originalSize: number, lvl: CompressionLevel) => {
+    const pct = getEstimatedPercent(lvl);
+    const est = originalSize * (1 - pct / 100);
+    return formatFileSize(Math.max(500, est));
   };
 
   return (
@@ -109,10 +130,13 @@ export const CompressPdfWorkspace: React.FC<CompressPdfWorkspaceProps> = ({ onBa
       {/* Compression Options */}
       {file && (
         <div className="space-y-5">
+          {/* File Selected Card */}
           <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border-2 border-slate-300 dark:border-slate-800 shadow-sm flex items-center justify-between">
-            <div>
+            <div className="flex-1 min-w-0 pr-4">
               <p className="text-sm font-black text-slate-900 dark:text-white truncate">{file.name}</p>
-              <p className="text-xs text-slate-500 font-medium">{formatFileSize(file.size)}</p>
+              <p className="text-xs text-slate-500 font-semibold mt-0.5">
+                {lang === 'en' ? 'Original Size:' : 'Ukuran Asli:'} <span className="font-extrabold text-slate-700 dark:text-slate-300">{formatFileSize(file.size)}</span>
+              </p>
             </div>
             <button
               type="button"
@@ -120,61 +144,114 @@ export const CompressPdfWorkspace: React.FC<CompressPdfWorkspaceProps> = ({ onBa
                 setFile(null);
                 setResult(null);
               }}
-              className="text-xs font-extrabold text-rose-600 hover:text-rose-700 px-3 py-1.5 rounded-xl border border-rose-200 dark:border-rose-800 hover:bg-rose-50 dark:hover:bg-rose-950/50 btn-press-effect"
+              className="text-xs font-extrabold text-rose-600 hover:text-rose-700 px-3 py-1.5 rounded-xl border border-rose-200 dark:border-rose-800 hover:bg-rose-50 dark:hover:bg-rose-950/50 btn-press-effect shrink-0"
             >
               {lang === 'en' ? 'Change File' : 'Ganti File'}
             </button>
           </div>
 
+          {/* Level Selector */}
           <div className="p-5 rounded-2xl bg-white dark:bg-slate-900 border-2 border-slate-300 dark:border-slate-800 shadow-sm space-y-4">
-            <label className="text-xs font-extrabold text-slate-700 dark:text-slate-300">
-              {lang === 'en' ? 'Compression Level' : 'Tingkat Kompresi'}
-            </label>
+            <div className="flex items-center justify-between">
+              <label className="text-xs font-extrabold text-slate-700 dark:text-slate-300">
+                {lang === 'en' ? 'Compression Level' : 'Tingkat Kompresi'}
+              </label>
+              <span className="text-[11px] font-extrabold text-teal-600 dark:text-teal-400 bg-teal-50 dark:bg-teal-950/80 px-2.5 py-0.5 rounded-full border border-teal-200 dark:border-teal-900">
+                Est. ~{getEstimatedPercent(level)}% Saved
+              </span>
+            </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               {[
-                { id: 'recommended', title: lang === 'en' ? 'Recommended' : 'Rekomendasi', desc: lang === 'en' ? 'Good quality, high compression' : 'Kualitas bagus, kompresi tinggi' },
-                { id: 'extreme', title: lang === 'en' ? 'Extreme' : 'Ekstrem', desc: lang === 'en' ? 'Less quality, max compression' : 'Kualitas standar, kompresi maksimal' },
-                { id: 'less', title: lang === 'en' ? 'Less Compression' : 'Kompresi Ringan', desc: lang === 'en' ? 'High quality, less compression' : 'Kualitas tinggi, kompresi ringan' },
+                { id: 'recommended', title: lang === 'en' ? 'Recommended' : 'Rekomendasi', desc: lang === 'en' ? 'Good quality, high compression' : 'Kualitas bagus, kompresi tinggi', badge: '~50%' },
+                { id: 'extreme', title: lang === 'en' ? 'Extreme' : 'Ekstrem', desc: lang === 'en' ? 'Less quality, max compression' : 'Kualitas standar, kompresi maksimal', badge: '~70%' },
+                { id: 'less', title: lang === 'en' ? 'Less Compression' : 'Kompresi Ringan', desc: lang === 'en' ? 'High quality, less compression' : 'Kualitas tinggi, kompresi ringan', badge: '~20%' },
               ].map((item) => (
                 <div
                   key={item.id}
                   onClick={() => setLevel(item.id as CompressionLevel)}
-                  className={`p-4 rounded-xl border-2 cursor-pointer transition-all ${
+                  className={`p-4 rounded-xl border-2 cursor-pointer transition-all relative ${
                     level === item.id
-                      ? 'border-blue-600 bg-blue-50/50 dark:bg-blue-950/40'
+                      ? 'border-blue-600 bg-blue-50/50 dark:bg-blue-950/40 shadow-sm'
                       : 'border-slate-200 dark:border-slate-800 hover:border-slate-300'
                   }`}
                 >
-                  <h4 className="text-xs font-black text-slate-900 dark:text-white">{item.title}</h4>
-                  <p className="text-[11px] text-slate-500 font-medium mt-1">{item.desc}</p>
+                  <div className="flex items-center justify-between">
+                    <h4 className="text-xs font-black text-slate-900 dark:text-white">{item.title}</h4>
+                    <span className={`text-[10px] font-black px-2 py-0.5 rounded-md ${level === item.id ? 'bg-blue-600 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400'}`}>
+                      {item.badge}
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-slate-500 font-medium mt-1.5">{item.desc}</p>
                 </div>
               ))}
             </div>
+
+            {/* Estimated Target Size Banner */}
+            <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 flex items-center justify-between text-xs font-bold text-slate-700 dark:text-slate-300">
+              <span>{lang === 'en' ? 'Estimated Target Size:' : 'Perkiraan Ukuran Hasil:'}</span>
+              <span className="font-extrabold text-blue-600 dark:text-sky-400">
+                {formatFileSize(file.size)} → <span className="underline decoration-blue-500 font-black">{getEstimatedSize(file.size, level)}</span> (-{getEstimatedPercent(level)}%)
+              </span>
+            </div>
           </div>
 
-          {/* Result Stats */}
+          {/* Actual Result Stats Banner after Compression */}
           {result && (
-            <div className="p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 flex items-center justify-between text-xs text-emerald-900 dark:text-emerald-200 font-extrabold animate-fade-in">
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
-                <span>
-                  {formatFileSize(result.originalSize)} → {formatFileSize(result.compressedSize)}
+            <div className="p-5 rounded-2xl bg-emerald-50 dark:bg-emerald-950/60 border-2 border-emerald-300 dark:border-emerald-800 space-y-3 animate-fade-in shadow-md">
+              <div className="flex items-center justify-between flex-wrap gap-2">
+                <div className="flex items-center gap-2 text-emerald-900 dark:text-emerald-200 font-black text-sm sm:text-base">
+                  <CheckCircle2 className="w-6 h-6 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                  <span>{lang === 'en' ? 'Compression Successful!' : 'Kompresi Berhasil!'}</span>
+                </div>
+
+                <div className="px-3 py-1 rounded-full bg-emerald-600 text-white font-black text-xs sm:text-sm shadow-sm">
+                  -{result.savedPercentage}% {lang === 'en' ? 'Smaller' : 'Lebih Kecil'}
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between text-xs text-emerald-800 dark:text-emerald-300 font-extrabold pt-1 border-t border-emerald-200 dark:border-emerald-900">
+                <span>{lang === 'en' ? 'Size Comparison:' : 'Perbandingan Ukuran:'}</span>
+                <span className="text-sm font-black">
+                  {formatFileSize(result.originalSize)} ➔ <span className="text-emerald-700 dark:text-emerald-300 underline">{formatFileSize(result.compressedSize)}</span>
                 </span>
               </div>
-              <span className="px-3 py-1 rounded-full bg-emerald-600 text-white font-black">
-                -{result.savedPercentage}% {lang === 'en' ? 'Smaller' : 'Lebih Kecil'}
-              </span>
             </div>
           )}
 
-          {/* CTA Bar */}
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-2 text-xs font-semibold text-slate-600 dark:text-slate-400">
-              <ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
-              <span>{lang === 'en' ? '100% compressed locally in your browser.' : '100% dikompres secara lokal di browser.'}</span>
+          {/* Rename Output File Section */}
+          <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border-2 border-slate-300 dark:border-slate-800 shadow-sm flex items-center justify-between gap-3">
+            <span className="text-xs font-extrabold text-slate-700 dark:text-slate-300 shrink-0">
+              {lang === 'en' ? 'Save as:' : 'Simpan sebagai:'}
+            </span>
+            <div className="flex-1 min-w-0 flex items-center gap-2">
+              {isEditingName ? (
+                <input
+                  type="text"
+                  value={customName}
+                  onChange={(e) => setCustomName(e.target.value)}
+                  onBlur={() => setIsEditingName(false)}
+                  onKeyDown={(e) => e.key === 'Enter' && setIsEditingName(false)}
+                  autoFocus
+                  className="w-full text-xs font-black px-3 py-1.5 rounded-xl border-2 border-blue-500 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white outline-none"
+                />
+              ) : (
+                <div className="flex items-center gap-2 truncate">
+                  <span className="text-xs font-black text-slate-900 dark:text-white truncate">{customName}</span>
+                  <button
+                    type="button"
+                    onClick={() => setIsEditingName(true)}
+                    className="text-[11px] font-extrabold text-blue-600 dark:text-sky-400 hover:underline shrink-0"
+                  >
+                    (Edit name)
+                  </button>
+                </div>
+              )}
             </div>
+          </div>
 
+          {/* Action Buttons */}
+          <div className="flex flex-col sm:flex-row items-center justify-end gap-3 pt-2">
             <button
               type="button"
               onClick={handleCompress}
@@ -185,14 +262,19 @@ export const CompressPdfWorkspace: React.FC<CompressPdfWorkspaceProps> = ({ onBa
                   : 'bg-slate-300 dark:bg-slate-800 text-slate-500 cursor-not-allowed shadow-none'
               }`}
             >
-              <Minimize2 className="w-4 h-4" />
-              <span>{isProcessing ? (lang === 'en' ? 'Compressing...' : 'Mengompres...') : (lang === 'en' ? 'Compress & Download' : 'Kompres & Unduh')}</span>
+              {result ? <Download className="w-4 h-4" /> : <Minimize2 className="w-4 h-4" />}
+              <span>
+                {isProcessing
+                  ? (lang === 'en' ? 'Compressing...' : 'Mengompres...')
+                  : result
+                  ? (lang === 'en' ? 'Download Compressed PDF' : 'Unduh PDF Terkompresi')
+                  : (lang === 'en' ? 'Compress & Download' : 'Kompres & Unduh')}
+              </span>
               {!isProcessing && <ArrowRight className="w-4 h-4 ml-1" />}
             </button>
           </div>
         </div>
       )}
-
     </div>
   );
 };
