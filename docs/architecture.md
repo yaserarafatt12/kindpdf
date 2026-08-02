@@ -1,14 +1,14 @@
-# System Architecture Specification — LocalPDF
+# System Architecture Specification - Kindpdf
 
-**Project Name:** LocalPDF  
-**Tagline:** Your documents never leave your device.  
-**Architecture Status:** Approved  
+**Project Name:** Kindpdf  
+**Document Version:** 1.0.0  
+**Last Updated:** 2026-08-02  
 
 ---
 
-## 1. High-Level Architecture Overview
+## 1. High-Level System Overview
 
-LocalPDF operates as a **100% In-Browser Local-First Web Application** using Next.js 14 App Router, TypeScript, React, and Tailwind CSS. Document parsing and modification are handled by two core libraries:
+Kindpdf operates as a **100% In-Browser Local-First Web Application** using Next.js 14 App Router, TypeScript, React, and Tailwind CSS. Document parsing and modification are handled by two core libraries:
 - **`PDF.js` (Mozilla):** Used for rendering PDF page thumbnails, text layer extraction, and visual page previews inside the browser canvas.
 - **`pdf-lib` (Hopding):** Used for low-level PDF manipulation, page merging, page splitting, rotation, and generating output PDF byte buffers.
 - **Web Workers API:** Offloads heavy ArrayBuffer parsing and rendering computations off the main UI thread to prevent browser freezing during large file operations.

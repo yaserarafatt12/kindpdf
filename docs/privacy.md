@@ -1,15 +1,15 @@
-# Privacy Policy & Zero-Server Security Guarantee — LocalPDF
+# Privacy Policy & Zero-Server Security Guarantee — Kindpdf
 
-**Project Name:** LocalPDF  
+**Project Name:** Kindpdf  
 **Tagline:** Your documents never leave your device.  
-**Brand Credit:** LocalPDF by edsheero  
+**Brand Credit:** Kindpdf by Yaser Arafat  
 **Effective Date:** 2026-08-01  
 
 ---
 
-## 1. Zero-Server Processing Principle
+## 1. Zero-Server Processing Architecture
 
-LocalPDF is engineered from the ground up on a **100% In-Browser Execution** model. When you use any tool on LocalPDF (Merge, Split, Organize, Extract, Images to PDF), your documents are loaded into your device's RAM and processed locally using JavaScript Web Workers.
+Kindpdf is engineered from the ground up on a **100% In-Browser Execution** model. When you use any tool on Kindpdf (Merge, Split, Organize, Extract, Images to PDF), your documents are loaded into your device's RAM and processed locally using JavaScript Web Workers.
 
 - **Zero Cloud Uploads:** Your files are never sent over the internet to any server, database, or third-party cloud service.
 - **Zero Document Retention:** Once you close or refresh the page, all loaded file buffers are immediately cleared from your browser's RAM.

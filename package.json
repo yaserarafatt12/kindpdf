@@ -1,5 +1,5 @@
 {
-  "name": "localpdf",
+  "name": "kindpdf",
   "version": "1.0.0",
   "private": true,
   "description": "Privacy-first PDF tools that process documents directly in your browser.",

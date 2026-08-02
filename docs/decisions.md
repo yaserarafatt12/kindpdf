@@ -1,6 +1,6 @@
-# Architectural Decision Records (ADR) — LocalPDF
+# Architectural Decision Records (ADR) — Kindpdf
 
-**Project Name:** LocalPDF  
+**Project Name:** Kindpdf  
 **Tagline:** Your documents never leave your device.  
 
 ---
