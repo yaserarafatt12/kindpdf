@@ -181,7 +181,7 @@ export const OrganizePagesWorkspace: React.FC<OrganizePagesWorkspaceProps> = ({
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6 flex-1 flex flex-col justify-between w-full">
+    <div className="max-w-4xl mx-auto space-y-6">
       {/* Back Button */}
       <button
         type="button"

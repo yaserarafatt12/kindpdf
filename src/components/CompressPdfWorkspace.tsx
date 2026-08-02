@@ -64,7 +64,7 @@ export const CompressPdfWorkspace: React.FC<CompressPdfWorkspaceProps> = ({ onBa
   };
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6 flex-1 flex flex-col justify-between w-full">
+    <div className="max-w-3xl mx-auto space-y-6">
       {/* Back Button */}
       <button
         type="button"
