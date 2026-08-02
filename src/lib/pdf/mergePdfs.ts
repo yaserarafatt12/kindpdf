@@ -10,10 +10,11 @@ export interface MergeProgressCallback {
  */
 export async function mergePdfFiles(
   files: File[],
-  onProgress?: MergeProgressCallback
+  onProgress?: MergeProgressCallback,
+  lang: 'en' | 'id' = 'en'
 ): Promise<Uint8Array> {
   if (files.length < 2) {
-    throw new Error('Minimal 2 dokumen PDF diperlukan untuk digabungkan.');
+    throw new Error(lang === 'en' ? 'At least 2 PDF documents are required to merge.' : 'Minimal 2 dokumen PDF diperlukan untuk digabungkan.');
   }
 
   // Create a new merged PDF document
@@ -23,7 +24,11 @@ export async function mergePdfFiles(
   for (let i = 0; i < totalFiles; i++) {
     const file = files[i];
     if (onProgress) {
-      onProgress(i + 1, totalFiles, `Membaca & menggabungkan berkas ${i + 1} dari ${totalFiles}: ${file.name}`);
+      const msg =
+        lang === 'en'
+          ? `Reading & merging file ${i + 1} of ${totalFiles}: ${file.name}`
+          : `Membaca & menggabungkan berkas ${i + 1} dari ${totalFiles}: ${file.name}`;
+      onProgress(i + 1, totalFiles, msg);
     }
 
     const arrayBuffer = await file.arrayBuffer();
@@ -36,7 +41,9 @@ export async function mergePdfFiles(
   }
 
   if (onProgress) {
-    onProgress(totalFiles, totalFiles, 'Finalisasi penyusunan dokumen PDF...');
+    const finalMsg =
+      lang === 'en' ? 'Finalizing PDF document merge...' : 'Finalisasi penyusunan dokumen PDF...';
+    onProgress(totalFiles, totalFiles, finalMsg);
   }
 
   const mergedBytes = await mergedPdf.save();

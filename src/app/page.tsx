@@ -28,6 +28,7 @@ import PdfToPdfAWorkspace from '@/components/PdfToPdfAWorkspace';
 import WordToPdfWorkspace from '@/components/WordToPdfWorkspace';
 import PdfToWordWorkspace from '@/components/PdfToWordWorkspace';
 import OcrPdfWorkspace from '@/components/OcrPdfWorkspace';
+import SuccessDownloadScreen from '@/components/SuccessDownloadScreen';
 
 import { validatePdfFile } from '@/lib/files/validateFile';
 import { mergePdfFiles } from '@/lib/pdf/mergePdfs';
@@ -68,6 +69,11 @@ export default function Home() {
   const [currentStep, setCurrentStep] = useState(0);
   const [totalSteps, setTotalSteps] = useState(0);
   const [errorToast, setErrorToast] = useState<HumanError | null>(null);
+  const [completedResult, setCompletedResult] = useState<{
+    blob: Blob;
+    downloadName: string;
+    title: string;
+  } | null>(null);
 
   // Client-side initialization for browser language & theme
   useEffect(() => {
@@ -123,6 +129,7 @@ export default function Home() {
   const handleClearAll = () => {
     setFiles([]);
     setErrorToast(null);
+    setCompletedResult(null);
   };
 
   // Move file up in queue
@@ -171,22 +178,29 @@ export default function Home() {
 
     try {
       const fileObjects = files.map((f) => f.file);
-      const mergedBytes = await mergePdfFiles(fileObjects, (curr, tot, msg) => {
-        setCurrentStep(curr);
-        setTotalSteps(tot);
-        setProgressMsg(msg);
-      });
+      const mergedBytes = await mergePdfFiles(
+        fileObjects,
+        (curr, tot, msg) => {
+          setCurrentStep(curr);
+          setTotalSteps(tot);
+          setProgressMsg(msg);
+        },
+        lang
+      );
 
-      // Convert Uint8Array to Blob and download
+      // Convert Uint8Array to Blob
       const blob = new Blob([mergedBytes.buffer as ArrayBuffer], { type: 'application/pdf' });
       const firstFileName = files[0].name.replace(/\.pdf$/i, '');
       const downloadName = `Kindpdf_${firstFileName}_Merged.pdf`;
 
-      downloadBlob(blob, downloadName);
-
       setTimeout(() => {
         setIsProcessing(false);
-      }, 500);
+        setCompletedResult({
+          blob,
+          downloadName,
+          title: lang === 'en' ? 'PDFs have been merged!' : 'PDF Anda telah berhasil digabungkan!',
+        });
+      }, 400);
     } catch (err: any) {
       setIsProcessing(false);
       setErrorToast({
@@ -230,8 +244,25 @@ export default function Home() {
         )}
 
         {/* VIEW MODE 2: MERGE PDF WORKSPACE */}
-        {activeView === 'merge' && (
-          <div className="max-w-3xl mx-auto space-y-6">
+        {activeView === 'merge' &&
+          (completedResult ? (
+            <SuccessDownloadScreen
+              title={completedResult.title}
+              downloadFileName={completedResult.downloadName}
+              onDownload={() => downloadBlob(completedResult.blob, completedResult.downloadName)}
+              onStartOver={() => {
+                setCompletedResult(null);
+                setFiles([]);
+              }}
+              onSelectTool={(toolId: ViewMode) => {
+                setCompletedResult(null);
+                setActiveView(toolId);
+              }}
+              t={t}
+              lang={lang}
+            />
+          ) : (
+            <div className="max-w-3xl mx-auto space-y-6">
             {/* Top Toolbar Navigation */}
             <div className="flex items-center justify-between gap-3">
               <button
@@ -369,7 +400,7 @@ export default function Home() {
               </div>
             )}
           </div>
-        )}
+        ))}
 
         {/* VIEW MODE 3: SPLIT PDF WORKSPACE */}
         {activeView === 'split' && (
