@@ -31,7 +31,7 @@ export const ToolGrid: React.FC<ToolGridProps> = ({ onSelectTool, t }) => {
       description: t.mergeHeroSubtitle,
       icon: <FileStack className="w-6 h-6 text-blue-600 dark:text-sky-400" />,
       iconBg: 'bg-blue-50 dark:bg-blue-950/80 border border-blue-200 dark:border-blue-900',
-      badge: t.activeReady,
+      badge: null, // Removed top-right status badge
       isReady: true,
     },
     {
@@ -120,7 +120,7 @@ export const ToolGrid: React.FC<ToolGridProps> = ({ onSelectTool, t }) => {
         </button>
       </div>
 
-      {/* Tool Cards Grid - Sharp & Clear Outlines (border-2 border-slate-300) */}
+      {/* Tool Cards Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
         {filteredTools.map((item) => (
           <div
@@ -134,20 +134,16 @@ export const ToolGrid: React.FC<ToolGridProps> = ({ onSelectTool, t }) => {
                 : 'border-slate-200 dark:border-slate-800/80 opacity-70 cursor-not-allowed shadow-sm'
             }`}
           >
-            {/* Header Icon & Badge */}
+            {/* Header Icon & Optional Badge */}
             <div className="flex items-center justify-between gap-2">
               <div className={`p-3.5 rounded-2xl ${item.iconBg} shadow-sm group-hover:scale-110 transition-transform`}>
                 {item.icon}
               </div>
-              <span
-                className={`px-2.5 py-0.5 rounded-full text-[10px] font-black ${
-                  item.isReady
-                    ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30'
-                    : 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-300 dark:border-slate-700'
-                }`}
-              >
-                {item.badge}
-              </span>
+              {item.badge && (
+                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-300 dark:border-slate-700">
+                  {item.badge}
+                </span>
+              )}
             </div>
 
             {/* Title & Description */}

@@ -43,10 +43,6 @@ export default function Home() {
     setLang(detected);
   }, []);
 
-  const toggleLanguage = () => {
-    setLang((prev) => (prev === 'en' ? 'id' : 'en'));
-  };
-
   const toggleTheme = () => {
     setIsDarkMode((prev) => {
       const next = !prev;
@@ -175,7 +171,7 @@ export default function Home() {
       <Header
         onViewChange={setActiveView}
         lang={lang}
-        onLangToggle={toggleLanguage}
+        onLangChange={setLang}
         t={t}
         isDarkMode={isDarkMode}
         onThemeToggle={toggleTheme}
@@ -186,7 +182,7 @@ export default function Home() {
         {/* VIEW MODE 1: GRID LANDING PAGE */}
         {activeView === 'grid' && (
           <div className="space-y-4">
-            {/* Main Landing Hero - Compact & 2x Smaller */}
+            {/* Main Landing Hero - Compact */}
             <div className="text-center space-y-1.5 py-2 sm:py-4 max-w-2xl mx-auto">
               <h2 className="text-lg sm:text-2xl font-extrabold tracking-tight text-slate-800 dark:text-slate-200 leading-snug">
                 {t.heroTitle}
