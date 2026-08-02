@@ -15,6 +15,9 @@ import ProtectPdfWorkspace from '@/components/ProtectPdfWorkspace';
 import UnlockPdfWorkspace from '@/components/UnlockPdfWorkspace';
 import PageNumbersWorkspace from '@/components/PageNumbersWorkspace';
 import WatermarkWorkspace from '@/components/WatermarkWorkspace';
+import CropPdfWorkspace from '@/components/CropPdfWorkspace';
+import EditPdfWorkspace from '@/components/EditPdfWorkspace';
+import ScanToPdfWorkspace from '@/components/ScanToPdfWorkspace';
 
 import { validatePdfFile } from '@/lib/files/validateFile';
 import { mergePdfFiles } from '@/lib/pdf/mergePdfs';
@@ -371,6 +374,21 @@ export default function Home() {
         {/* VIEW MODE 11: WATERMARK WORKSPACE */}
         {activeView === 'watermark' && (
           <WatermarkWorkspace onBack={() => setActiveView('grid')} t={t} lang={lang} />
+        )}
+
+        {/* VIEW MODE 12: CROP PDF WORKSPACE */}
+        {activeView === 'crop' && (
+          <CropPdfWorkspace onBack={() => setActiveView('grid')} t={t} lang={lang} />
+        )}
+
+        {/* VIEW MODE 13: EDIT PDF WORKSPACE */}
+        {activeView === 'edit-pdf' && (
+          <EditPdfWorkspace onBack={() => setActiveView('grid')} t={t} lang={lang} />
+        )}
+
+        {/* VIEW MODE 14: SCAN TO PDF WORKSPACE */}
+        {activeView === 'scan-to-pdf' && (
+          <ScanToPdfWorkspace onBack={() => setActiveView('grid')} t={t} lang={lang} />
         )}
       </main>
 

@@ -22,7 +22,12 @@
 - [x] **Task 3.3**: Implement Add Page Numbers engine (`pdfAnnotations.ts`) with 6 alignment positions, format, font size controls & UI workspace.
 - [x] **Task 3.4**: Implement Add Watermark engine (`pdfAnnotations.ts`) with text overlay, opacity, rotation angle, font size controls & UI workspace.
 
-## Checkpoint 3: Sprint 3 Verification
-- [x] Run `npm test` and verify 100% unit tests pass (21/21 passed).
-- [x] Run `npm run build` and verify clean static generation.
-- [x] Sprint 3 (PDF Security & Annotations Suite) 100% COMPLETE!
+## Sprint 4: Advanced Local Tools & Optimization (100% COMPLETE)
+- [x] **Task 4.1**: Implement Crop PDF engine (`cropPdf.ts`) with CropBox percentage margins, page selection parsing & UI workspace.
+- [x] **Task 4.2**: Implement Edit PDF Overlay engine (`editPdfOverlay.ts`) with text, rectangle, circle, and line annotations & UI workspace.
+- [x] **Task 4.3**: Implement Scan to PDF engine (`scanToPdf.ts`) with camera capture, grayscale/B&W filters, brightness adjustment & UI workspace.
+
+## Checkpoint 4: Sprint 4 Verification
+- [x] Run `npm test` and verify 100% unit tests pass (25/25 passed).
+- [x] Run `npm run build` and verify clean static page generation.
+- [x] Sprint 4 (Advanced Local Tools Suite) 100% COMPLETE!

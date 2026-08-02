@@ -9,12 +9,24 @@ import {
   ExtractPagesIcon,
   ImageToPdfIcon,
 } from './icons/CustomPdfIcons';
-import { FileImage, Lock, Unlock, Hash, Stamp } from 'lucide-react';
+import { FileImage, Lock, Unlock, Hash, Stamp, Crop, Edit3, Camera } from 'lucide-react';
 import { ViewMode } from './Header';
 
 export type ToolId = Extract<
   ViewMode,
-  'merge' | 'split' | 'organize' | 'extract' | 'image-to-pdf' | 'pdf-to-image' | 'protect' | 'unlock' | 'page-numbers' | 'watermark'
+  | 'merge'
+  | 'split'
+  | 'organize'
+  | 'extract'
+  | 'image-to-pdf'
+  | 'pdf-to-image'
+  | 'protect'
+  | 'unlock'
+  | 'page-numbers'
+  | 'watermark'
+  | 'crop'
+  | 'edit-pdf'
+  | 'scan-to-pdf'
 >;
 
 interface ToolGridProps {
@@ -112,6 +124,33 @@ export const ToolGrid: React.FC<ToolGridProps> = ({ onSelectTool, t }) => {
       icon: <Stamp className="w-6 h-6 text-violet-600 dark:text-violet-400" />,
       iconBg: 'bg-violet-50 dark:bg-violet-950/80 border border-violet-200 dark:border-violet-900',
       badge: null,
+      isReady: true,
+    },
+    {
+      id: 'crop' as ToolId,
+      title: 'Crop PDF',
+      description: 'Trim page margins and resize visible area non-destructively.',
+      icon: <Crop className="w-6 h-6 text-blue-600 dark:text-blue-400" />,
+      iconBg: 'bg-blue-50 dark:bg-blue-950/80 border border-blue-200 dark:border-blue-900',
+      badge: 'NEW',
+      isReady: true,
+    },
+    {
+      id: 'edit-pdf' as ToolId,
+      title: 'Edit PDF',
+      description: 'Add text, shapes, and lines overlay on top of PDF pages.',
+      icon: <Edit3 className="w-6 h-6 text-purple-600 dark:text-purple-400" />,
+      iconBg: 'bg-purple-50 dark:bg-purple-950/80 border border-purple-200 dark:border-purple-900',
+      badge: 'NEW',
+      isReady: true,
+    },
+    {
+      id: 'scan-to-pdf' as ToolId,
+      title: 'Scan to PDF',
+      description: 'Capture documents with webcam/camera and compile into PDF.',
+      icon: <Camera className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />,
+      iconBg: 'bg-emerald-50 dark:bg-emerald-950/80 border border-emerald-200 dark:border-emerald-900',
+      badge: 'NEW',
       isReady: true,
     },
   ];

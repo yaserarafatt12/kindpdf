@@ -31,7 +31,10 @@ export type ViewMode =
   | 'protect'
   | 'unlock'
   | 'page-numbers'
-  | 'watermark';
+  | 'watermark'
+  | 'crop'
+  | 'edit-pdf'
+  | 'scan-to-pdf';
 
 interface HeaderProps {
   onViewChange: (view: ViewMode) => void;
