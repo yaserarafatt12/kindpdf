@@ -25,4 +25,4 @@ In accordance with modern software development transparency standards:
    - AI tools assisted in analyzing build logs and Vitest unit test failure tracebacks.
 
 3. **Core Binary PDF Processing & Security**:
-   - All PDF binary manipulation logic (`pdf-lib`, `pdfjs-dist`, `fflate`), security boundaries (%PDF- magic byte validation, client-side memory lifecycle, URL object revocation), and Vitest unit test suites were rigorously inspected, verified, and validated by the developer.
+   - All PDF binary manipulation logic (`pdf-lib`, `pdfjs-dist`, `fflate`), single source of truth manifest (`manifest.ts`), security boundaries (%PDF- magic byte validation, client-side memory lifecycle, URL object revocation), and Vitest unit test suites were rigorously inspected, verified, and validated by the developer.

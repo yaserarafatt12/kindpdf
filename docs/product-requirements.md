@@ -3,58 +3,59 @@
 **Project Name:** Kindpdf  
 **Version:** 1.0.0 (Production Release)  
 **Date:** August 2, 2026  
-**Status:** Completed (23 Active PDF Tools)  
+**Status:** Completed (23 Active Tools Defined in Manifest)  
 
 ---
 
 ## 1. Executive Summary
 
-Kindpdf is a 100% client-side, privacy-first web application designed to solve the data security risks associated with cloud-based PDF processing. By executing binary document manipulation entirely within browser RAM memory using WebAssembly and client-side JavaScript engines, Kindpdf guarantees zero server uploads and complete document privacy.
+Kindpdf is a client-side, privacy-first web application designed to reduce data security risks associated with cloud-based PDF processing. By executing binary document manipulation within browser RAM memory using WebAssembly and client-side JavaScript engines, Kindpdf processes documents locally without uploading files to remote API servers.
 
 ---
 
-## 2. Product Architecture & 6 Subsystems (23 Tools)
+## 2. Product Architecture & 5 Subsystems (23 Active Tools)
 
-### 2.1 Subsystem 1: Organize PDF Module
-1. **Merge PDF**: Combine multiple PDF files with drag-and-drop reordering, page count calculation, and instant download.
-2. **Split PDF**: Split PDF by custom page range (`1-3,5,8-10`), N pages per file, or extract all pages to ZIP.
-3. **Remove Pages**: Interactive page grid thumbnail view to select and delete specific pages.
-4. **Extract Pages**: Extract selected pages into a new single PDF or separate files in ZIP.
-5. **Organize Pages**: Reorder, rotate (90°, 180°, 270°), or delete pages visually.
-6. **Rotate PDF**: Rotate all or selected pages permanently.
-7. **Crop PDF**: Trim margins using non-destructive CropBox percentage controls.
-8. **Scan to PDF**: Webcam capture with filters (Color, Grayscale, B&W) and brightness adjustment.
+All active tools are registered in a single typed manifest (`src/lib/tools/manifest.ts`):
 
-### 2.2 Subsystem 2: Image & Conversion Suite
-9. **JPG/PNG to PDF**: Convert images to PDF with A4/Fit sizing, orientation, and margin settings.
-10. **PDF to JPG/PNG**: Render PDF pages to high-DPI images exported as ZIP.
-11. **HTML to PDF**: Convert formatted text & HTML notes to PDF documents.
-12. **PDF to PDF/A**: ISO 19005 archival standard metadata conversion (1b, 2b, 3b).
+### 2.1 Subsystem 1: Organize & Pages (5 Tools)
+1. **Merge PDF** (`Stable`, Popular) — Combine multiple PDF files with drag-and-drop page reordering.
+2. **Split PDF** (`Stable`, Popular) — Separate PDF by page range (`1-3,5`), N pages per file, or extract to ZIP.
+3. **Organize Pages** (`Stable`, Popular) — Reorder, rotate (90°, 180°, 270°), or delete pages visually (*Includes Remove Pages and Rotate Pages functions*).
+4. **Extract Pages** (`Stable`) — Extract selected pages into a new PDF or ZIP archive.
+5. **Crop PDF** (`Stable`) — Trim margins using CropBox controls.
 
-### 2.3 Subsystem 3: PDF Security & Annotations
-13. **Protect PDF**: Add AES-256 password encryption to PDF.
-14. **Unlock PDF**: Remove password security restrictions using valid user password.
-15. **Add Page Numbers**: Insert page numbers with 6 alignment positions and custom formats.
-16. **Add Watermark**: Overlay text watermarks with opacity and rotation controls.
-17. **Sign PDF**: Draw signatures on canvas pad or type name with date stamp.
-18. **Redact PDF**: Apply permanent black-out redaction boxes over sensitive regions.
+### 2.2 Subsystem 2: Convert to PDF (4 Tools)
+6. **Images to PDF** (`Stable`, Popular) — Convert JPG, PNG, WEBP images to PDF with custom margins.
+7. **DOCX to PDF** (`Beta`) — Text-first conversion of Word documents (.docx) to PDF.
+8. **HTML / Notes to PDF** (`Beta`) — Convert formatted text and HTML notes into PDF documents.
+9. **Scan to PDF** (`Beta`) — Capture physical documents using webcam/camera with filters.
 
-### 2.4 Subsystem 4: Optimization & Repair Utilities
-19. **Repair PDF**: Re-parse damaged cross-reference tables and re-encode clean streams.
-20. **Compress PDF**: Optimize object streams with 3 compression presets and size delta display.
-21. **Compare PDF**: Side-by-side structural analysis and page count comparison report.
+### 2.3 Subsystem 3: Convert from PDF (4 Tools)
+10. **PDF to Images** (`Stable`, Popular) — Render PDF pages into PNG/JPG images exported as ZIP.
+11. **PDF to DOCX** (`Beta`) — Text extraction from PDF pages into editable `.docx`.
+12. **Extract Text / OCR** (`Experimental`) — Extract embedded text layers and pattern streams directly in browser.
+13. **PDF/A Preparation** (`Experimental`) — Embed ISO 19005 metadata markers for archival.
 
-### 2.5 Subsystem 5: Office & OCR Conversion
-22. **Word to PDF**: Parse `.docx` XML container text streams and export to PDF.
-23. **PDF to Word**: Extract text content from PDF pages into editable `.docx` files.
-24. **OCR PDF**: Client-side text extraction from scanned PDFs with clipboard copy and `.txt` export.
+### 2.4 Subsystem 4: Edit & Annotate (4 Tools)
+14. **Edit PDF** (`Beta`) — Add text, shapes, and lines overlay on top of PDF pages.
+15. **Add Page Numbers** (`Stable`) — Insert customizable page numbers with 6 alignment positions.
+16. **Add Watermark** (`Stable`) — Overlay text watermarks with opacity and rotation sliders.
+17. **Add Signature** (`Stable`) — Visual electronic signature image overlay with optional date stamp.
+
+### 2.5 Subsystem 5: Security & Maintenance (6 Tools)
+18. **Protect PDF** (`Experimental`) — Add user password security dictionary restrictions.
+19. **Unlock PDF** (`Experimental`) — Remove password security restrictions using valid user key.
+20. **Visual Blackout** (`Experimental`) — Apply solid black rectangles over sensitive areas on PDF pages.
+21. **Compare PDF** (`Beta`) — Side-by-side structural analysis and page count comparison report.
+22. **Basic PDF Recovery** (`Experimental`) — Re-serialize clean xref tables for mildly corrupted files.
+23. **Basic PDF Optimization** (`Experimental`, Popular) — Re-encode PDF object streams to optimize file structure.
 
 ---
 
 ## 3. Non-Functional Requirements & Security Guarantees
 
-- **Zero-Server Upload**: 100% of PDF binary data is processed in browser memory.
-- **Strict File Validation**: All files are checked for `%PDF-` magic bytes header before processing.
-- **Memory Cleanup**: Download URLs created with `URL.createObjectURL()` are revoked immediately after download.
-- **Automated Testing**: 35/35 Vitest unit tests passing across all engines.
+- **Local Execution**: All PDF binary operations execute within browser RAM memory without external file uploads.
+- **Strict File Validation**: Files are checked for `%PDF-` magic bytes headers prior to processing.
+- **Resource Cleanup**: Download URLs created with `URL.createObjectURL()` are released via `URL.revokeObjectURL()` after download.
+- **Automated Testing**: 36 automated unit tests passing across all engines and manifest integrity.
 - **Static Next.js Build**: Pre-rendered Next.js 14 App Router static output.
