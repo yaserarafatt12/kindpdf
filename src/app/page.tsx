@@ -182,16 +182,16 @@ export default function Home() {
       />
 
       {/* Main Workspace */}
-      <main className="flex-1 max-w-6xl w-full mx-auto px-4 py-6 sm:py-10 space-y-6">
+      <main className="flex-1 max-w-6xl w-full mx-auto px-4 py-4 sm:py-6 space-y-4">
         {/* VIEW MODE 1: GRID LANDING PAGE */}
         {activeView === 'grid' && (
-          <div className="space-y-6">
-            {/* Main Landing Hero */}
-            <div className="text-center space-y-3 py-4 sm:py-8 max-w-3xl mx-auto">
-              <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-slate-900 dark:text-white leading-tight">
+          <div className="space-y-4">
+            {/* Main Landing Hero - Compact & 2x Smaller */}
+            <div className="text-center space-y-1.5 py-2 sm:py-4 max-w-2xl mx-auto">
+              <h2 className="text-lg sm:text-2xl font-extrabold tracking-tight text-slate-800 dark:text-slate-200 leading-snug">
                 {t.heroTitle}
               </h2>
-              <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 font-medium leading-relaxed">
+              <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium leading-relaxed">
                 {t.heroSubtitle}
               </p>
             </div>
@@ -203,7 +203,7 @@ export default function Home() {
 
         {/* VIEW MODE 2: MERGE PDF WORKSPACE */}
         {activeView === 'merge' && (
-          <div className="max-w-4xl mx-auto space-y-6">
+          <div className="max-w-4xl mx-auto space-y-5">
             {/* Back Button */}
             <button
               type="button"
@@ -214,16 +214,16 @@ export default function Home() {
               <span>{t.backToAllTools}</span>
             </button>
 
-            {/* Merge Hero Section */}
-            <div className="text-center space-y-2 py-2">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-600 dark:text-sky-400 text-xs font-black">
+            {/* Merge Hero Section - Compact */}
+            <div className="text-center space-y-1.5 py-1">
+              <div className="inline-flex items-center gap-2 px-3 py-0.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-600 dark:text-sky-400 text-[11px] font-black">
                 <FileStack className="w-3.5 h-3.5" />
                 <span>{t.mergePdf} Tool</span>
               </div>
-              <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900 dark:text-white">
+              <h2 className="text-lg sm:text-2xl font-extrabold tracking-tight text-slate-800 dark:text-slate-200">
                 {t.mergeHeroTitle}
               </h2>
-              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 font-medium max-w-xl mx-auto">
+              <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium max-w-xl mx-auto">
                 {t.mergeHeroSubtitle}
               </p>
             </div>
