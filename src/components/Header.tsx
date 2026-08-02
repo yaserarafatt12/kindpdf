@@ -81,14 +81,14 @@ export const Header: React.FC<HeaderProps> = ({
   return (
     <header className="w-full bg-white dark:bg-slate-900 border-b border-slate-300 dark:border-slate-800 sticky top-0 z-40 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 py-3 flex flex-col md:flex-row items-center justify-between gap-3">
-        {/* Left Side: Brand Logo (K I N D P D F) - No Icon Box, No edsheero Badge */}
+        {/* Left Side: Brand Logo (Kindpdf) - Normal Spacing, Only K capitalized */}
         <div className="flex items-center justify-between w-full md:w-auto">
           <div
             onClick={() => onViewChange('grid')}
             className="cursor-pointer group flex flex-col items-start"
           >
-            <h1 className="text-xl sm:text-2xl font-black tracking-[0.25em] text-slate-900 dark:text-white uppercase font-sans">
-              K I N D<span className="text-blue-600 dark:text-sky-400">P D F</span>
+            <h1 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white font-sans tracking-tight">
+              Kind<span className="text-blue-600 dark:text-sky-400">pdf</span>
             </h1>
             <p className="text-[10px] text-slate-500 dark:text-slate-400 font-semibold tracking-normal">
               {t.tagline}

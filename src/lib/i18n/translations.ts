@@ -42,7 +42,7 @@ export interface TranslationDictionary {
 
 export const translations: Record<Language, TranslationDictionary> = {
   en: {
-    brandName: 'K I N D P D F',
+    brandName: 'Kindpdf',
     tagline: 'Your documents never leave your device',
     privacyTitle: '100% Privacy Protected',
     noServerUpload: 'Zero Server Uploads',
@@ -81,7 +81,7 @@ export const translations: Record<Language, TranslationDictionary> = {
     upcoming: 'Upcoming',
   },
   id: {
-    brandName: 'K I N D P D F',
+    brandName: 'Kindpdf',
     tagline: 'Dokumen Anda tidak pernah meninggalkan perangkat',
     privacyTitle: 'Privasi 100% Terjaga',
     noServerUpload: 'Tanpa Unggahan Server',

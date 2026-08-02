@@ -334,8 +334,8 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="w-full border-t border-slate-300 dark:border-slate-800 py-6 mt-12 text-center text-xs font-semibold text-slate-600 dark:text-slate-400 space-y-1">
-        <p className="tracking-widest font-black text-slate-900 dark:text-white">
-          K I N D<span className="text-blue-600 dark:text-sky-400">P D F</span> — Privacy-First Local PDF Tools
+        <p className="font-black text-slate-900 dark:text-white">
+          Kind<span className="text-blue-600 dark:text-sky-400">pdf</span> — Privacy-First PDF Tools
         </p>
         <p className="text-[11px] text-slate-500 dark:text-slate-500">
           Process documents locally inside your web browser. 100% Zero-Server Upload.
