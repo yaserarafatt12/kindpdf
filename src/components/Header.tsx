@@ -24,14 +24,14 @@ export const Header: React.FC<HeaderProps> = ({
   onThemeToggle,
 }) => {
   return (
-    <header className="w-full bg-white dark:bg-slate-900 border-b border-slate-300 dark:border-slate-800 sticky top-0 z-40 shadow-sm">
+    <header className="w-full bg-white dark:bg-slate-900 border-b-2 border-slate-300 dark:border-slate-800 sticky top-0 z-40 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 py-3 sm:py-3.5 flex items-center justify-between gap-3">
-        {/* Left Side: Brand Logo (Kindpdf) - Larger font, no subtext */}
+        {/* Left Side: Brand Logo (Kindpdf) - Subtle refined letter spacing gap (tracking-[0.06em]) */}
         <div
           onClick={() => onViewChange('grid')}
           className="cursor-pointer group flex items-center"
         >
-          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white font-sans tracking-tight leading-none">
+          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white font-sans tracking-[0.06em] leading-none">
             Kind<span className="text-blue-600 dark:text-sky-400">pdf</span>
           </h1>
         </div>
@@ -43,7 +43,7 @@ export const Header: React.FC<HeaderProps> = ({
             href="https://github.com/yaserarafatt12/localpdf"
             target="_blank"
             rel="noopener noreferrer"
-            className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-200 text-xs font-bold transition-colors"
+            className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border-2 border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-200 text-xs font-bold transition-colors shadow-sm"
           >
             <Github className="w-4 h-4 text-blue-600 dark:text-sky-400" />
             <span>GitHub</span>
@@ -53,7 +53,7 @@ export const Header: React.FC<HeaderProps> = ({
           <button
             type="button"
             onClick={onLangToggle}
-            className="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-300 dark:border-slate-700 text-xs font-black text-slate-800 dark:text-slate-100 flex items-center gap-1.5 transition-colors btn-press-effect"
+            className="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border-2 border-slate-300 dark:border-slate-700 text-xs font-black text-slate-800 dark:text-slate-100 flex items-center gap-1.5 transition-colors btn-press-effect shadow-sm"
             title="Switch Language (EN | ID)"
           >
             <Globe className="w-4 h-4 text-blue-600 dark:text-sky-400" />
@@ -64,7 +64,7 @@ export const Header: React.FC<HeaderProps> = ({
           <button
             type="button"
             onClick={onThemeToggle}
-            className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-100 transition-colors btn-press-effect"
+            className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border-2 border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-100 transition-colors btn-press-effect shadow-sm"
             title="Toggle Light / Dark Mode"
           >
             {isDarkMode ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-blue-600" />}
