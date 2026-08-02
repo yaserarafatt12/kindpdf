@@ -132,7 +132,7 @@ export const CropPdfWorkspace: React.FC<CropPdfWorkspaceProps> = ({ onBack, t, l
       )}
 
       {/* File Upload */}
-      {!file && <FileDropzone onFilesSelected={handleFileSelected} disabled={isProcessing} t={t} />}
+      {!file && <FileDropzone onFilesSelected={handleFileSelected} disabled={isProcessing} t={t} colorTheme="blue" />}
 
       {/* Crop Controls */}
       {file && (

@@ -196,7 +196,7 @@ export const SignPdfWorkspace: React.FC<SignPdfWorkspaceProps> = ({ onBack, t, l
       )}
 
       {/* File Upload */}
-      {!file && <FileDropzone onFilesSelected={handleFileSelected} disabled={isProcessing} t={t} />}
+      {!file && <FileDropzone onFilesSelected={handleFileSelected} disabled={isProcessing} t={t} colorTheme="blue" />}
 
       {/* Signature Controls */}
       {file && (

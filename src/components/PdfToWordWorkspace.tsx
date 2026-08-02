@@ -99,7 +99,7 @@ export const PdfToWordWorkspace: React.FC<PdfToWordWorkspaceProps> = ({ onBack, 
       )}
 
       {/* Upload File */}
-      {!file && <FileDropzone onFilesSelected={handleFileSelected} disabled={isProcessing} t={t} />}
+      {!file && <FileDropzone onFilesSelected={handleFileSelected} disabled={isProcessing} t={t} colorTheme="indigo" />}
 
       {/* Action Bar */}
       {file && (
@@ -141,9 +141,6 @@ export const PdfToWordWorkspace: React.FC<PdfToWordWorkspaceProps> = ({ onBack, 
           </div>
         </div>
       )}
-
-      {/* Privacy Notice */}
-      <PrivacyNotice t={t} />
     </div>
   );
 };

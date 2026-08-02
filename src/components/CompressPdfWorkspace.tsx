@@ -104,7 +104,7 @@ export const CompressPdfWorkspace: React.FC<CompressPdfWorkspaceProps> = ({ onBa
       )}
 
       {/* Upload File */}
-      {!file && <FileDropzone onFilesSelected={handleFileSelected} disabled={isProcessing} t={t} />}
+      {!file && <FileDropzone onFilesSelected={handleFileSelected} disabled={isProcessing} t={t} colorTheme="teal" />}
 
       {/* Compression Options */}
       {file && (

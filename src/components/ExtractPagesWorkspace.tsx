@@ -168,7 +168,7 @@ export const ExtractPagesWorkspace: React.FC<ExtractPagesWorkspaceProps> = ({ on
 
       {/* Upload CTA or Workspace */}
       {!file ? (
-        <FileDropzone onFilesSelected={handleFileChange} disabled={isProcessing} t={t} />
+        <FileDropzone onFilesSelected={handleFileChange} disabled={isProcessing} t={t} colorTheme="emerald" />
       ) : (
         <div className="space-y-6">
           {/* Active File Summary Box */}

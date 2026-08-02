@@ -132,7 +132,7 @@ export const ComparePdfWorkspace: React.FC<ComparePdfWorkspaceProps> = ({ onBack
               </button>
             </div>
           ) : (
-            <FileDropzone onFilesSelected={handleSelectFile1} disabled={isProcessing} t={t} />
+            <FileDropzone onFilesSelected={handleSelectFile1} disabled={isProcessing} t={t} colorTheme="purple" />
           )}
         </div>
 

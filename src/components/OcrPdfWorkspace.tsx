@@ -114,7 +114,7 @@ export const OcrPdfWorkspace: React.FC<OcrPdfWorkspaceProps> = ({ onBack, t, lan
       )}
 
       {/* Upload File */}
-      {!file && <FileDropzone onFilesSelected={handleFileSelected} disabled={isProcessing} t={t} />}
+      {!file && <FileDropzone onFilesSelected={handleFileSelected} disabled={isProcessing} t={t} colorTheme="purple" />}
 
       {/* OCR Controls */}
       {file && (
@@ -214,9 +214,6 @@ export const OcrPdfWorkspace: React.FC<OcrPdfWorkspaceProps> = ({ onBack, t, lan
           )}
         </div>
       )}
-
-      {/* Privacy Notice */}
-      <PrivacyNotice t={t} />
     </div>
   );
 };

@@ -116,7 +116,7 @@ export const PdfToPdfAWorkspace: React.FC<PdfToPdfAWorkspaceProps> = ({ onBack, 
       )}
 
       {/* Upload File */}
-      {!file && <FileDropzone onFilesSelected={handleFileSelected} disabled={isProcessing} t={t} />}
+      {!file && <FileDropzone onFilesSelected={handleFileSelected} disabled={isProcessing} t={t} colorTheme="indigo" />}
 
       {/* Conversion Options */}
       {file && (
@@ -188,9 +188,6 @@ export const PdfToPdfAWorkspace: React.FC<PdfToPdfAWorkspaceProps> = ({ onBack, 
           </div>
         </div>
       )}
-
-      {/* Privacy Notice */}
-      <PrivacyNotice t={t} />
     </div>
   );
 };

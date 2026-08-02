@@ -153,12 +153,12 @@ export const ToolGrid: React.FC<ToolGridProps> = ({ onSelectTool, t }) => {
   const popularTools = tools.filter((t) => t.popular);
 
   const categories: { key: ToolDefinition['category']; title: string; subtitle: string }[] = [
-    { key: 'organize', title: '📁 Organize & Pages', subtitle: 'Merge, split, extract, crop, and reorder PDF pages' },
-    { key: 'convert-to', title: '🔄 Convert to PDF', subtitle: 'Convert images, Word documents, HTML notes, and camera scans to PDF' },
-    { key: 'convert-from', title: '📤 Convert from PDF', subtitle: 'Export PDF pages to images, Word files, text layers, and archival formats' },
-    { key: 'edit', title: '✏️ Edit & Annotate', subtitle: 'Add text overlays, page numbers, watermarks, and electronic signatures' },
-    { key: 'security', title: '🛡️ Security & Privacy', subtitle: 'Password protection, key removal, and visual redaction blackout' },
-    { key: 'utilities', title: '🛠️ Utilities & Maintenance', subtitle: 'File compression optimization, recovery, and structural comparison' },
+    { key: 'organize', title: 'Organize & Pages', subtitle: 'Merge, split, extract, crop, and reorder PDF pages' },
+    { key: 'convert-to', title: 'Convert to PDF', subtitle: 'Convert images, Word documents, HTML notes, and camera scans to PDF' },
+    { key: 'convert-from', title: 'Convert from PDF', subtitle: 'Export PDF pages to images, Word files, text layers, and archival formats' },
+    { key: 'edit', title: 'Edit & Annotate', subtitle: 'Add text overlays, page numbers, watermarks, and electronic signatures' },
+    { key: 'security', title: 'Security & Privacy', subtitle: 'Password protection, key removal, and visual redaction blackout' },
+    { key: 'utilities', title: 'Utilities & Maintenance', subtitle: 'File compression optimization, recovery, and structural comparison' },
   ];
 
   const renderCard = (item: ToolDefinition) => (
@@ -197,12 +197,9 @@ export const ToolGrid: React.FC<ToolGridProps> = ({ onSelectTool, t }) => {
       {/* 1. POPULAR SHORTCUTS SECTION */}
       <section className="space-y-3">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Star className="w-4 h-4 text-amber-500 fill-amber-500" />
-            <h2 className="text-sm font-black tracking-tight text-slate-900 dark:text-white uppercase">
-              Popular Tools ({popularTools.length})
-            </h2>
-          </div>
+          <h2 className="text-base font-black tracking-tight text-slate-900 dark:text-white">
+            Popular Tools
+          </h2>
           <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
             <ShieldCheck className="w-3.5 h-3.5" />
             Local processing

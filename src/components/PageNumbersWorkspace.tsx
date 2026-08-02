@@ -140,7 +140,7 @@ export const PageNumbersWorkspace: React.FC<PageNumbersWorkspaceProps> = ({ onBa
 
       {/* Upload CTA or Workspace */}
       {!file ? (
-        <FileDropzone onFilesSelected={handleFileChange} disabled={isProcessing} t={t} />
+        <FileDropzone onFilesSelected={handleFileChange} disabled={isProcessing} t={t} colorTheme="sky" />
       ) : (
         <div className="space-y-6">
           {/* Active File Summary Box */}

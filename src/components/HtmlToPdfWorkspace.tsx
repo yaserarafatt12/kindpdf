@@ -164,9 +164,6 @@ export const HtmlToPdfWorkspace: React.FC<HtmlToPdfWorkspaceProps> = ({ onBack, 
           {!isProcessing && <ArrowRight className="w-4 h-4 ml-1" />}
         </button>
       </div>
-
-      {/* Privacy Notice */}
-      <PrivacyNotice t={t} />
     </div>
   );
 };

@@ -158,7 +158,7 @@ export const EditPdfWorkspace: React.FC<EditPdfWorkspaceProps> = ({ onBack, t, l
       )}
 
       {/* File Upload */}
-      {!file && <FileDropzone onFilesSelected={handleFileSelected} disabled={isProcessing} t={t} />}
+      {!file && <FileDropzone onFilesSelected={handleFileSelected} disabled={isProcessing} t={t} colorTheme="purple" />}
 
       {/* Edit Workspace */}
       {file && (

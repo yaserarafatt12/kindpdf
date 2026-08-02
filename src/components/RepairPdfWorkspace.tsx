@@ -109,7 +109,7 @@ export const RepairPdfWorkspace: React.FC<RepairPdfWorkspaceProps> = ({ onBack, 
       )}
 
       {/* Upload File */}
-      {!file && <FileDropzone onFilesSelected={handleFileSelected} disabled={isProcessing} t={t} />}
+      {!file && <FileDropzone onFilesSelected={handleFileSelected} disabled={isProcessing} t={t} colorTheme="amber" />}
 
       {/* Repair Action Bar */}
       {file && (

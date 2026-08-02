@@ -230,7 +230,7 @@ export const OrganizePagesWorkspace: React.FC<OrganizePagesWorkspaceProps> = ({
 
       {/* Upload CTA or Workspace */}
       {!file ? (
-        <FileDropzone onFilesSelected={handleFileChange} disabled={isProcessing} t={t} />
+        <FileDropzone onFilesSelected={handleFileChange} disabled={isProcessing} t={t} colorTheme="purple" />
       ) : (
         <div className="space-y-6">
           {/* File Toolbar Header */}

@@ -134,7 +134,7 @@ export const UnlockPdfWorkspace: React.FC<UnlockPdfWorkspaceProps> = ({ onBack, 
 
       {/* Upload CTA or Workspace */}
       {!file ? (
-        <FileDropzone onFilesSelected={handleFileChange} disabled={isProcessing} t={t} />
+        <FileDropzone onFilesSelected={handleFileChange} disabled={isProcessing} t={t} colorTheme="teal" />
       ) : (
         <div className="space-y-6">
           {/* Active File Summary Box */}

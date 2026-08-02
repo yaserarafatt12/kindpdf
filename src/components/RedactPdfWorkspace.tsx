@@ -133,7 +133,7 @@ export const RedactPdfWorkspace: React.FC<RedactPdfWorkspaceProps> = ({ onBack, 
       )}
 
       {/* Upload File */}
-      {!file && <FileDropzone onFilesSelected={handleFileSelected} disabled={isProcessing} t={t} />}
+      {!file && <FileDropzone onFilesSelected={handleFileSelected} disabled={isProcessing} t={t} colorTheme="rose" />}
 
       {/* Redaction Controls */}
       {file && (

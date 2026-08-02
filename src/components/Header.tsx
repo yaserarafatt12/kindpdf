@@ -10,15 +10,10 @@ import {
   Check,
   Menu,
   X,
+  FileText,
 } from 'lucide-react';
 import { Language, TranslationDictionary } from '@/lib/i18n/translations';
-import {
-  MergePdfIcon,
-  SplitPdfIcon,
-  OrganizePagesIcon,
-  ExtractPagesIcon,
-  ImageToPdfIcon,
-} from './icons/CustomPdfIcons';
+import { tools } from '@/lib/tools/manifest';
 
 export type ViewMode =
   | 'grid'
@@ -83,32 +78,13 @@ export const Header: React.FC<HeaderProps> = ({
     { code: 'id' as Language, label: 'ID' },
   ];
 
-  // Full categorized menu items (matching iLovePDF full suite layout)
-  const menuCategories = [
-    {
-      title: 'ORGANIZE PDF',
-      items: [
-        { id: 'merge' as ViewMode, label: t.mergePdf, icon: <MergePdfIcon className="w-4 h-4" />, active: true },
-        { id: 'split' as ViewMode, label: t.splitPdf, icon: <SplitPdfIcon className="w-4 h-4" />, active: false },
-        { id: 'extract' as ViewMode, label: t.extractPages, icon: <ExtractPagesIcon className="w-4 h-4" />, active: false },
-        { id: 'organize' as ViewMode, label: t.organizePages, icon: <OrganizePagesIcon className="w-4 h-4" />, active: false },
-      ],
-    },
-    {
-      title: 'CONVERT TO PDF',
-      items: [
-        { id: 'image-to-pdf' as ViewMode, label: t.imagesToPdf, icon: <ImageToPdfIcon className="w-4 h-4" />, active: false },
-        { id: 'word-to-pdf' as any, label: 'WORD to PDF', icon: <ImageToPdfIcon className="w-4 h-4" />, active: false },
-        { id: 'excel-to-pdf' as any, label: 'EXCEL to PDF', icon: <ImageToPdfIcon className="w-4 h-4" />, active: false },
-      ],
-    },
-    {
-      title: 'CONVERT FROM PDF',
-      items: [
-        { id: 'pdf-to-jpg' as any, label: 'PDF to JPG', icon: <ImageToPdfIcon className="w-4 h-4" />, active: false },
-        { id: 'pdf-to-word' as any, label: 'PDF to WORD', icon: <ImageToPdfIcon className="w-4 h-4" />, active: false },
-      ],
-    },
+  const drawerCategories = [
+    { key: 'organize', title: 'Organize & Pages' },
+    { key: 'convert-to', title: 'Convert to PDF' },
+    { key: 'convert-from', title: 'Convert from PDF' },
+    { key: 'edit', title: 'Edit & Annotate' },
+    { key: 'security', title: 'Security & Privacy' },
+    { key: 'utilities', title: 'Utilities & Maintenance' },
   ];
 
   return (
@@ -151,21 +127,20 @@ export const Header: React.FC<HeaderProps> = ({
               <span>GitHub</span>
             </a>
 
-            {/* Interactive Language Dropdown - Short Clean ID / EN */}
+            {/* Language Selector Dropdown */}
             <div className="relative" ref={dropdownRef}>
               <button
                 type="button"
                 onClick={() => setIsLangDropdownOpen(!isLangDropdownOpen)}
-                className="px-2.5 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border-2 border-slate-300 dark:border-slate-700 text-xs font-black text-slate-800 dark:text-slate-100 flex items-center gap-1 transition-colors btn-press-effect shadow-sm"
+                className="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border-2 border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-200 text-xs font-bold transition-colors flex items-center gap-1.5 shadow-sm btn-press-effect"
               >
-                <Globe className="w-4 h-4 text-blue-600 dark:text-sky-400" />
+                <Globe className="w-3.5 h-3.5 text-blue-600 dark:text-sky-400" />
                 <span>{lang.toUpperCase()}</span>
-                <ChevronDown className={`w-3.5 h-3.5 text-slate-500 transition-transform ${isLangDropdownOpen ? 'rotate-180' : ''}`} />
+                <ChevronDown className="w-3 h-3 text-slate-500" />
               </button>
 
-              {/* Dropdown Options Menu */}
               {isLangDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-28 rounded-2xl bg-white dark:bg-slate-900 border-2 border-slate-300 dark:border-slate-700 shadow-xl py-1.5 z-50 animate-fade-in">
+                <div className="absolute right-0 mt-2 w-28 rounded-2xl bg-white dark:bg-slate-900 border-2 border-slate-300 dark:border-slate-800 shadow-xl py-1.5 z-50 animate-fade-in">
                   {languages.map((item) => (
                     <button
                       key={item.code}
@@ -174,9 +149,9 @@ export const Header: React.FC<HeaderProps> = ({
                         onLangChange(item.code);
                         setIsLangDropdownOpen(false);
                       }}
-                      className={`w-full px-3 py-2 text-xs font-extrabold flex items-center justify-between transition-colors ${
+                      className={`w-full px-3 py-2 text-xs font-bold text-left flex items-center justify-between transition-colors ${
                         lang === item.code
-                          ? 'bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-sky-400 font-black'
+                          ? 'bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-sky-400'
                           : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
                       }`}
                     >
@@ -201,7 +176,7 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
       </header>
 
-      {/* FULL CATEGORIZED APP DRAWER MENU (iLovePDF Style Slide-Over) */}
+      {/* FULL CATEGORIZED APP DRAWER MENU */}
       {isAppDrawerOpen && (
         <div className="fixed inset-0 z-50 flex">
           {/* Backdrop */}
@@ -228,40 +203,34 @@ export const Header: React.FC<HeaderProps> = ({
 
             {/* Drawer Scrollable Body */}
             <div className="flex-1 overflow-y-auto p-4 space-y-6">
-              {menuCategories.map((cat, idx) => (
-                <div key={idx} className="space-y-2">
-                  <h4 className="text-[11px] font-black tracking-wider text-slate-400 dark:text-slate-500 uppercase">
-                    {cat.title}
-                  </h4>
-                  <div className="space-y-1">
-                    {cat.items.map((item) => (
-                      <button
-                        key={item.label}
-                        type="button"
-                        onClick={() => {
-                          if (item.active) onViewChange(item.id);
-                          setIsAppDrawerOpen(false);
-                        }}
-                        className={`w-full p-2.5 rounded-xl text-xs font-bold flex items-center justify-between transition-colors ${
-                          item.active
-                            ? 'text-slate-900 dark:text-white hover:bg-blue-50 dark:hover:bg-blue-950/60 hover:text-blue-600'
-                            : 'text-slate-400 dark:text-slate-500 opacity-60 cursor-not-allowed'
-                        }`}
-                      >
-                        <div className="flex items-center gap-2.5">
-                          {item.icon}
-                          <span>{item.label}</span>
-                        </div>
-                        {!item.active && (
-                          <span className="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-[9px] text-slate-400 font-bold">
-                            {t.soon}
-                          </span>
-                        )}
-                      </button>
-                    ))}
+              {drawerCategories.map((cat) => {
+                const catTools = tools.filter((t) => t.category === cat.key);
+                return (
+                  <div key={cat.key} className="space-y-2">
+                    <h4 className="text-[11px] font-black tracking-wider text-slate-400 dark:text-slate-500 uppercase">
+                      {cat.title}
+                    </h4>
+                    <div className="space-y-1">
+                      {catTools.map((item) => (
+                        <button
+                          key={item.id}
+                          type="button"
+                          onClick={() => {
+                            onViewChange(item.route);
+                            setIsAppDrawerOpen(false);
+                          }}
+                          className="w-full p-2.5 rounded-xl text-xs font-bold flex items-center justify-between text-slate-700 dark:text-slate-300 hover:bg-blue-50 dark:hover:bg-blue-950/60 hover:text-blue-600 dark:hover:text-sky-400 transition-colors btn-press-effect"
+                        >
+                          <div className="flex items-center gap-2.5">
+                            <FileText className="w-4 h-4 text-slate-400 shrink-0" />
+                            <span>{item.title}</span>
+                          </div>
+                        </button>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </div>
