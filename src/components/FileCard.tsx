@@ -39,16 +39,6 @@ export const FileCard: React.FC<FileCardProps> = ({
           : 'border-slate-300 dark:border-slate-800 hover:border-blue-600 hover:shadow-md'
       }`}
     >
-      {/* Reorder Grip Handle */}
-      <div className="flex items-center gap-2 shrink-0">
-        <div className="p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-grab active:cursor-grabbing">
-          <GripVertical className="w-5 h-5" />
-        </div>
-        <div className="p-2.5 rounded-xl bg-blue-50 dark:bg-blue-950/80 text-blue-600 dark:text-sky-400 font-black text-xs border border-blue-200 dark:border-blue-900">
-          #{index + 1}
-        </div>
-      </div>
-
       {/* File Info */}
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2">

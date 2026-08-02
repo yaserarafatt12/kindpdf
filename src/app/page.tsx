@@ -327,7 +327,6 @@ export default function Home() {
                   <span>
                     {files.length} {t.documentsCount} • {totalPages} {t.pagesTotal} ({formatFileSize(totalSizeBytes)})
                   </span>
-                  <span className="text-[11px] text-slate-600 dark:text-slate-400">{t.reorderHint}</span>
                 </div>
 
                 {/* Document Cards List */}
@@ -351,15 +350,13 @@ export default function Home() {
                     type="button"
                     onClick={handleMergePdfs}
                     disabled={files.length < 2 || isProcessing}
-                    className={`w-full sm:w-auto min-w-[240px] px-8 py-3.5 rounded-2xl font-black text-sm flex items-center justify-center gap-2 text-white shadow-xl transition-all duration-200 btn-press-effect ${
+                    className={`w-full sm:w-auto min-w-[240px] px-8 py-3.5 rounded-2xl font-black text-sm flex items-center justify-center text-white shadow-xl transition-all duration-200 btn-press-effect ${
                       files.length >= 2 && !isProcessing
                         ? 'bg-gradient-to-r from-blue-600 to-sky-500 hover:from-blue-500 hover:to-sky-400 shadow-blue-500/30 scale-[1.02]'
                         : 'bg-slate-300 dark:bg-slate-800 text-slate-500 dark:text-slate-500 cursor-not-allowed shadow-none'
                     }`}
                   >
-                    <FileStack className="w-4 h-4" />
                     <span>{t.mergeNow}</span>
-                    <ArrowRight className="w-4 h-4 ml-1" />
                   </button>
                 </div>
               </div>
