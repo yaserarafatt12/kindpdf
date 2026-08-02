@@ -11,6 +11,7 @@ export interface CompressResult {
 
 /**
  * Perform real client-side PDF file compression using stream optimization and canvas image downscaling.
+ * STRICT GUARANTEE: Never inflates file size beyond original input size.
  */
 export async function compressPdf(
   file: File,
@@ -21,7 +22,7 @@ export async function compressPdf(
   const originalSize = file.size;
   const arrayBuffer = await file.arrayBuffer();
 
-  // Engine 1: Structure & Stream Optimization via pdf-lib
+  // Engine 1: Structure & Object Stream Compression via pdf-lib
   const pdfDoc = await PDFDocument.load(arrayBuffer, { ignoreEncryption: true });
   const optBytes = await pdfDoc.save({
     useObjectStreams: true,
@@ -29,12 +30,13 @@ export async function compressPdf(
     objectsPerTick: 50,
   });
 
+  // Start with stream-optimized bytes
   let bestBytes = optBytes;
 
-  // Engine 2: High-Reduction Canvas Downscaling via pdfjs-dist
+  // Engine 2: Canvas Downscaling (ONLY used if it produces a smaller binary than both original and optBytes!)
   if (typeof window !== 'undefined') {
     try {
-      onProgress?.('Optimizing page image streams and downscaling resolution...');
+      onProgress?.('Optimizing page image streams...');
       const pdfjsLib = await import('pdfjs-dist');
       if (!pdfjsLib.GlobalWorkerOptions.workerSrc) {
         pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
@@ -47,15 +49,15 @@ export async function compressPdf(
       if (numPages > 0) {
         const newPdfDoc = await PDFDocument.create();
 
-        // Target downscaling parameters based on selected level
-        let scale = 0.85;
-        let quality = 0.55;
+        // Downscale parameters
+        let scale = 0.80;
+        let quality = 0.50;
         if (level === 'extreme') {
-          scale = 0.70;
-          quality = 0.40;
+          scale = 0.65;
+          quality = 0.35;
         } else if (level === 'less') {
-          scale = 0.95;
-          quality = 0.70;
+          scale = 0.90;
+          quality = 0.65;
         }
 
         for (let i = 1; i <= numPages; i++) {
@@ -69,7 +71,6 @@ export async function compressPdf(
             canvas.width = viewport.width;
             canvas.height = viewport.height;
 
-            // Fill white background for clean transparency handling
             ctx.fillStyle = '#FFFFFF';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -96,8 +97,8 @@ export async function compressPdf(
 
         const rasterBytes = await newPdfDoc.save({ useObjectStreams: true });
 
-        // Select whichever result produces a smaller binary file
-        if (rasterBytes.length < bestBytes.length || optBytes.length >= originalSize) {
+        // ONLY use rasterBytes if it is STRICTLY smaller than both bestBytes AND originalSize!
+        if (rasterBytes.length < bestBytes.length && rasterBytes.length < originalSize) {
           bestBytes = rasterBytes;
         }
       }
@@ -106,21 +107,22 @@ export async function compressPdf(
     }
   }
 
-  const compressedSize = bestBytes.length;
-  const savedBytes = Math.max(0, originalSize - compressedSize);
-  const calculatedPercentage = Math.round((savedBytes / originalSize) * 100);
+  // Final Guardrail: If bestBytes is larger than original file, fall back to raw original bytes
+  let finalBytes = bestBytes;
+  if (bestBytes.length > originalSize) {
+    finalBytes = new Uint8Array(arrayBuffer);
+  }
 
-  // Determine realistic saved percentage (min 10% reduction for compressed outputs)
-  const finalPercentage = calculatedPercentage > 0 
-    ? calculatedPercentage 
-    : (level === 'extreme' ? 45 : level === 'recommended' ? 30 : 15);
+  const compressedSize = finalBytes.length;
+  const savedBytes = Math.max(0, originalSize - compressedSize);
+  const savedPercentage = Math.round((savedBytes / originalSize) * 100);
 
   onProgress?.('Compression complete!');
 
   return {
-    pdfBytes: bestBytes,
+    pdfBytes: finalBytes,
     originalSize,
-    compressedSize: Math.min(compressedSize, Math.round(originalSize * (1 - finalPercentage / 100))),
-    savedPercentage: finalPercentage,
+    compressedSize,
+    savedPercentage,
   };
 }
