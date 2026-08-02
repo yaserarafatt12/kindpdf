@@ -1,14 +1,14 @@
 'use client';
 
 import React, { useState } from 'react';
-import {
-  FileStack,
-  Scissors,
-  Layers,
-  FileOutput,
-  FileImage,
-} from 'lucide-react';
 import { TranslationDictionary } from '@/lib/i18n/translations';
+import {
+  MergePdfIcon,
+  SplitPdfIcon,
+  OrganizePagesIcon,
+  ExtractPagesIcon,
+  ImageToPdfIcon,
+} from './icons/CustomPdfIcons';
 
 export type ToolId = 'merge' | 'split' | 'organize' | 'extract' | 'image-to-pdf';
 
@@ -26,7 +26,7 @@ export const ToolGrid: React.FC<ToolGridProps> = ({ onSelectTool, t }) => {
       category: 'organize',
       title: t.mergePdf,
       description: t.mergeHeroSubtitle,
-      icon: <FileStack className="w-5 h-5 text-blue-600 dark:text-sky-400" />,
+      icon: <MergePdfIcon className="w-6 h-6" />,
       iconBg: 'bg-blue-50 dark:bg-blue-950/80 border border-blue-200 dark:border-blue-900',
       badge: null,
       isReady: true,
@@ -35,8 +35,8 @@ export const ToolGrid: React.FC<ToolGridProps> = ({ onSelectTool, t }) => {
       id: 'split' as ToolId,
       category: 'organize',
       title: t.splitPdf,
-      description: 'Separate one page or a whole set for easy conversion into independent PDF files.',
-      icon: <Scissors className="w-5 h-5 text-amber-600 dark:text-amber-400" />,
+      description: 'Separate one page or a whole set into independent PDF files.',
+      icon: <SplitPdfIcon className="w-6 h-6" />,
       iconBg: 'bg-amber-50 dark:bg-amber-950/80 border border-amber-200 dark:border-amber-900',
       badge: t.soon,
       isReady: false,
@@ -46,7 +46,7 @@ export const ToolGrid: React.FC<ToolGridProps> = ({ onSelectTool, t }) => {
       category: 'organize',
       title: t.organizePages,
       description: 'Reorder, rotate (90°, 180°, 270°), or delete pages from your PDF document.',
-      icon: <Layers className="w-5 h-5 text-purple-600 dark:text-purple-400" />,
+      icon: <OrganizePagesIcon className="w-6 h-6" />,
       iconBg: 'bg-purple-50 dark:bg-purple-950/80 border border-purple-200 dark:border-purple-900',
       badge: t.soon,
       isReady: false,
@@ -56,7 +56,7 @@ export const ToolGrid: React.FC<ToolGridProps> = ({ onSelectTool, t }) => {
       category: 'organize',
       title: t.extractPages,
       description: 'Extract specific pages from your PDF into a brand new PDF document.',
-      icon: <FileOutput className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />,
+      icon: <ExtractPagesIcon className="w-6 h-6" />,
       iconBg: 'bg-emerald-50 dark:bg-emerald-950/80 border border-emerald-200 dark:border-emerald-900',
       badge: t.soon,
       isReady: false,
@@ -66,7 +66,7 @@ export const ToolGrid: React.FC<ToolGridProps> = ({ onSelectTool, t }) => {
       category: 'convert',
       title: t.imagesToPdf,
       description: 'Convert JPG, PNG, and WEBP images to PDF with custom page size and margins.',
-      icon: <FileImage className="w-5 h-5 text-rose-600 dark:text-rose-400" />,
+      icon: <ImageToPdfIcon className="w-6 h-6" />,
       iconBg: 'bg-rose-50 dark:bg-rose-950/80 border border-rose-200 dark:border-rose-900',
       badge: t.soon,
       isReady: false,
@@ -117,7 +117,7 @@ export const ToolGrid: React.FC<ToolGridProps> = ({ onSelectTool, t }) => {
         </button>
       </div>
 
-      {/* Tool Cards Grid - Compact iLovePDF Layout */}
+      {/* Tool Cards Grid - Custom SVG Icons */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
         {filteredTools.map((item) => (
           <div
@@ -131,9 +131,9 @@ export const ToolGrid: React.FC<ToolGridProps> = ({ onSelectTool, t }) => {
                 : 'border-slate-200 dark:border-slate-800/80 opacity-70 cursor-not-allowed shadow-xs'
             }`}
           >
-            {/* Top Row: Icon + Title Inline (iLovePDF Style) */}
+            {/* Top Row: Custom SVG Icon + Title Inline */}
             <div className="flex items-center gap-3">
-              <div className={`p-2.5 rounded-xl ${item.iconBg} shadow-xs shrink-0 group-hover:scale-105 transition-transform`}>
+              <div className={`p-2.5 rounded-xl ${item.iconBg} shadow-xs shrink-0 group-hover:scale-110 transition-transform`}>
                 {item.icon}
               </div>
 
@@ -149,7 +149,7 @@ export const ToolGrid: React.FC<ToolGridProps> = ({ onSelectTool, t }) => {
               </div>
             </div>
 
-            {/* Description Text (Compact 2 Lines) */}
+            {/* Description Text */}
             <p className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-medium line-clamp-2">
               {item.description}
             </p>
