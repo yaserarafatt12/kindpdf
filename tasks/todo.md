@@ -1,19 +1,20 @@
-# Task Checklist: LocalPDF — Sprint 1 (Merge PDF Foundation)
+# Kindpdf — Task Checklist (`tasks/todo.md`)
 
-## Phase 1: Project Setup & Core Foundations
-- [x] Task 1: Project Directory Setup & Documentation Specifications (`docs/product-requirements.md`, `docs/architecture.md`, `docs/privacy.md`, `docs/decisions.md`)
-- [ ] Task 2: Build `package.json`, `tsconfig.json`, `tailwind.config.js`, `postcss.config.js`, `vitest.config.ts`, `playwright.config.ts`, `.env.example`, `.gitignore`, `LICENSE`, `CHANGELOG.md`, `README.md`
-- [ ] Task 3: Build Base Layout & Navigation Header (`src/app/layout.tsx`, `src/app/page.tsx`, `src/components/PrivacyNotice.tsx`)
+## Sprint 1: Foundation & Core Organize PDF Module
 
-## Phase 2: File Dropzone & Validation Engine
-- [ ] Task 4: Build File Validation Utilities (`src/lib/files/validateFile.ts`, `formatFileSize.ts`, `src/lib/errors/messages.ts`)
-- [ ] Task 5: Build `FileDropzone.tsx` component with drag-and-drop & native file selection
+- [x] **Task 1.1**: Scaffold workspace with Next.js 14, TypeScript, Tailwind CSS, `pdf-lib`, `pdfjs-dist`, Vitest, Playwright.
+- [x] **Task 1.2**: Implement core PDF validation (`validateFile.ts`) checking `%PDF-` magic bytes, password encryption, max size (100MB), and corruption.
+- [x] **Task 1.3**: Implement client-side Merge PDF engine (`mergePdfs.ts`) with progress callback.
+- [x] **Task 1.4**: Build Header with `Kindpdf` logo, 3-line hamburger drawer menu, `EN` | `ID` dropdown, and Light mode default.
+- [x] **Task 1.5**: Build compact Tool Grid layout with custom vector SVG icons matching iLovePDF.
+- [x] **Task 1.6**: Build simple Merge PDF workspace with prominent primary `Pilih Berkas PDF` CTA button.
+- [ ] **Task 1.7**: Implement Split PDF engine (`splitPdfs.ts`) supporting custom range parsing (e.g. `1-3,5,8-10`), N-page splitting, and ZIP export.
+- [ ] **Task 1.8**: Build Split PDF UI workspace & Vitest tests.
+- [ ] **Task 1.9**: Implement Remove Pages & Extract Pages engines (`removePages.ts`, `extractPages.ts`).
+- [ ] **Task 1.10**: Build Interactive Thumbnail Grid component with page selection checkboxes.
+- [ ] **Task 1.11**: Implement Organize Pages engine (reorder, rotate, delete) with Web Worker offloading.
 
-## Phase 3: Merge PDF Queue & Reordering
-- [ ] Task 6: Build `FileCard.tsx` displaying document name, size, page count, and remove button
-- [ ] Task 7: Implement Drag-and-Drop file reordering in the merge queue
-
-## Phase 4: Local PDF Merge Engine & Export
-- [ ] Task 8: Build `src/lib/pdf/mergePdfs.ts` using `pdf-lib` to merge multiple PDF files in browser
-- [ ] Task 9: Build `ProcessingProgress.tsx` component & `downloadBlob.ts` download utility
-- [ ] Task 10: Write Vitest Unit Tests (`tests/unit/validateFile.test.ts` & `tests/unit/mergePdfs.test.ts`)
+## Checkpoint 1: Sprint 1 Verification
+- [ ] Run `npm test` and verify 100% unit tests pass.
+- [ ] Run `npm run build` and verify clean static generation.
+- [ ] Perform manual QA on mobile (375px) and desktop (1440px).
