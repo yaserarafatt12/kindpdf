@@ -4,13 +4,6 @@ import React from 'react';
 import { TranslationDictionary } from '@/lib/i18n/translations';
 import { tools, ToolDefinition, activeToolCount } from '@/lib/tools/manifest';
 import {
-  MergePdfIcon,
-  SplitPdfIcon,
-  OrganizePagesIcon,
-  ExtractPagesIcon,
-  ImageToPdfIcon,
-} from './icons/CustomPdfIcons';
-import {
   FileImage,
   Lock,
   Unlock,
@@ -30,6 +23,11 @@ import {
   ScanText,
   ShieldCheck,
   Star,
+  Layers,
+  Split,
+  RotateCw,
+  Copy,
+  Image,
 } from 'lucide-react';
 import { ViewMode } from './Header';
 
@@ -43,15 +41,15 @@ interface ToolGridProps {
 export const getToolIcon = (id: string) => {
   switch (id) {
     case 'merge':
-      return <MergePdfIcon className="w-6 h-6" />;
+      return <Layers className="w-6 h-6 text-blue-600 dark:text-sky-400" />;
     case 'split':
-      return <SplitPdfIcon className="w-6 h-6" />;
+      return <Split className="w-6 h-6 text-amber-600 dark:text-amber-400" />;
     case 'organize':
-      return <OrganizePagesIcon className="w-6 h-6" />;
+      return <RotateCw className="w-6 h-6 text-purple-600 dark:text-purple-400" />;
     case 'extract':
-      return <ExtractPagesIcon className="w-6 h-6" />;
+      return <Copy className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />;
     case 'image-to-pdf':
-      return <ImageToPdfIcon className="w-6 h-6" />;
+      return <Image className="w-6 h-6 text-rose-600 dark:text-rose-400" />;
     case 'pdf-to-image':
       return <FileImage className="w-6 h-6 text-indigo-600 dark:text-indigo-400" />;
     case 'protect':
