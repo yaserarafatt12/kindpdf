@@ -167,14 +167,9 @@ export const CompressPdfWorkspace: React.FC<CompressPdfWorkspaceProps> = ({ onBa
 
           {/* Clean Minimalist Level Selector with Badges & Descriptions */}
           <div className="p-5 rounded-2xl bg-white dark:bg-slate-900 border-2 border-slate-300 dark:border-slate-800 shadow-sm space-y-4">
-            <div className="flex items-center justify-between">
-              <label className="text-xs font-extrabold text-slate-700 dark:text-slate-300">
-                {lang === 'en' ? 'Compression Level' : 'Tingkat Kompresi'}
-              </label>
-              <span className="text-[11px] font-extrabold text-blue-600 dark:text-sky-400 bg-blue-50 dark:bg-blue-950/80 px-2.5 py-0.5 rounded-full border border-blue-200 dark:border-blue-900">
-                {lang === 'en' ? 'Selected:' : 'Dipilih:'} {level === 'recommended' ? '~50%' : level === 'extreme' ? '~70%' : '~20%'} {lang === 'en' ? 'Saved' : 'Hemat'}
-              </span>
-            </div>
+            <label className="text-xs font-extrabold text-slate-700 dark:text-slate-300">
+              {lang === 'en' ? 'Compression Level' : 'Tingkat Kompresi'}
+            </label>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               {[
@@ -244,7 +239,6 @@ export const CompressPdfWorkspace: React.FC<CompressPdfWorkspaceProps> = ({ onBa
             >
               <Minimize2 className="w-4 h-4" />
               <span>{lang === 'en' ? 'Compress PDF' : 'Kompres PDF'}</span>
-              <ArrowRight className="w-4 h-4 ml-1" />
             </button>
           </div>
         </div>

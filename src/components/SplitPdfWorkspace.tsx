@@ -330,7 +330,6 @@ export const SplitPdfWorkspace: React.FC<SplitPdfWorkspaceProps> = ({ onBack, t,
             >
               <Scissors className="w-4 h-4" />
               <span>{lang === 'en' ? 'Split PDF Now' : 'Pisahkan PDF Sekarang'}</span>
-              <ArrowRight className="w-4 h-4 ml-1" />
             </button>
           </div>
         </div>

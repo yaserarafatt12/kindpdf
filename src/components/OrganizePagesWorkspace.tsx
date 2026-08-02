@@ -359,7 +359,6 @@ export const OrganizePagesWorkspace: React.FC<OrganizePagesWorkspaceProps> = ({
             >
               <LayoutGrid className="w-4 h-4" />
               <span>{lang === 'en' ? 'Save & Download Organized PDF' : 'Simpan & Unduh PDF Organisasi'}</span>
-              <ArrowRight className="w-4 h-4 ml-1" />
             </button>
           </div>
         </div>
