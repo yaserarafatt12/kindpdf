@@ -54,44 +54,47 @@ export const FileCard: React.FC<FileCardProps> = ({
         </div>
       </div>
 
-      {/* Action Controls (Fixed 108px Width 3-Slot Alignment for Perfect Straight Edge across All Devices) */}
-      <div className="flex items-center justify-end gap-1 shrink-0 w-[108px] min-w-[108px]">
-        {/* Move Up Slot */}
-        <button
-          type="button"
-          onClick={() => onMoveUp && onMoveUp(index)}
-          disabled={!onMoveUp || index === 0}
-          title="Move Up"
-          className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 transition-colors ${
-            onMoveUp && index > 0
-              ? 'text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-sky-400 hover:bg-slate-100 dark:hover:bg-slate-800 btn-press-effect'
-              : 'invisible pointer-events-none'
-          }`}
-        >
-          <ChevronUp className="w-4 h-4" strokeWidth={2.75} />
-        </button>
+      {/* Action Controls: Vertical Stacked Reorder [▲/▼] + Trash Button */}
+      <div className="flex items-center gap-2 shrink-0">
+        {/* Vertical Stacked Up/Down Column Container */}
+        {(onMoveUp || onMoveDown) && (
+          <div className="flex flex-col justify-center rounded-xl bg-slate-100 dark:bg-slate-800/80 p-0.5 border border-slate-200 dark:border-slate-700/80 w-8 h-[48px] shrink-0 shadow-xs">
+            <button
+              type="button"
+              onClick={() => onMoveUp && onMoveUp(index)}
+              disabled={!onMoveUp || index === 0}
+              title="Move Up"
+              className={`flex-1 w-full rounded-lg flex items-center justify-center transition-all ${
+                index === 0
+                  ? 'text-slate-300 dark:text-slate-700 cursor-not-allowed'
+                  : 'text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-sky-400 hover:bg-white dark:hover:bg-slate-700 shadow-xs btn-press-effect'
+              }`}
+            >
+              <ChevronUp className="w-3.5 h-3.5" strokeWidth={2.75} />
+            </button>
+            <div className="w-3.5 h-[1px] bg-slate-200 dark:bg-slate-700 mx-auto my-0.5" />
+            <button
+              type="button"
+              onClick={() => onMoveDown && onMoveDown(index)}
+              disabled={!onMoveDown || index === totalItems - 1}
+              title="Move Down"
+              className={`flex-1 w-full rounded-lg flex items-center justify-center transition-all ${
+                index === totalItems - 1
+                  ? 'text-slate-300 dark:text-slate-700 cursor-not-allowed'
+                  : 'text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-sky-400 hover:bg-white dark:hover:bg-slate-700 shadow-xs btn-press-effect'
+              }`}
+            >
+              <ChevronDown className="w-3.5 h-3.5" strokeWidth={2.75} />
+            </button>
+          </div>
+        )}
 
-        {/* Move Down Slot */}
-        <button
-          type="button"
-          onClick={() => onMoveDown && onMoveDown(index)}
-          disabled={!onMoveDown || index === totalItems - 1}
-          title="Move Down"
-          className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 transition-colors ${
-            onMoveDown && index < totalItems - 1
-              ? 'text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-sky-400 hover:bg-slate-100 dark:hover:bg-slate-800 btn-press-effect'
-              : 'invisible pointer-events-none'
-          }`}
-        >
-          <ChevronDown className="w-4 h-4" strokeWidth={2.75} />
-        </button>
-
-        {/* Delete Slot */}
+        {/* Delete Button */}
         <button
           type="button"
           onClick={() => onRemove(item.id)}
           title="Remove from list"
-          className="w-8 h-8 rounded-xl flex items-center justify-center text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/50 transition-colors btn-press-effect"
+          className="w-9 h-[48px] rounded-xl flex items-center justify-center text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/50 transition-colors btn-press-effect shrink-0"
         >
           <Trash2 className="w-4 h-4" />
         </button>
