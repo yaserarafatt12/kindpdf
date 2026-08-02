@@ -165,15 +165,15 @@ export const ToolGrid: React.FC<ToolGridProps> = ({ onSelectTool, t }) => {
     <div
       key={item.id}
       onClick={() => onSelectTool(item.route)}
-      className="p-4.5 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border-2 border-slate-300/80 dark:border-slate-800 hover:border-blue-600 dark:hover:border-sky-500 shadow-xs hover:shadow-xl cursor-pointer hover:-translate-y-0.5 transition-all duration-200 flex flex-col justify-start gap-3 h-full group"
+      className="p-3.5 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border-2 border-slate-300/80 dark:border-slate-800 hover:border-blue-600 dark:hover:border-sky-500 shadow-xs hover:shadow-xl cursor-pointer hover:-translate-y-0.5 transition-all duration-200 flex flex-col justify-start gap-2.5 sm:gap-3 h-auto sm:h-full group"
     >
       <div className="flex items-center gap-3">
-        <div className={`p-2.5 rounded-xl ${getIconBg(item.id)} shadow-xs shrink-0 group-hover:scale-105 transition-transform`}>
+        <div className={`p-2 sm:p-2.5 rounded-xl ${getIconBg(item.id)} shadow-xs shrink-0 group-hover:scale-105 transition-transform`}>
           {getToolIcon(item.id)}
         </div>
 
         <div className="flex-1 min-w-0 flex items-center justify-between gap-1.5">
-          <h3 className="text-sm font-black text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-sky-400 transition-colors truncate">
+          <h3 className="text-xs sm:text-sm font-black text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-sky-400 transition-colors truncate">
             {item.title}
           </h3>
           {renderStatusBadge(item.status)}

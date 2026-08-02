@@ -108,14 +108,14 @@ export const Header: React.FC<HeaderProps> = ({
               onClick={() => onViewChange('grid')}
               className="cursor-pointer group flex items-center"
             >
-              <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white font-sans tracking-[0.06em] leading-none">
+              <h1 className="text-xl sm:text-3xl font-black text-slate-900 dark:text-white font-sans tracking-[0.04em] leading-none">
                 Kind<span className="text-blue-600 dark:text-sky-400">pdf</span>
               </h1>
             </div>
           </div>
 
           {/* Right Side Controls: Language Dropdown, Theme, & GitHub */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2">
             {/* GitHub Link (Desktop) */}
             <a
               href="https://github.com/yaserarafatt12/localpdf"
@@ -132,11 +132,11 @@ export const Header: React.FC<HeaderProps> = ({
               <button
                 type="button"
                 onClick={() => setIsLangDropdownOpen(!isLangDropdownOpen)}
-                className="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border-2 border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-200 text-xs font-bold transition-colors flex items-center gap-1.5 shadow-sm btn-press-effect"
+                className="px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border-2 border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-200 text-[11px] sm:text-xs font-extrabold transition-colors flex items-center gap-1 sm:gap-1.5 shadow-sm btn-press-effect"
               >
-                <Globe className="w-3.5 h-3.5 text-blue-600 dark:text-sky-400" />
+                <Globe className="w-3.5 h-3.5 text-blue-600 dark:text-sky-400 shrink-0" />
                 <span>{lang.toUpperCase()}</span>
-                <ChevronDown className="w-3 h-3 text-slate-500" />
+                <ChevronDown className="w-3 h-3 text-slate-500 shrink-0" />
               </button>
 
               {isLangDropdownOpen && (
