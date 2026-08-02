@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { Loader2, ShieldCheck } from 'lucide-react';
+import { TranslationDictionary } from '@/lib/i18n/translations';
 
 interface ProcessingProgressProps {
   isOpen: boolean;
@@ -9,6 +10,7 @@ interface ProcessingProgressProps {
   currentStep: number;
   totalSteps: number;
   onCancel?: () => void;
+  t: TranslationDictionary;
 }
 
 export const ProcessingProgress: React.FC<ProcessingProgressProps> = ({
@@ -17,6 +19,7 @@ export const ProcessingProgress: React.FC<ProcessingProgressProps> = ({
   currentStep,
   totalSteps,
   onCancel,
+  t,
 }) => {
   if (!isOpen) return null;
 
@@ -24,7 +27,7 @@ export const ProcessingProgress: React.FC<ProcessingProgressProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-md animate-fade-in">
-      <div className="w-full max-w-md p-6 sm:p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl space-y-6 text-center">
+      <div className="w-full max-w-md p-6 sm:p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 shadow-2xl space-y-6 text-center">
         {/* Animated Icon */}
         <div className="relative w-16 h-16 mx-auto flex items-center justify-center">
           <div className="absolute inset-0 rounded-full bg-blue-500/20 animate-ping" />
@@ -36,20 +39,20 @@ export const ProcessingProgress: React.FC<ProcessingProgressProps> = ({
         {/* Text Details */}
         <div className="space-y-2">
           <h3 className="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white">
-            Menggabungkan Dokumen PDF...
+            {t.mergingTitle}
           </h3>
-          <p className="text-xs text-slate-500 dark:text-slate-400 font-medium px-2 leading-relaxed">
+          <p className="text-xs text-slate-600 dark:text-slate-400 font-medium px-2 leading-relaxed">
             {progressMessage}
           </p>
         </div>
 
         {/* Progress Bar */}
         <div className="space-y-2">
-          <div className="flex justify-between items-center text-xs font-black text-slate-700 dark:text-slate-300">
-            <span>Progres Pemrosesan</span>
+          <div className="flex justify-between items-center text-xs font-black text-slate-800 dark:text-slate-200">
+            <span>{t.processingProgress}</span>
             <span className="text-blue-600 dark:text-sky-400">{percentage}%</span>
           </div>
-          <div className="w-full h-3 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden p-0.5 border border-slate-200/50 dark:border-slate-700/50">
+          <div className="w-full h-3 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden p-0.5 border border-slate-300 dark:border-slate-700">
             <div
               className="h-full rounded-full bg-gradient-to-r from-blue-600 to-sky-500 transition-all duration-300 shadow-sm"
               style={{ width: `${percentage}%` }}
@@ -58,9 +61,9 @@ export const ProcessingProgress: React.FC<ProcessingProgressProps> = ({
         </div>
 
         {/* Privacy Note */}
-        <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/50 dark:border-slate-700/50 flex items-center justify-center gap-2 text-[11px] text-slate-500 dark:text-slate-400 font-semibold">
-          <ShieldCheck className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
-          <span>Pemrosesan berlangsung 100% lokal di RAM perangkat</span>
+        <div className="p-3 rounded-xl bg-slate-100 dark:bg-slate-800/60 border border-slate-300 dark:border-slate-700 flex items-center justify-center gap-2 text-[11px] text-slate-700 dark:text-slate-300 font-semibold">
+          <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
+          <span>{t.ramProcessing}</span>
         </div>
 
         {/* Cancel Button */}
@@ -68,9 +71,9 @@ export const ProcessingProgress: React.FC<ProcessingProgressProps> = ({
           <button
             type="button"
             onClick={onCancel}
-            className="px-4 py-2 rounded-xl text-xs font-extrabold text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors btn-press-effect"
+            className="px-4 py-2 rounded-xl text-xs font-extrabold text-slate-600 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors btn-press-effect"
           >
-            Batalkan Proses
+            {t.cancelProcess}
           </button>
         )}
       </div>

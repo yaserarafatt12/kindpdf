@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header, { ViewMode } from '@/components/Header';
 import PrivacyNotice from '@/components/PrivacyNotice';
 import ToolGrid, { ToolId } from '@/components/ToolGrid';
@@ -13,6 +13,11 @@ import { downloadBlob } from '@/lib/files/downloadBlob';
 import { formatFileSize } from '@/lib/files/formatFileSize';
 import { HumanError } from '@/lib/errors/messages';
 import {
+  Language,
+  translations,
+  detectBrowserLanguage,
+} from '@/lib/i18n/translations';
+import {
   FileStack,
   Trash2,
   AlertCircle,
@@ -24,12 +29,38 @@ import {
 
 export default function Home() {
   const [activeView, setActiveView] = useState<ViewMode>('grid');
+  const [lang, setLang] = useState<Language>('en');
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
   const [files, setFiles] = useState<PdfFileItem[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
   const [progressMsg, setProgressMsg] = useState('');
   const [currentStep, setCurrentStep] = useState(0);
   const [totalSteps, setTotalSteps] = useState(0);
   const [errorToast, setErrorToast] = useState<HumanError | null>(null);
+
+  // Client-side initialization for browser language & theme
+  useEffect(() => {
+    const detected = detectBrowserLanguage();
+    setLang(detected);
+  }, []);
+
+  const toggleLanguage = () => {
+    setLang((prev) => (prev === 'en' ? 'id' : 'en'));
+  };
+
+  const toggleTheme = () => {
+    setIsDarkMode((prev) => {
+      const next = !prev;
+      if (next) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+      return next;
+    });
+  };
+
+  const t = translations[lang];
 
   // Handle files selected via dropzone or picker
   const handleFilesSelected = async (selectedFiles: File[]) => {
@@ -100,8 +131,8 @@ export default function Home() {
     if (files.length < 2) {
       setErrorToast({
         type: 'EMPTY_FILE_LIST',
-        title: 'Kurang Dari 2 Dokumen',
-        message: 'Pilih minimal 2 dokumen PDF untuk digabungkan.',
+        title: lang === 'en' ? 'Fewer Than 2 Documents' : 'Kurang Dari 2 Dokumen',
+        message: lang === 'en' ? 'Please select at least 2 PDF documents to merge.' : 'Pilih minimal 2 dokumen PDF untuk digabungkan.',
       });
       return;
     }
@@ -109,7 +140,7 @@ export default function Home() {
     setIsProcessing(true);
     setCurrentStep(0);
     setTotalSteps(files.length);
-    setProgressMsg('Memulai penggabungan dokumen PDF secara lokal...');
+    setProgressMsg(lang === 'en' ? 'Starting local PDF document merge...' : 'Memulai penggabungan dokumen PDF secara lokal...');
 
     try {
       const fileObjects = files.map((f) => f.file);
@@ -122,7 +153,7 @@ export default function Home() {
       // Convert Uint8Array to Blob and download
       const blob = new Blob([mergedBytes.buffer as ArrayBuffer], { type: 'application/pdf' });
       const firstFileName = files[0].name.replace(/\.pdf$/i, '');
-      const downloadName = `LocalPDF_${firstFileName}_Merged.pdf`;
+      const downloadName = `KindPDF_${firstFileName}_Merged.pdf`;
 
       downloadBlob(blob, downloadName);
 
@@ -133,37 +164,45 @@ export default function Home() {
       setIsProcessing(false);
       setErrorToast({
         type: 'CORRUPTED',
-        title: 'Gagal Menggabungkan PDF',
-        message: err?.message || 'Terjadi kesalahan tidak terduga saat memproses dokumen.',
+        title: lang === 'en' ? 'Failed to Merge PDF' : 'Gagal Menggabungkan PDF',
+        message: err?.message || 'Unexpected error occurred while processing documents.',
       });
     }
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100">
+    <div className="min-h-screen flex flex-col bg-slate-100 dark:bg-slate-950 text-slate-900 dark:text-slate-100">
       {/* Header Bar */}
-      <Header activeView={activeView} onViewChange={setActiveView} />
+      <Header
+        activeView={activeView}
+        onViewChange={setActiveView}
+        lang={lang}
+        onLangToggle={toggleLanguage}
+        t={t}
+        isDarkMode={isDarkMode}
+        onThemeToggle={toggleTheme}
+      />
 
       {/* Main Workspace */}
       <main className="flex-1 max-w-6xl w-full mx-auto px-4 py-6 sm:py-10 space-y-6">
         {/* Privacy Banner */}
-        <PrivacyNotice />
+        <PrivacyNotice t={t} />
 
-        {/* VIEW MODE 1: GRID LANDING PAGE (iLovePDF Style) */}
+        {/* VIEW MODE 1: GRID LANDING PAGE */}
         {activeView === 'grid' && (
           <div className="space-y-6">
             {/* Main Landing Hero */}
             <div className="text-center space-y-3 py-6 sm:py-8 max-w-3xl mx-auto">
               <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-slate-900 dark:text-white leading-tight">
-                Setiap Peralatan PDF Yang Anda Butuhkan Dalam Satu Tempat
+                {t.heroTitle}
               </h2>
               <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 font-medium leading-relaxed">
-                Kelola, gabungkan, pisahkan, dan atur dokumen PDF secara instan di peramban Anda. 100% GRATIS, 100% PRIVAT, dan tanpa unggahan server.
+                {t.heroSubtitle}
               </p>
             </div>
 
             {/* Tool Grid Cards */}
-            <ToolGrid onSelectTool={(toolId: ToolId) => setActiveView(toolId)} />
+            <ToolGrid onSelectTool={(toolId: ToolId) => setActiveView(toolId)} t={t} />
           </div>
         )}
 
@@ -174,23 +213,23 @@ export default function Home() {
             <button
               type="button"
               onClick={() => setActiveView('grid')}
-              className="inline-flex items-center gap-2 text-xs font-extrabold text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-sky-400 transition-colors btn-press-effect"
+              className="inline-flex items-center gap-2 text-xs font-black text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-sky-400 transition-colors btn-press-effect"
             >
               <ArrowLeft className="w-4 h-4" />
-              <span>Kembali ke Semua Alat</span>
+              <span>{t.backToAllTools}</span>
             </button>
 
             {/* Merge Hero Section */}
             <div className="text-center space-y-2 py-2">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-600 dark:text-sky-400 text-xs font-black">
                 <FileStack className="w-3.5 h-3.5" />
-                <span>Alat Gabungkan PDF (PDF Merge Tool)</span>
+                <span>{t.mergePdf} Tool</span>
               </div>
               <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900 dark:text-white">
-                Gabungkan Beberapa Berkas PDF Menjadi Satu
+                {t.mergeHeroTitle}
               </h2>
-              <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium max-w-xl mx-auto">
-                Urutkan dokumen sesuai keinginan Anda dan gabungkan secara instan tanpa perlu mengunggah berkas ke server mana pun.
+              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 font-medium max-w-xl mx-auto">
+                {t.mergeHeroSubtitle}
               </p>
             </div>
 
@@ -217,24 +256,24 @@ export default function Home() {
             )}
 
             {/* Dropzone Upload Section */}
-            <FileDropzone onFilesSelected={handleFilesSelected} disabled={isProcessing} />
+            <FileDropzone onFilesSelected={handleFilesSelected} disabled={isProcessing} t={t} />
 
             {/* Selected Documents Workspace */}
             {files.length > 0 && (
               <div className="space-y-4 pt-2">
                 {/* Header Toolbar Summary */}
-                <div className="flex flex-wrap items-center justify-between gap-3 p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
+                <div className="flex flex-wrap items-center justify-between gap-3 p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 shadow-sm">
                   <div className="space-y-0.5">
                     <div className="flex items-center gap-2">
                       <span className="px-2.5 py-0.5 rounded-full bg-blue-600 text-white text-xs font-black">
-                        {files.length} Dokumen
+                        {files.length} {t.documentsCount}
                       </span>
-                      <span className="text-xs font-extrabold text-slate-700 dark:text-slate-300">
-                        • {totalPages} Halaman Total
+                      <span className="text-xs font-extrabold text-slate-800 dark:text-slate-200">
+                        • {totalPages} {t.pagesTotal}
                       </span>
                     </div>
-                    <p className="text-[11px] font-semibold text-slate-500 dark:text-slate-400">
-                      Total Ukuran: {formatFileSize(totalSizeBytes)} (Gunakan tombol # untuk mengubah urutan)
+                    <p className="text-[11px] font-semibold text-slate-600 dark:text-slate-400">
+                      {t.totalSize}: {formatFileSize(totalSizeBytes)} ({t.reorderHint})
                     </p>
                   </div>
 
@@ -242,10 +281,10 @@ export default function Home() {
                     <button
                       type="button"
                       onClick={handleClearAll}
-                      className="px-3 py-1.5 rounded-xl text-xs font-extrabold text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/50 transition-colors flex items-center gap-1.5 btn-press-effect"
+                      className="px-3 py-1.5 rounded-xl text-xs font-extrabold text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/50 border border-rose-200 dark:border-rose-900/50 transition-colors flex items-center gap-1.5 btn-press-effect"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
-                      <span>Hapus Semua</span>
+                      <span>{t.clearAll}</span>
                     </button>
                   </div>
                 </div>
@@ -267,9 +306,9 @@ export default function Home() {
 
                 {/* Merge Action CTA Bar */}
                 <div className="pt-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-                  <div className="flex items-center gap-2 text-xs font-semibold text-slate-500 dark:text-slate-400">
-                    <ShieldCheck className="w-4 h-4 text-emerald-500 shrink-0" />
-                    <span>Dokumen akan digabungkan secara instan di peramban Anda.</span>
+                  <div className="flex items-center gap-2 text-xs font-semibold text-slate-600 dark:text-slate-400">
+                    <ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                    <span>{t.ramProcessing}</span>
                   </div>
 
                   <button
@@ -283,7 +322,7 @@ export default function Home() {
                     }`}
                   >
                     <FileStack className="w-4 h-4" />
-                    <span>Gabungkan PDF Sekarang</span>
+                    <span>{t.mergeNow}</span>
                     <ArrowRight className="w-4 h-4 ml-1" />
                   </button>
                 </div>
@@ -294,11 +333,11 @@ export default function Home() {
       </main>
 
       {/* Footer */}
-      <footer className="w-full border-t border-slate-200 dark:border-slate-800 py-6 mt-12 text-center text-xs font-semibold text-slate-500 dark:text-slate-400 space-y-1">
-        <p>
-          Local<span className="text-blue-600 dark:text-sky-400 font-extrabold">PDF</span> by edsheero — Privacy-First PDF Tools
+      <footer className="w-full border-t border-slate-300 dark:border-slate-800 py-6 mt-12 text-center text-xs font-semibold text-slate-600 dark:text-slate-400 space-y-1">
+        <p className="tracking-widest font-black text-slate-900 dark:text-white">
+          K I N D<span className="text-blue-600 dark:text-sky-400">P D F</span> — Privacy-First Local PDF Tools
         </p>
-        <p className="text-[11px] text-slate-400 dark:text-slate-600">
+        <p className="text-[11px] text-slate-500 dark:text-slate-500">
           Process documents locally inside your web browser. 100% Zero-Server Upload.
         </p>
       </footer>
@@ -309,6 +348,7 @@ export default function Home() {
         progressMessage={progressMsg}
         currentStep={currentStep}
         totalSteps={totalSteps}
+        t={t}
       />
     </div>
   );

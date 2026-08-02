@@ -2,13 +2,15 @@
 
 import React, { useState, useRef } from 'react';
 import { UploadCloud, FileText } from 'lucide-react';
+import { TranslationDictionary } from '@/lib/i18n/translations';
 
 interface FileDropzoneProps {
   onFilesSelected: (files: File[]) => void;
   disabled?: boolean;
+  t: TranslationDictionary;
 }
 
-export const FileDropzone: React.FC<FileDropzoneProps> = ({ onFilesSelected, disabled = false }) => {
+export const FileDropzone: React.FC<FileDropzoneProps> = ({ onFilesSelected, disabled = false, t }) => {
   const [isDragOver, setIsDragOver] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -57,7 +59,7 @@ export const FileDropzone: React.FC<FileDropzoneProps> = ({ onFilesSelected, dis
       className={`w-full rounded-[28px] border-2 border-dashed p-8 sm:p-12 text-center flex flex-col items-center justify-center gap-4 transition-all duration-300 cursor-pointer ${
         isDragOver
           ? 'border-blue-600 bg-blue-500/10 dark:bg-blue-500/15 scale-[1.01] shadow-xl'
-          : 'border-slate-300 dark:border-slate-700 bg-white/60 dark:bg-slate-900/60 hover:border-blue-500/60 hover:bg-slate-50 dark:hover:bg-slate-800/80 shadow-sm'
+          : 'border-slate-400 dark:border-slate-700 bg-white dark:bg-slate-900 hover:border-blue-600 hover:bg-slate-100/60 dark:hover:bg-slate-800/80 shadow-sm'
       } ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
     >
       <input
@@ -70,28 +72,28 @@ export const FileDropzone: React.FC<FileDropzoneProps> = ({ onFilesSelected, dis
         disabled={disabled}
       />
 
-      <div className="p-4 rounded-3xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-sky-400 shadow-md">
+      <div className="p-4 rounded-3xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-sky-400 border border-blue-200 dark:border-blue-900 shadow-sm">
         <UploadCloud className="w-8 h-8 sm:w-10 sm:h-10 animate-bounce-slow" />
       </div>
 
       <div className="space-y-1.5 max-w-sm">
         <h3 className="text-sm sm:text-base font-extrabold text-slate-900 dark:text-white">
-          Tarik & Lepaskan Dokumen PDF ke Sini
+          {t.dropzoneTitle}
         </h3>
         <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
-          atau <span className="text-blue-600 dark:text-sky-400 font-extrabold underline underline-offset-2">Pilih Dokumen dari HP/Komputer</span>
+          {t.dropzoneSubtitle} <span className="text-blue-600 dark:text-sky-400 font-black underline underline-offset-2">{t.dropzoneClick}</span>
         </p>
       </div>
 
-      <div className="pt-2 flex flex-wrap items-center justify-center gap-3 text-[11px] text-slate-500 dark:text-slate-400 font-semibold border-t border-slate-200/60 dark:border-slate-800/60 w-full max-w-md">
-        <span className="flex items-center gap-1">
-          <FileText className="w-3.5 h-3.5 text-blue-500" />
-          Format .PDF
+      <div className="pt-2 flex flex-wrap items-center justify-center gap-3 text-[11px] text-slate-600 dark:text-slate-400 font-bold border-t border-slate-200 dark:border-slate-800/80 w-full max-w-md">
+        <span className="flex items-center gap-1 text-slate-700 dark:text-slate-300 font-extrabold">
+          <FileText className="w-3.5 h-3.5 text-blue-600 dark:text-sky-400" />
+          {t.formatPdfOnly}
         </span>
         <span>•</span>
-        <span>Maksimal 100 MB per berkas</span>
+        <span>{t.maxFileSize}</span>
         <span>•</span>
-        <span>Maksimal 10 berkas sekaligus</span>
+        <span>{t.maxFilesCount}</span>
       </div>
     </div>
   );
