@@ -249,7 +249,9 @@ export default function Home() {
             <SuccessDownloadScreen
               title={completedResult.title}
               downloadFileName={completedResult.downloadName}
-              onDownload={() => downloadBlob(completedResult.blob, completedResult.downloadName)}
+              onDownload={(customName?: string) =>
+                downloadBlob(completedResult.blob, customName || completedResult.downloadName)
+              }
               onStartOver={() => {
                 setCompletedResult(null);
                 setFiles([]);

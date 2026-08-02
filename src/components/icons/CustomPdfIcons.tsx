@@ -29,7 +29,7 @@ export const MergePdfIcon: React.FC<IconProps> = ({ className = 'w-6 h-6' }) => 
 );
 
 /**
- * Custom SVG Icon for Split PDF (Document splitting apart with outward arrows)
+ * Custom SVG Icon for Split PDF (Sleek document splitting in two with split divider line)
  */
 export const SplitPdfIcon: React.FC<IconProps> = ({ className = 'w-6 h-6' }) => (
   <svg
@@ -38,23 +38,21 @@ export const SplitPdfIcon: React.FC<IconProps> = ({ className = 'w-6 h-6' }) => 
     xmlns="http://www.w3.org/2000/svg"
     className={className}
   >
-    {/* Document Left Half */}
-    <path d="M4 4C4 2.89543 4.89543 2 6 2H10V22H6C4.89543 22 4 21.1046 4 20V4Z" className="fill-amber-100 dark:fill-amber-950 stroke-amber-600 dark:stroke-amber-400" strokeWidth="1.8" />
-    
-    {/* Document Right Half */}
-    <path d="M14 2H18C19.1046 2 20 2.89543 20 4V20C20 21.1046 19.1046 22 18 22H14V2Z" className="fill-amber-100 dark:fill-amber-950 stroke-amber-600 dark:stroke-amber-400" strokeWidth="1.8" />
-    
-    {/* Dashed Split Line */}
-    <path d="M12 3V21" className="stroke-amber-600 dark:stroke-amber-400" strokeWidth="2" strokeDasharray="2 2" strokeLinecap="round" />
-    
-    {/* Outward Split Arrows */}
-    <path d="M8 12H2M5 9L2 12L5 15" className="stroke-amber-600 dark:stroke-amber-400" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-    <path d="M16 12H22M19 9L22 12L19 15" className="stroke-amber-600 dark:stroke-amber-400" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+    {/* Left Page Half */}
+    <rect x="3" y="3" width="7.5" height="18" rx="2" className="fill-amber-100 dark:fill-amber-950/80 stroke-amber-600 dark:stroke-amber-400" strokeWidth="1.8" />
+    <path d="M5.5 7H8M5.5 11H8M5.5 15H7" className="stroke-amber-600 dark:stroke-amber-400" strokeWidth="1.5" strokeLinecap="round" />
+
+    {/* Right Page Half */}
+    <rect x="13.5" y="3" width="7.5" height="18" rx="2" className="fill-amber-100 dark:fill-amber-950/80 stroke-amber-600 dark:stroke-amber-400" strokeWidth="1.8" />
+    <path d="M16 7H18.5M16 11H18.5M16 15H17.5" className="stroke-amber-600 dark:stroke-amber-400" strokeWidth="1.5" strokeLinecap="round" />
+
+    {/* Split Cut Path in Center */}
+    <path d="M12 4V20" className="stroke-amber-500 dark:stroke-amber-400" strokeWidth="1.8" strokeDasharray="2 2" strokeLinecap="round" />
   </svg>
 );
 
 /**
- * Custom SVG Icon for Organize Pages (Grid of page thumbnails with rotation arrow)
+ * Custom SVG Icon for Organize Pages (4-Page Thumbnail Grid with Rotate & Reorder Arrows)
  */
 export const OrganizePagesIcon: React.FC<IconProps> = ({ className = 'w-6 h-6' }) => (
   <svg
@@ -63,15 +61,15 @@ export const OrganizePagesIcon: React.FC<IconProps> = ({ className = 'w-6 h-6' }
     xmlns="http://www.w3.org/2000/svg"
     className={className}
   >
-    {/* 4 Page Grid Thumbnails */}
-    <rect x="3" y="3" width="8" height="9" rx="1.5" className="fill-purple-100 dark:fill-purple-950 stroke-purple-600 dark:stroke-purple-400" strokeWidth="1.8" />
-    <rect x="13" y="3" width="8" height="9" rx="1.5" className="fill-purple-100 dark:fill-purple-950 stroke-purple-600 dark:stroke-purple-400" strokeWidth="1.8" />
-    <rect x="3" y="14" width="8" height="7" rx="1.5" className="fill-purple-100 dark:fill-purple-950 stroke-purple-600 dark:stroke-purple-400" strokeWidth="1.8" />
+    {/* Page Grid 2x2 */}
+    <rect x="3" y="3" width="8" height="8" rx="2" className="fill-purple-100 dark:fill-purple-950/80 stroke-purple-600 dark:stroke-purple-400" strokeWidth="1.8" />
+    <rect x="13" y="3" width="8" height="8" rx="2" className="fill-purple-100 dark:fill-purple-950/80 stroke-purple-600 dark:stroke-purple-400" strokeWidth="1.8" />
+    <rect x="3" y="13" width="8" height="8" rx="2" className="fill-purple-100 dark:fill-purple-950/80 stroke-purple-600 dark:stroke-purple-400" strokeWidth="1.8" />
     
-    {/* Active Page with Reorder Arrow */}
-    <rect x="13" y="14" width="8" height="7" rx="1.5" className="fill-purple-600 dark:fill-purple-500/30 stroke-purple-600 dark:stroke-purple-400" strokeWidth="1.8" />
-    <path d="M15 17.5C15 16.1193 16.1193 15 17.5 15C18.8807 15 20 16.1193 20 17.5" className="stroke-white dark:stroke-purple-300" strokeWidth="1.6" strokeLinecap="round" />
-    <path d="M19 16L20.5 17.5L19 19" className="stroke-white dark:stroke-purple-300" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+    {/* Active Rotate & Reorder Page */}
+    <rect x="13" y="13" width="8" height="8" rx="2" className="fill-purple-600 dark:fill-purple-500/30 stroke-purple-600 dark:stroke-purple-400" strokeWidth="1.8" />
+    <path d="M15.5 17C15.5 15.6193 16.6193 14.5 18 14.5C19.3807 14.5 20.5 15.6193 20.5 17" className="stroke-white dark:stroke-purple-300" strokeWidth="1.5" strokeLinecap="round" />
+    <path d="M19 15.5L20.5 17L19 18.5" className="stroke-white dark:stroke-purple-300" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 );
 

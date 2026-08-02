@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Download, ArrowLeft, ChevronRight } from 'lucide-react';
+import { Download, ArrowLeft, ChevronRight, Edit3 } from 'lucide-react';
 import { TranslationDictionary, Language } from '@/lib/i18n/translations';
 import { tools, ToolDefinition } from '@/lib/tools/manifest';
 import { getToolIcon, getIconBg } from './ToolGrid';
@@ -10,7 +10,7 @@ import { ViewMode } from './Header';
 interface SuccessDownloadScreenProps {
   title: string;
   downloadFileName: string;
-  onDownload: () => void;
+  onDownload: (customName?: string) => void;
   onStartOver: () => void;
   onSelectTool: (toolId: ViewMode) => void;
   t: TranslationDictionary;
@@ -25,10 +25,23 @@ export const SuccessDownloadScreen: React.FC<SuccessDownloadScreenProps> = ({
   onSelectTool,
   lang,
 }) => {
+  const [fileName, setFileName] = React.useState(downloadFileName);
+  const [isEditing, setIsEditing] = React.useState(false);
+
   // Pull REAL Popular Tools directly from Single Source of Truth Manifest (manifest.ts)
   const realPopularTools: ToolDefinition[] = tools.filter(
     (item) => item.popular && item.route !== 'merge'
   );
+
+  const handleSaveRename = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    if (!fileName.trim()) {
+      setFileName(downloadFileName);
+    } else if (!fileName.toLowerCase().endsWith('.pdf')) {
+      setFileName(`${fileName.trim()}.pdf`);
+    }
+    setIsEditing(false);
+  };
 
   return (
     <div className="max-w-3xl mx-auto py-4 sm:py-6 space-y-6 sm:space-y-8 animate-fade-in px-2 sm:px-0">
@@ -50,19 +63,61 @@ export const SuccessDownloadScreen: React.FC<SuccessDownloadScreenProps> = ({
           {title}
         </h2>
 
-        {/* Big Prominent High-Impact Download Button */}
-        <div className="pt-2 max-w-lg mx-auto space-y-3">
-          <button
-            type="button"
-            onClick={onDownload}
-            className="w-full py-5 sm:py-6 px-8 sm:px-10 rounded-2xl bg-gradient-to-r from-blue-600 via-sky-600 to-blue-700 hover:from-blue-500 hover:to-sky-500 text-white font-black text-lg sm:text-xl flex items-center justify-center gap-3.5 shadow-2xl shadow-blue-600/35 hover:shadow-blue-500/50 scale-[1.01] hover:scale-[1.03] transition-all duration-200 btn-press-effect"
-          >
-            <Download className="w-7 h-7 stroke-[3] shrink-0" />
-            <span>{lang === 'en' ? 'Download Merged PDF' : 'Unduh Merged PDF'}</span>
-          </button>
-          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-semibold truncate px-4">
-            {downloadFileName}
-          </p>
+        {/* Big Prominent High-Impact Download Button + Rename Icon */}
+        <div className="pt-2 max-w-lg mx-auto space-y-4">
+          <div className="flex items-center gap-2.5">
+            {/* Download CTA Button */}
+            <button
+              type="button"
+              onClick={() => onDownload(fileName)}
+              className="flex-1 py-5 sm:py-6 px-6 sm:px-8 rounded-2xl bg-gradient-to-r from-blue-600 via-sky-600 to-blue-700 hover:from-blue-500 hover:to-sky-500 text-white font-black text-base sm:text-xl flex items-center justify-center gap-3 shadow-2xl shadow-blue-600/35 hover:shadow-blue-500/50 scale-[1.01] hover:scale-[1.02] transition-all duration-200 btn-press-effect"
+            >
+              <Download className="w-6 h-6 sm:w-7 sm:h-7 stroke-[3] shrink-0" />
+              <span>{lang === 'en' ? 'Download Merged PDF' : 'Unduh Merged PDF'}</span>
+            </button>
+
+            {/* Rename Icon Button */}
+            <button
+              type="button"
+              onClick={() => setIsEditing(!isEditing)}
+              title={lang === 'en' ? 'Rename output PDF' : 'Ubah nama berkas PDF'}
+              className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-sky-400 hover:border-blue-500 dark:hover:border-sky-500 shadow-md transition-all btn-press-effect shrink-0"
+            >
+              <Edit3 className="w-6 h-6" />
+            </button>
+          </div>
+
+          {/* Output Filename (Enlarged Text & Inline Rename Mode) */}
+          <div className="px-2">
+            {isEditing ? (
+              <form onSubmit={handleSaveRename} className="flex items-center gap-2 max-w-md mx-auto">
+                <input
+                  type="text"
+                  value={fileName}
+                  onChange={(e) => setFileName(e.target.value)}
+                  autoFocus
+                  className="flex-1 px-3 py-2 rounded-xl text-sm font-extrabold bg-white dark:bg-slate-800 border-2 border-blue-500 dark:border-sky-400 text-slate-900 dark:text-white outline-none shadow-sm"
+                />
+                <button
+                  type="submit"
+                  className="px-3 py-2 rounded-xl text-xs font-black bg-blue-600 text-white hover:bg-blue-500 transition-colors btn-press-effect"
+                >
+                  {lang === 'en' ? 'Save' : 'Simpan'}
+                </button>
+              </form>
+            ) : (
+              <p className="text-sm sm:text-base font-black text-slate-800 dark:text-slate-200 truncate flex items-center justify-center gap-2">
+                <span>{fileName}</span>
+                <button
+                  type="button"
+                  onClick={() => setIsEditing(true)}
+                  className="text-xs text-blue-600 dark:text-sky-400 hover:underline font-bold"
+                >
+                  ({lang === 'en' ? 'Edit name' : 'Ubah nama'})
+                </button>
+              </p>
+            )}
+          </div>
         </div>
       </div>
 
