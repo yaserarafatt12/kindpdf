@@ -33,29 +33,29 @@ export const FileCard: React.FC<FileCardProps> = ({
 }) => {
   return (
     <div
-      className={`w-full py-5 px-4.5 sm:px-6 rounded-2xl bg-white dark:bg-slate-900 border-2 transition-all duration-200 flex items-center justify-between gap-4 shadow-xs ${
+      className={`w-full py-4 sm:py-5 px-3.5 sm:px-6 rounded-2xl bg-white dark:bg-slate-900 border-2 transition-all duration-200 flex items-center justify-between gap-2.5 sm:gap-4 shadow-xs ${
         isDragging
           ? 'border-blue-600 bg-blue-50/50 dark:bg-blue-950/40 shadow-lg scale-[1.01]'
           : 'border-slate-200/90 dark:border-slate-800 hover:border-blue-500 hover:shadow-md'
       }`}
     >
       {/* File Info */}
-      <div className="flex-1 min-w-0 py-1">
-        <div className="flex items-center gap-3">
+      <div className="flex-1 min-w-0 py-0.5">
+        <div className="flex items-center gap-2 sm:gap-3">
           <FileText className="w-4 h-4 text-blue-600 dark:text-sky-400 shrink-0" />
           <h4 className="text-xs sm:text-sm font-extrabold text-slate-900 dark:text-white truncate">
             {item.name}
           </h4>
         </div>
-        <div className="flex items-center gap-2.5 text-xs font-semibold text-slate-500 dark:text-slate-400 mt-2.5">
+        <div className="flex items-center gap-2 sm:gap-2.5 text-xs font-semibold text-slate-500 dark:text-slate-400 mt-2 sm:mt-2.5">
           <span>{item.pageCount} pages</span>
           <span className="text-slate-300 dark:text-slate-700">•</span>
           <span>{formatFileSize(item.size)}</span>
         </div>
       </div>
 
-      {/* Action Controls (Fixed 3-Slot Alignment for Perfect Straight Edge) */}
-      <div className="flex items-center gap-1 shrink-0">
+      {/* Action Controls (Fixed 108px Width 3-Slot Alignment for Perfect Straight Edge across All Devices) */}
+      <div className="flex items-center justify-end gap-1 shrink-0 w-[108px] min-w-[108px]">
         {/* Move Up Slot */}
         <button
           type="button"
