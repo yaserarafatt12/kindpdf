@@ -36,7 +36,7 @@ export const SuccessDownloadScreen: React.FC<SuccessDownloadScreenProps> = ({
     setFileName(downloadFileName);
   }, [downloadFileName]);
 
-  // Official iLovePDF Popular Hierarchy Rank
+  // Kindpdf Popular Hierarchy Rank
   const POPULAR_RANK: Record<string, number> = {
     compress: 1,       // Kompres PDF (#1 Most Used)
     'pdf-to-word': 2,  // PDF ke Word (#2 Most Used)
@@ -51,7 +51,7 @@ export const SuccessDownloadScreen: React.FC<SuccessDownloadScreenProps> = ({
     watermark: 11,     // Tanda Air
   };
 
-  // Pull REAL Popular Tools sorted strictly by official iLovePDF usage ranking (Top 4 only for balanced 2x2 grid)
+  // Pull REAL Popular Tools sorted strictly by Kindpdf usage ranking (Top 4 only for balanced 2x2 grid)
   const realPopularTools: ToolDefinition[] = tools
     .filter((item) => item.popular && item.route !== 'merge')
     .sort((a, b) => (POPULAR_RANK[a.id] || 99) - (POPULAR_RANK[b.id] || 99))

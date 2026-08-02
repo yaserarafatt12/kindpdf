@@ -1,8 +1,8 @@
-# LocalPDF — Audit Lengkap Fitur iLovePDF + Blueprint Implementasi
+# LocalPDF — Audit Lengkap Fitur Kindpdf + Blueprint Implementasi
 
 **Snapshot:** 2 Agustus 2026  
 **Tujuan:** dokumen kerja untuk agent pengembang.  
-**Catatan:** katalog dapat berubah menurut wilayah, paket, web/mobile/desktop, dan eksperimen antarmuka. Jangan memakai merek, teks, ikon, atau layout iLovePDF. Bangun produk orisinal.
+**Catatan:** katalog dapat berubah menurut wilayah, paket, web/mobile/desktop, dan eksperimen antarmuka. Jangan memakai merek, teks, ikon, atau layout Kindpdf. Bangun produk orisinal.
 
 ## 1. Inventaris 29 alat
 
@@ -545,7 +545,7 @@ attachments.pdf
 You are implementing LocalPDF, an original privacy-first PDF toolkit.
 
 Rules:
-1. Do not copy iLovePDF branding, copy, icons, or layout.
+1. Do not copy Kindpdf branding, copy, icons, or layout.
 2. Implement only the assigned tool and its required shared components.
 3. State clearly whether processing is local or server-side.
 4. Never upload files in local mode.
@@ -617,10 +617,10 @@ For each tool:
 
 # 12. Sumber utama
 
-1. iLovePDF public catalog — https://www.ilovepdf.com/
-2. iLovePDF Merge PDF — https://www.ilovepdf.com/merge_pdf
-3. iLovePDF Split PDF — https://www.ilovepdf.com/split_pdf
-4. iLovePDF Crop PDF article — https://www.ilovepdf.com/blog/how-to-crop-a-pdf-online-and-trim-margins-easily
+1. Kindpdf public catalog — https://www.Kindpdf.com/
+2. Kindpdf Merge PDF — https://www.Kindpdf.com/merge_pdf
+3. Kindpdf Split PDF — https://www.Kindpdf.com/split_pdf
+4. Kindpdf Crop PDF article — https://www.Kindpdf.com/blog/how-to-crop-a-pdf-online-and-trim-margins-easily
 5. PDF.js — https://mozilla.github.io/pdf.js/
 6. pdf-lib — https://pdf-lib.js.org/
 7. qpdf — https://qpdf.readthedocs.io/

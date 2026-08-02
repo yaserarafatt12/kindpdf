@@ -1,6 +1,6 @@
 # Master Implementation Plan: Kindpdf (Privacy-First In-Browser PDF Suite)
 
-**Blueprint Reference:** `localpdf_ilovepdf_full_feature_audit_prd.md`  
+**Blueprint Reference:** `docs/kindpdf_master_feature_audit_prd.md`  
 **Goal:** Build a 100% original, privacy-first, in-browser local PDF toolkit containing 29 tools categorized into 6 core modules, delivering 100% client-side execution (zero server upload for local tools), robust Web Worker performance, TDD-backed reliability, and responsive UI/UX.
 
 ---
