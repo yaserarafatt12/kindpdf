@@ -122,10 +122,8 @@ export const translations: Record<Language, TranslationDictionary> = {
 };
 
 /**
- * Auto detect browser language (default to 'en' if not 'id')
+ * Default language is English ('en'). User can manually switch to 'id' via language dropdown.
  */
 export function detectBrowserLanguage(): Language {
-  if (typeof window === 'undefined' || !navigator) return 'en';
-  const lang = (navigator.language || (navigator as any).userLanguage || '').toLowerCase();
-  return lang.startsWith('id') ? 'id' : 'en';
+  return 'en';
 }
