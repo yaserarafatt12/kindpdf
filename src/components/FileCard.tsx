@@ -54,33 +54,44 @@ export const FileCard: React.FC<FileCardProps> = ({
         </div>
       </div>
 
-      {/* Action Controls (Move & Delete) */}
+      {/* Action Controls (Fixed 3-Slot Alignment for Perfect Straight Edge) */}
       <div className="flex items-center gap-1 shrink-0">
-        {onMoveUp && index > 0 && (
-          <button
-            type="button"
-            onClick={() => onMoveUp(index)}
-            title="Move Up"
-            className="p-2 rounded-xl text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-sky-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors btn-press-effect"
-          >
-            <ChevronUp className="w-4 h-4" strokeWidth={2.75} />
-          </button>
-        )}
-        {onMoveDown && index < totalItems - 1 && (
-          <button
-            type="button"
-            onClick={() => onMoveDown(index)}
-            title="Move Down"
-            className="p-2 rounded-xl text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-sky-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors btn-press-effect"
-          >
-            <ChevronDown className="w-4 h-4" strokeWidth={2.75} />
-          </button>
-        )}
+        {/* Move Up Slot */}
+        <button
+          type="button"
+          onClick={() => onMoveUp && onMoveUp(index)}
+          disabled={!onMoveUp || index === 0}
+          title="Move Up"
+          className={`w-8 h-8 rounded-xl flex items-center justify-center transition-colors ${
+            onMoveUp && index > 0
+              ? 'text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-sky-400 hover:bg-slate-100 dark:hover:bg-slate-800 btn-press-effect'
+              : 'opacity-0 pointer-events-none'
+          }`}
+        >
+          <ChevronUp className="w-4 h-4" strokeWidth={2.75} />
+        </button>
+
+        {/* Move Down Slot */}
+        <button
+          type="button"
+          onClick={() => onMoveDown && onMoveDown(index)}
+          disabled={!onMoveDown || index === totalItems - 1}
+          title="Move Down"
+          className={`w-8 h-8 rounded-xl flex items-center justify-center transition-colors ${
+            onMoveDown && index < totalItems - 1
+              ? 'text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-sky-400 hover:bg-slate-100 dark:hover:bg-slate-800 btn-press-effect'
+              : 'opacity-0 pointer-events-none'
+          }`}
+        >
+          <ChevronDown className="w-4 h-4" strokeWidth={2.75} />
+        </button>
+
+        {/* Delete Slot */}
         <button
           type="button"
           onClick={() => onRemove(item.id)}
           title="Remove from list"
-          className="p-2 rounded-xl text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/50 transition-colors btn-press-effect ml-1"
+          className="w-8 h-8 rounded-xl flex items-center justify-center text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/50 transition-colors btn-press-effect"
         >
           <Trash2 className="w-4 h-4" />
         </button>
