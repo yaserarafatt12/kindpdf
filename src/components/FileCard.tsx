@@ -33,24 +33,23 @@ export const FileCard: React.FC<FileCardProps> = ({
 }) => {
   return (
     <div
-      className={`w-full p-4 rounded-2xl bg-white dark:bg-slate-900 border transition-all duration-200 flex items-center justify-between gap-3 shadow-sm ${
+      className={`w-full py-4.5 px-4 sm:px-5 rounded-2xl bg-white dark:bg-slate-900 border transition-all duration-200 flex items-center justify-between gap-4 shadow-sm ${
         isDragging
           ? 'border-blue-600 bg-blue-50/50 dark:bg-blue-950/40 shadow-lg scale-[1.01]'
-          : 'border-slate-300 dark:border-slate-800 hover:border-blue-600 hover:shadow-md'
+          : 'border-slate-200/90 dark:border-slate-800 hover:border-blue-500 hover:shadow-md'
       }`}
     >
       {/* File Info */}
-      <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2">
+      <div className="flex-1 min-w-0 py-0.5">
+        <div className="flex items-center gap-2.5">
           <FileText className="w-4 h-4 text-blue-600 dark:text-sky-400 shrink-0" />
-          <h4 className="text-xs sm:text-sm font-black text-slate-900 dark:text-white truncate">
+          <h4 className="text-xs sm:text-sm font-extrabold text-slate-900 dark:text-white truncate">
             {item.name}
           </h4>
         </div>
-        <div className="flex items-center gap-3 text-[11px] font-semibold text-slate-600 dark:text-slate-400 mt-1">
-          <span className="px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 font-extrabold border border-slate-200 dark:border-slate-700">
-            {item.pageCount} pages
-          </span>
+        <div className="flex items-center gap-2 text-xs font-semibold text-slate-500 dark:text-slate-400 mt-2">
+          <span>{item.pageCount} pages</span>
+          <span className="text-slate-300 dark:text-slate-700">•</span>
           <span>{formatFileSize(item.size)}</span>
         </div>
       </div>
@@ -62,9 +61,9 @@ export const FileCard: React.FC<FileCardProps> = ({
             type="button"
             onClick={() => onMoveUp(index)}
             title="Move Up"
-            className="p-1.5 rounded-lg text-slate-500 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-slate-800 transition-colors btn-press-effect"
+            className="p-2 rounded-xl text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-sky-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors btn-press-effect"
           >
-            <ChevronUp className="w-4 h-4" />
+            <ChevronUp className="w-4 h-4" strokeWidth={2.75} />
           </button>
         )}
         {onMoveDown && index < totalItems - 1 && (
@@ -72,9 +71,9 @@ export const FileCard: React.FC<FileCardProps> = ({
             type="button"
             onClick={() => onMoveDown(index)}
             title="Move Down"
-            className="p-1.5 rounded-lg text-slate-500 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-slate-800 transition-colors btn-press-effect"
+            className="p-2 rounded-xl text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-sky-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors btn-press-effect"
           >
-            <ChevronDown className="w-4 h-4" />
+            <ChevronDown className="w-4 h-4" strokeWidth={2.75} />
           </button>
         )}
         <button
