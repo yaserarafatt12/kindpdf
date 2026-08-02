@@ -181,12 +181,6 @@ export const ToolGrid: React.FC<ToolGridProps> = ({ onSelectTool, t }) => {
       <p className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-medium flex-1">
         {item.description}
       </p>
-
-      {item.note && (
-        <p className="mt-auto text-[10px] text-slate-700 dark:text-slate-300 font-semibold bg-slate-100 dark:bg-slate-800/80 px-2.5 py-1 rounded-lg border border-slate-300 dark:border-slate-700 line-clamp-1">
-          ⚠️ {item.note}
-        </p>
-      )}
     </div>
   );
 

@@ -193,8 +193,6 @@ export const CompressPdfWorkspace: React.FC<CompressPdfWorkspaceProps> = ({ onBa
         </div>
       )}
 
-      {/* Privacy Notice */}
-      <PrivacyNotice t={t} />
     </div>
   );
 };
