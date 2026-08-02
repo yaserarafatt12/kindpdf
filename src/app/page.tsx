@@ -54,6 +54,15 @@ export default function Home() {
   const [lang, setLang] = useState<Language>('en');
   const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
   const [files, setFiles] = useState<PdfFileItem[]>([]);
+  const [sortAsc, setSortAsc] = useState<boolean>(true);
+
+  // Toggle A-Z / Z-A Sorting
+  const handleToggleSort = () => {
+    setFiles((prev) =>
+      [...prev].sort((a, b) => (sortAsc ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name)))
+    );
+    setSortAsc(!sortAsc);
+  };
   const [isProcessing, setIsProcessing] = useState(false);
   const [progressMsg, setProgressMsg] = useState('');
   const [currentStep, setCurrentStep] = useState(0);
@@ -257,16 +266,14 @@ export default function Home() {
                     />
                   </label>
 
-                  {/* Sort A-Z Button */}
+                  {/* Sort A-Z / Z-A Toggle Button */}
                   <button
                     type="button"
-                    title={lang === 'en' ? 'Sort A-Z' : 'Urutkan A-Z'}
-                    onClick={() => {
-                      setFiles((prev) => [...prev].sort((a, b) => a.name.localeCompare(b.name)));
-                    }}
-                    className="px-2.5 py-1.5 rounded-xl bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-black border border-slate-300 dark:border-slate-700 transition-colors btn-press-effect"
+                    title={sortAsc ? (lang === 'en' ? 'Sort A to Z' : 'Urutkan A ke Z') : (lang === 'en' ? 'Sort Z to A' : 'Urutkan Z ke A')}
+                    onClick={handleToggleSort}
+                    className="px-2.5 py-1.5 rounded-xl bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-black border border-slate-300 dark:border-slate-700 transition-colors btn-press-effect flex items-center gap-1"
                   >
-                    A-Z
+                    <span>{sortAsc ? 'A-Z' : 'Z-A'}</span>
                   </button>
 
                   {/* Clear All */}
