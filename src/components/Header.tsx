@@ -8,7 +8,7 @@ import {
   Github,
   ChevronDown,
   Check,
-  LayoutGrid,
+  Menu,
   X,
 } from 'lucide-react';
 import { Language, TranslationDictionary } from '@/lib/i18n/translations';
@@ -91,16 +91,16 @@ export const Header: React.FC<HeaderProps> = ({
     <>
       <header className="w-full bg-white dark:bg-slate-900 border-b-2 border-slate-300 dark:border-slate-800 sticky top-0 z-40 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 py-3 sm:py-3.5 flex items-center justify-between gap-3">
-          {/* Left Side: 4-Grid App Menu Icon + Brand Logo (Kindpdf) */}
-          <div className="flex items-center gap-3">
-            {/* 4-Grid App Launcher Button */}
+          {/* Left Side: Clean 3-Line Hamburger Icon + Brand Logo (Kindpdf) */}
+          <div className="flex items-center gap-2.5">
+            {/* Clean 3-Line Hamburger Menu Button */}
             <button
               type="button"
               onClick={() => setIsAppDrawerOpen(true)}
-              className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border-2 border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-100 transition-colors btn-press-effect shadow-sm"
-              title="All PDF Tools Menu"
+              className="p-1.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-100 transition-colors btn-press-effect"
+              title="Menu"
             >
-              <LayoutGrid className="w-5 h-5 text-blue-600 dark:text-sky-400" />
+              <Menu className="w-6 h-6 text-slate-900 dark:text-white" />
             </button>
 
             {/* Logo */}
