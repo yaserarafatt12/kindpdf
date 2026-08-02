@@ -19,6 +19,7 @@ import {
   LayoutGrid,
   Layers,
   Check,
+  ArrowLeft,
 } from 'lucide-react';
 
 import { downloadBlob } from '@/lib/files/downloadBlob';
@@ -295,6 +296,28 @@ export const SplitPdfWorkspace: React.FC<SplitPdfWorkspaceProps> = ({ onBack, on
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
+      {/* Back Button */}
+      <button
+        type="button"
+        onClick={onBack}
+        className="inline-flex items-center gap-2 text-xs font-black text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-sky-400 transition-colors btn-press-effect"
+      >
+        <ArrowLeft className="w-4 h-4" />
+        <span>{t.backToAllTools}</span>
+      </button>
+
+      {/* Hero Header */}
+      <div className="text-center space-y-2 py-2 max-w-lg mx-auto">
+        <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900 dark:text-white">
+          {lang === 'en' ? 'Split PDF Document' : 'Pisahkan Dokumen PDF'}
+        </h2>
+        <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 font-medium leading-relaxed">
+          {lang === 'en'
+            ? 'Split PDF into multiple files by pages, ranges, or visual selection.'
+            : 'Pisahkan PDF menjadi beberapa berkas berdasarkan halaman, rentang, atau pilihan visual.'}
+        </p>
+      </div>
+
       {/* Error Toast */}
       {errorToast && (
         <div className="w-full p-4 rounded-2xl bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-800 text-rose-900 dark:text-rose-200 flex items-start justify-between gap-3 shadow-md animate-fade-in">
