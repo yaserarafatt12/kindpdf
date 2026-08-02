@@ -337,7 +337,7 @@ export default function Home() {
                 </div>
 
                 {/* Document Cards List */}
-                <div className="space-y-2.5">
+                <div className="space-y-3.5 sm:space-y-4">
                   {files.map((item, index) => (
                     <FileCard
                       key={item.id}
