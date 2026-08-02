@@ -313,15 +313,15 @@ export const tools: ToolDefinition[] = [
   {
     id: 'compress',
     route: 'compress',
-    title: 'Basic PDF Optimization',
-    description: 'Re-encode PDF object streams to optimize file structure.',
+    title: 'Compress PDF',
+    description: 'Reduce PDF file size while optimizing document structure 100% locally in browser.',
     category: 'utilities',
-    status: 'experimental',
+    status: 'stable',
     processingMode: 'Client-side browser processing',
     popular: true,
     inputFormats: ['.pdf'],
     outputFormats: ['.pdf'],
-    note: 'Optimizes object stream structures. Image-heavy or pre-compressed PDFs may show limited size reduction.',
+    note: 'Re-encodes object streams. Pre-compressed or image-dense PDFs may show variable size reduction.',
   },
 ];
 
