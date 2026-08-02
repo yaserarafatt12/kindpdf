@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { TranslationDictionary } from '@/lib/i18n/translations';
 import {
   MergePdfIcon,
@@ -18,12 +18,9 @@ interface ToolGridProps {
 }
 
 export const ToolGrid: React.FC<ToolGridProps> = ({ onSelectTool, t }) => {
-  const [activeCategory, setActiveCategory] = useState<'all' | 'organize' | 'convert'>('all');
-
   const tools = [
     {
       id: 'merge' as ToolId,
-      category: 'organize',
       title: t.mergePdf,
       description: t.mergeHeroSubtitle,
       icon: <MergePdfIcon className="w-6 h-6" />,
@@ -33,7 +30,6 @@ export const ToolGrid: React.FC<ToolGridProps> = ({ onSelectTool, t }) => {
     },
     {
       id: 'split' as ToolId,
-      category: 'organize',
       title: t.splitPdf,
       description: 'Separate one page or a whole set into independent PDF files.',
       icon: <SplitPdfIcon className="w-6 h-6" />,
@@ -43,7 +39,6 @@ export const ToolGrid: React.FC<ToolGridProps> = ({ onSelectTool, t }) => {
     },
     {
       id: 'organize' as ToolId,
-      category: 'organize',
       title: t.organizePages,
       description: 'Reorder, rotate (90°, 180°, 270°), or delete pages from your PDF document.',
       icon: <OrganizePagesIcon className="w-6 h-6" />,
@@ -53,7 +48,6 @@ export const ToolGrid: React.FC<ToolGridProps> = ({ onSelectTool, t }) => {
     },
     {
       id: 'extract' as ToolId,
-      category: 'organize',
       title: t.extractPages,
       description: 'Extract specific pages from your PDF into a brand new PDF document.',
       icon: <ExtractPagesIcon className="w-6 h-6" />,
@@ -63,7 +57,6 @@ export const ToolGrid: React.FC<ToolGridProps> = ({ onSelectTool, t }) => {
     },
     {
       id: 'image-to-pdf' as ToolId,
-      category: 'convert',
       title: t.imagesToPdf,
       description: 'Convert JPG, PNG, and WEBP images to PDF with custom page size and margins.',
       icon: <ImageToPdfIcon className="w-6 h-6" />,
@@ -73,53 +66,11 @@ export const ToolGrid: React.FC<ToolGridProps> = ({ onSelectTool, t }) => {
     },
   ];
 
-  const filteredTools = tools.filter((item) => {
-    if (activeCategory === 'all') return true;
-    return item.category === activeCategory;
-  });
-
   return (
-    <div className="space-y-6 py-2">
-      {/* Category Filter Pills */}
-      <div className="flex flex-wrap items-center justify-center gap-2">
-        <button
-          type="button"
-          onClick={() => setActiveCategory('all')}
-          className={`px-3.5 py-1.5 rounded-full text-xs font-black transition-all btn-press-effect border-2 ${
-            activeCategory === 'all'
-              ? 'bg-slate-900 border-slate-900 dark:bg-white dark:border-white text-white dark:text-slate-900 shadow-md'
-              : 'bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-800 text-slate-800 dark:text-slate-200 hover:bg-slate-200/60 dark:hover:bg-slate-800 shadow-sm'
-          }`}
-        >
-          {t.allTools}
-        </button>
-        <button
-          type="button"
-          onClick={() => setActiveCategory('organize')}
-          className={`px-3.5 py-1.5 rounded-full text-xs font-black transition-all btn-press-effect border-2 ${
-            activeCategory === 'organize'
-              ? 'bg-slate-900 border-slate-900 dark:bg-white dark:border-white text-white dark:text-slate-900 shadow-md'
-              : 'bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-800 text-slate-800 dark:text-slate-200 hover:bg-slate-200/60 dark:hover:bg-slate-800 shadow-sm'
-          }`}
-        >
-          Organize PDF
-        </button>
-        <button
-          type="button"
-          onClick={() => setActiveCategory('convert')}
-          className={`px-3.5 py-1.5 rounded-full text-xs font-black transition-all btn-press-effect border-2 ${
-            activeCategory === 'convert'
-              ? 'bg-slate-900 border-slate-900 dark:bg-white dark:border-white text-white dark:text-slate-900 shadow-md'
-              : 'bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-800 text-slate-800 dark:text-slate-200 hover:bg-slate-200/60 dark:hover:bg-slate-800 shadow-sm'
-          }`}
-        >
-          Convert to PDF
-        </button>
-      </div>
-
-      {/* Tool Cards Grid - Custom SVG Icons */}
+    <div className="space-y-4 py-2">
+      {/* Tool Cards Grid - Direct compact list without category pills */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-        {filteredTools.map((item) => (
+        {tools.map((item) => (
           <div
             key={item.id}
             onClick={() => {
@@ -133,7 +84,7 @@ export const ToolGrid: React.FC<ToolGridProps> = ({ onSelectTool, t }) => {
           >
             {/* Top Row: Custom SVG Icon + Title Inline */}
             <div className="flex items-center gap-3">
-              <div className={`p-2.5 rounded-xl ${item.iconBg} shadow-xs shrink-0 group-hover:scale-110 transition-transform`}>
+              <div className={`p-2.5 rounded-xl ${item.iconBg} shadow-xs shrink-0 group-hover:scale-105 transition-transform`}>
                 {item.icon}
               </div>
 
