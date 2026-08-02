@@ -12,10 +12,11 @@
 - [x] **Task 1.9**: Implement Extract Pages engine (`pageOperations.ts`) with single PDF or ZIP output options & Vitest tests (3 unit tests passing).
 - [x] **Task 1.10**: Implement Remove Pages & Organize Pages interactive thumbnail preview grid (rotate 90°/180°/270°, reorder, delete pages) & Vitest tests (2 unit tests passing).
 
-## Sprint 2: Convert to/from PDF & Image Tools (IN PROGRESS)
+## Sprint 2: Convert to/from PDF & Image Tools (100% COMPLETE)
 - [x] **Task 2.1**: Implement Images to PDF engine (`imagesToPdf.ts`) converting JPG, PNG, WEBP with page size (A4/Fit), orientation, margin controls & Vitest tests (2 unit tests passing).
-- [ ] **Task 2.2**: Implement PDF to Images engine (`pdfToImages.ts`) rendering PDF pages to high-DPI PNG/JPG images and exporting as ZIP.
+- [x] **Task 2.2**: Implement PDF to Images engine (`pdfToImages.ts`) rendering PDF pages to high-DPI PNG/JPG images and exporting as ZIP & Vitest tests (1 unit test passing).
 
 ## Checkpoint 2: Sprint 2 Verification
-- [x] Run `npm test` and verify 100% unit tests pass (16/16 passed).
+- [x] Run `npm test` and verify 100% unit tests pass (17/17 passed).
 - [x] Run `npm run build` and verify clean static generation.
+- [x] Sprint 2 (Convert to/from PDF & Image Tools) 100% COMPLETE!
