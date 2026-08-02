@@ -8,13 +8,12 @@
 - [x] **Task 1.4**: Build Header with `Kindpdf` logo, 3-line hamburger drawer menu, `EN` | `ID` dropdown, and Light mode default.
 - [x] **Task 1.5**: Build compact Tool Grid layout with custom vector SVG icons matching iLovePDF.
 - [x] **Task 1.6**: Build simple Merge PDF workspace with prominent primary `Pilih Berkas PDF` CTA button.
-- [ ] **Task 1.7**: Implement Split PDF engine (`splitPdfs.ts`) supporting custom range parsing (e.g. `1-3,5,8-10`), N-page splitting, and ZIP export.
-- [ ] **Task 1.8**: Build Split PDF UI workspace & Vitest tests.
-- [ ] **Task 1.9**: Implement Remove Pages & Extract Pages engines (`removePages.ts`, `extractPages.ts`).
-- [ ] **Task 1.10**: Build Interactive Thumbnail Grid component with page selection checkboxes.
-- [ ] **Task 1.11**: Implement Organize Pages engine (reorder, rotate, delete) with Web Worker offloading.
+- [x] **Task 1.7**: Implement Split PDF engine (`splitPdf.ts`) supporting custom range parsing (e.g. `1-3,5,8-10`), N-page splitting, and ZIP export.
+- [x] **Task 1.8**: Build Split PDF UI workspace & Vitest tests (4 unit tests passing).
+- [x] **Task 1.9**: Implement Extract Pages engine (`pageOperations.ts`) with single PDF or ZIP output options & Vitest tests (3 unit tests passing).
+- [ ] **Task 1.10**: Implement Remove Pages & Organize Pages interactive thumbnail preview grid (rotate 90°/180°/270°, reorder, delete pages).
 
 ## Checkpoint 1: Sprint 1 Verification
-- [ ] Run `npm test` and verify 100% unit tests pass.
-- [ ] Run `npm run build` and verify clean static generation.
+- [x] Run `npm test` and verify 100% unit tests pass (12/12 passed).
+- [x] Run `npm run build` and verify clean static generation.
 - [ ] Perform manual QA on mobile (375px) and desktop (1440px).
