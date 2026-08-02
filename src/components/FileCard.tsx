@@ -35,8 +35,8 @@ export const FileCard: React.FC<FileCardProps> = ({
     <div
       className={`w-full p-4 rounded-2xl bg-white dark:bg-slate-900 border transition-all duration-200 flex items-center justify-between gap-3 shadow-sm ${
         isDragging
-          ? 'border-indigo-500 bg-indigo-50/50 dark:bg-indigo-950/40 shadow-lg scale-[1.01]'
-          : 'border-slate-200 dark:border-slate-800 hover:border-indigo-500/40 hover:shadow-md'
+          ? 'border-blue-500 bg-blue-50/50 dark:bg-blue-950/40 shadow-lg scale-[1.01]'
+          : 'border-slate-200 dark:border-slate-800 hover:border-blue-500/40 hover:shadow-md'
       }`}
     >
       {/* Reorder Grip Handle */}
@@ -44,7 +44,7 @@ export const FileCard: React.FC<FileCardProps> = ({
         <div className="p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-grab active:cursor-grabbing">
           <GripVertical className="w-5 h-5" />
         </div>
-        <div className="p-2.5 rounded-xl bg-indigo-50 dark:bg-indigo-950/80 text-indigo-600 dark:text-indigo-400 font-black text-xs">
+        <div className="p-2.5 rounded-xl bg-blue-50 dark:bg-blue-950/80 text-blue-600 dark:text-sky-400 font-black text-xs">
           #{index + 1}
         </div>
       </div>
@@ -52,7 +52,7 @@ export const FileCard: React.FC<FileCardProps> = ({
       {/* File Info */}
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2">
-          <FileText className="w-4 h-4 text-indigo-500 shrink-0" />
+          <FileText className="w-4 h-4 text-blue-500 shrink-0" />
           <h4 className="text-xs sm:text-sm font-extrabold text-slate-900 dark:text-white truncate">
             {item.name}
           </h4>
@@ -72,7 +72,7 @@ export const FileCard: React.FC<FileCardProps> = ({
             type="button"
             onClick={() => onMoveUp(index)}
             title="Pindahkan Ke Atas"
-            className="p-1.5 rounded-lg text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-slate-800 transition-colors btn-press-effect"
+            className="p-1.5 rounded-lg text-slate-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-slate-800 transition-colors btn-press-effect"
           >
             <ChevronUp className="w-4 h-4" />
           </button>
@@ -82,7 +82,7 @@ export const FileCard: React.FC<FileCardProps> = ({
             type="button"
             onClick={() => onMoveDown(index)}
             title="Pindahkan Ke Bawah"
-            className="p-1.5 rounded-lg text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-slate-800 transition-colors btn-press-effect"
+            className="p-1.5 rounded-lg text-slate-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-slate-800 transition-colors btn-press-effect"
           >
             <ChevronDown className="w-4 h-4" />
           </button>

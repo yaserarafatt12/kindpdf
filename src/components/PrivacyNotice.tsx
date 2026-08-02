@@ -3,10 +3,10 @@ import { ShieldCheck, ServerOff, Lock, Sparkles } from 'lucide-react';
 
 export const PrivacyNotice: React.FC = () => {
   return (
-    <div className="w-full p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-indigo-500/10 border border-indigo-500/30 backdrop-blur-md shadow-sm">
+    <div className="w-full p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-blue-500/10 via-sky-500/10 to-blue-500/10 border border-blue-500/30 backdrop-blur-md shadow-sm">
       <div className="flex flex-wrap items-center justify-between gap-3 text-xs text-slate-700 dark:text-slate-200 font-medium">
         <div className="flex items-center gap-2 font-extrabold text-slate-900 dark:text-white">
-          <div className="p-1.5 rounded-xl bg-indigo-600 text-white shadow-sm shrink-0">
+          <div className="p-1.5 rounded-xl bg-blue-600 text-white shadow-sm shrink-0">
             <ShieldCheck className="w-4 h-4" />
           </div>
           <span className="tracking-tight text-sm">Privasi 100% Terjaga</span>
@@ -14,7 +14,7 @@ export const PrivacyNotice: React.FC = () => {
 
         <div className="flex flex-wrap items-center gap-4 text-[11px] font-semibold text-slate-600 dark:text-slate-300">
           <span className="flex items-center gap-1.5">
-            <ServerOff className="w-3.5 h-3.5 text-indigo-500" />
+            <ServerOff className="w-3.5 h-3.5 text-blue-500" />
             Tanpa Unggahan Server
           </span>
           <span className="flex items-center gap-1.5">

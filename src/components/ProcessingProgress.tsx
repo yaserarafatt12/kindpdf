@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Loader2, FileCheck2, ShieldCheck, XCircle } from 'lucide-react';
+import { Loader2, ShieldCheck } from 'lucide-react';
 
 interface ProcessingProgressProps {
   isOpen: boolean;
@@ -27,8 +27,8 @@ export const ProcessingProgress: React.FC<ProcessingProgressProps> = ({
       <div className="w-full max-w-md p-6 sm:p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl space-y-6 text-center">
         {/* Animated Icon */}
         <div className="relative w-16 h-16 mx-auto flex items-center justify-center">
-          <div className="absolute inset-0 rounded-full bg-indigo-500/20 animate-ping" />
-          <div className="relative p-4 rounded-full bg-indigo-600 text-white shadow-lg shadow-indigo-500/30">
+          <div className="absolute inset-0 rounded-full bg-blue-500/20 animate-ping" />
+          <div className="relative p-4 rounded-full bg-blue-600 text-white shadow-lg shadow-blue-500/30">
             <Loader2 className="w-8 h-8 animate-spin" />
           </div>
         </div>
@@ -47,11 +47,11 @@ export const ProcessingProgress: React.FC<ProcessingProgressProps> = ({
         <div className="space-y-2">
           <div className="flex justify-between items-center text-xs font-black text-slate-700 dark:text-slate-300">
             <span>Progres Pemrosesan</span>
-            <span className="text-indigo-600 dark:text-indigo-400">{percentage}%</span>
+            <span className="text-blue-600 dark:text-sky-400">{percentage}%</span>
           </div>
           <div className="w-full h-3 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden p-0.5 border border-slate-200/50 dark:border-slate-700/50">
             <div
-              className="h-full rounded-full bg-gradient-to-r from-indigo-500 to-violet-600 transition-all duration-300 shadow-sm"
+              className="h-full rounded-full bg-gradient-to-r from-blue-600 to-sky-500 transition-all duration-300 shadow-sm"
               style={{ width: `${percentage}%` }}
             />
           </div>
