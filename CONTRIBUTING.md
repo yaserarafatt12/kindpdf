@@ -21,8 +21,8 @@ As a privacy-first application, the following rules are **strictly enforced**:
 
 ### 1. Fork & Clone
 ```bash
-git clone https://github.com/yaserarafatt12/localpdf.git
-cd localpdf
+git clone https://github.com/yaserarafatt12/kindpdf.git
+cd kindpdf
 npm install
 ```
 

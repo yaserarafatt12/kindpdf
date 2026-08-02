@@ -29,7 +29,7 @@ Kindpdf is engineered from the ground up on a **100% In-Browser Execution** mode
 
 ## 3. Transparency & Open Source
 
-The entire source code of LocalPDF is open-source and publicly inspectable on GitHub at:  
-[https://github.com/yaserarafatt12/localpdf](https://github.com/yaserarafatt12/localpdf)
+The entire source code of Kindpdf is open-source and publicly inspectable on GitHub at:  
+[https://github.com/yaserarafatt12/kindpdf](https://github.com/yaserarafatt12/kindpdf)
 
 You can verify in the browser Network Inspector tab (F12) that zero HTTP POST / PUT requests containing file payloads are ever transmitted during file processing.

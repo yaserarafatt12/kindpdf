@@ -10,7 +10,7 @@
 **Kindpdf** (`v1.0.0`) is a modern, privacy-first web application providing a full suite of **23 active PDF utilities** operating 100% locally inside the user's browser RAM. Documents are never uploaded to cloud servers or remote APIs.
 
 - **Author**: Yaser Arafat
-- **GitHub Repository**: [yaserarafatt12/localpdf](https://github.com/yaserarafatt12/localpdf)
+- **GitHub Repository**: [yaserarafatt12/kindpdf](https://github.com/yaserarafatt12/kindpdf)
 - **Version**: `v1.0.0`
 - **Release Date**: August 2026
 
@@ -135,8 +135,8 @@ All 23 tools are defined in a single typed manifest (`src/lib/tools/manifest.ts`
 
 1. **Clone the Repository**:
    ```bash
-   git clone https://github.com/yaserarafatt12/localpdf.git
-   cd localpdf
+   git clone https://github.com/yaserarafatt12/kindpdf.git
+   cd kindpdf
    ```
 
 2. **Install Dependencies**:
@@ -282,7 +282,7 @@ This project is open-source software licensed under the **[MIT License](LICENSE)
 
 - **Author**: Yaser Arafat
 - **Contact**: `yaserarafatt03@gmail.com`
-- **GitHub**: [github.com/yaserarafatt12/localpdf](https://github.com/yaserarafatt12/localpdf)
+- **GitHub**: [github.com/yaserarafatt12/kindpdf](https://github.com/yaserarafatt12/kindpdf)
 
 ---
 
