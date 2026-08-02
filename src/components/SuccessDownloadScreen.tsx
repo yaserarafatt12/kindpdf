@@ -83,6 +83,16 @@ export const SuccessDownloadScreen: React.FC<SuccessDownloadScreenProps> = ({
           {title}
         </h2>
 
+        {/* Optional Stats Badge (e.g. Compression Results) */}
+        {statBadge && (
+          <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-emerald-50 dark:bg-emerald-950/80 border border-emerald-300 dark:border-emerald-800 text-emerald-900 dark:text-emerald-200 font-extrabold text-xs shadow-xs">
+            <span className="px-2 py-0.5 rounded-md bg-emerald-600 text-white font-black text-[11px]">
+              {statBadge.label}
+            </span>
+            {statBadge.detail && <span className="font-bold text-xs">{statBadge.detail}</span>}
+          </div>
+        )}
+
         {/* Ideal Compact Download Button */}
         <div className="pt-2 max-w-md mx-auto space-y-4">
           <button
