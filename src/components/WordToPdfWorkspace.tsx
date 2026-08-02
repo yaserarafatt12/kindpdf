@@ -1,24 +1,39 @@
 'use client';
 
 import React, { useState } from 'react';
-import { ArrowLeft, FileText, ShieldCheck, ArrowRight, AlertCircle, X } from 'lucide-react';
+import { ArrowLeft, FileText, ShieldCheck, AlertCircle, X } from 'lucide-react';
 import { Language, TranslationDictionary } from '@/lib/i18n/translations';
 import { downloadBlob } from '@/lib/files/downloadBlob';
 import FileDropzone from './FileDropzone';
-import PrivacyNotice from './PrivacyNotice';
 import { wordToPdf } from '@/lib/pdf/wordToPdf';
 import { HumanError } from '@/lib/errors/messages';
+import ProcessingProgress from './ProcessingProgress';
+import SuccessDownloadScreen from './SuccessDownloadScreen';
+import { ViewMode } from '@/components/Header';
 
 interface WordToPdfWorkspaceProps {
   onBack: () => void;
+  onSelectTool?: (toolId: ViewMode) => void;
   t: TranslationDictionary;
   lang: Language;
 }
 
-export const WordToPdfWorkspace: React.FC<WordToPdfWorkspaceProps> = ({ onBack, t, lang }) => {
+export const WordToPdfWorkspace: React.FC<WordToPdfWorkspaceProps> = ({
+  onBack,
+  onSelectTool,
+  t,
+  lang,
+}) => {
   const [file, setFile] = useState<File | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [progressMsg, setProgressMsg] = useState('');
+  const [currentStep, setCurrentStep] = useState(0);
+  const [totalSteps, setTotalSteps] = useState(0);
   const [errorToast, setErrorToast] = useState<HumanError | null>(null);
+  const [completedResult, setCompletedResult] = useState<{
+    blob: Blob;
+    filename: string;
+  } | null>(null);
 
   const handleFileSelected = (files: File[]) => {
     setErrorToast(null);
@@ -41,23 +56,58 @@ export const WordToPdfWorkspace: React.FC<WordToPdfWorkspaceProps> = ({ onBack, 
     if (!file) return;
 
     setIsProcessing(true);
+    setCurrentStep(1);
+    setTotalSteps(2);
+    setProgressMsg(lang === 'en' ? 'Converting Word document to PDF...' : 'Mengonversi dokumen Word ke PDF...');
     setErrorToast(null);
 
     try {
       const pdfBytes = await wordToPdf(file);
       const blob = new Blob([pdfBytes.buffer as ArrayBuffer], { type: 'application/pdf' });
       const baseName = file.name.replace(/\.(docx|doc)$/i, '');
-      downloadBlob(blob, `Kindpdf_${baseName}.pdf`);
+      const filename = `Kindpdf_${baseName}.pdf`;
+
+      setCurrentStep(2);
+      setTotalSteps(2);
+
+      setIsProcessing(false);
+      setCompletedResult({
+        blob,
+        filename,
+      });
     } catch (err: any) {
+      setIsProcessing(false);
       setErrorToast({
         type: 'CORRUPTED',
         title: lang === 'en' ? 'Conversion Failed' : 'Konversi Gagal',
         message: err?.message || 'Unexpected error converting Word file.',
       });
-    } finally {
-      setIsProcessing(false);
     }
   };
+
+  if (completedResult) {
+    return (
+      <SuccessDownloadScreen
+        title={lang === 'en' ? 'PDF Converted Successfully!' : 'PDF Berhasil Dibuat!'}
+        downloadFileName={completedResult.filename}
+        downloadButtonText={lang === 'en' ? 'Download PDF' : 'Unduh PDF'}
+        onDownload={(customName?: string) =>
+          downloadBlob(completedResult.blob, customName || completedResult.filename)
+        }
+        onStartOver={() => {
+          setCompletedResult(null);
+          setFile(null);
+        }}
+        onSelectTool={(toolId: ViewMode) => {
+          setCompletedResult(null);
+          setFile(null);
+          if (onSelectTool) onSelectTool(toolId);
+        }}
+        t={t}
+        lang={lang}
+      />
+    );
+  }
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">
@@ -135,12 +185,20 @@ export const WordToPdfWorkspace: React.FC<WordToPdfWorkspaceProps> = ({ onBack, 
               }`}
             >
               <FileText className="w-4 h-4" />
-              <span>{isProcessing ? (lang === 'en' ? 'Converting...' : 'Mengonversi...') : (lang === 'en' ? 'Convert & Download PDF' : 'Konversi & Unduh PDF')}</span>
-              
+              <span>{isProcessing ? (lang === 'en' ? 'Converting...' : 'Mengonversi...') : (lang === 'en' ? 'Convert to PDF' : 'Konversi ke PDF')}</span>
             </button>
           </div>
         </div>
       )}
+
+      {/* Progress Modal */}
+      <ProcessingProgress
+        isOpen={isProcessing}
+        progressMessage={progressMsg}
+        currentStep={currentStep}
+        totalSteps={totalSteps}
+        t={t}
+      />
     </div>
   );
 };

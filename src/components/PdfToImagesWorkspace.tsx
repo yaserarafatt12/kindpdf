@@ -20,13 +20,22 @@ import {
   Settings2,
 } from 'lucide-react';
 
+import SuccessDownloadScreen from './SuccessDownloadScreen';
+import { ViewMode } from '@/components/Header';
+
 interface PdfToImagesWorkspaceProps {
   onBack: () => void;
+  onSelectTool?: (toolId: ViewMode) => void;
   t: TranslationDictionary;
   lang: 'en' | 'id';
 }
 
-export const PdfToImagesWorkspace: React.FC<PdfToImagesWorkspaceProps> = ({ onBack, t, lang }) => {
+export const PdfToImagesWorkspace: React.FC<PdfToImagesWorkspaceProps> = ({
+  onBack,
+  onSelectTool,
+  t,
+  lang,
+}) => {
   const [file, setFile] = useState<File | null>(null);
   const [pageCount, setPageCount] = useState<number>(0);
   const [options, setOptions] = useState<PdfToImagesOptions>({
@@ -39,6 +48,10 @@ export const PdfToImagesWorkspace: React.FC<PdfToImagesWorkspaceProps> = ({ onBa
   const [currentStep, setCurrentStep] = useState(0);
   const [totalSteps, setTotalSteps] = useState(0);
   const [errorToast, setErrorToast] = useState<{ title: string; message: string } | null>(null);
+  const [completedResult, setCompletedResult] = useState<{
+    blob: Blob;
+    filename: string;
+  } | null>(null);
 
   const handleFileChange = async (selectedFiles: File[]) => {
     if (!selectedFiles || selectedFiles.length === 0) return;
@@ -75,11 +88,11 @@ export const PdfToImagesWorkspace: React.FC<PdfToImagesWorkspaceProps> = ({ onBa
         setProgressMsg(msg);
       });
 
-      downloadBlob(result.blob, result.filename);
-
-      setTimeout(() => {
-        setIsProcessing(false);
-      }, 500);
+      setIsProcessing(false);
+      setCompletedResult({
+        blob: result.blob,
+        filename: result.filename,
+      });
     } catch (err: any) {
       setIsProcessing(false);
       setErrorToast({
@@ -88,6 +101,31 @@ export const PdfToImagesWorkspace: React.FC<PdfToImagesWorkspaceProps> = ({ onBa
       });
     }
   };
+
+  if (completedResult) {
+    return (
+      <SuccessDownloadScreen
+        title={lang === 'en' ? 'Images Extracted Successfully!' : 'Gambar Berhasil Diekstrak dari PDF!'}
+        downloadFileName={completedResult.filename}
+        downloadButtonText={lang === 'en' ? 'Download Images' : 'Unduh Berkas Gambar'}
+        onDownload={(customName?: string) =>
+          downloadBlob(completedResult.blob, customName || completedResult.filename)
+        }
+        onStartOver={() => {
+          setCompletedResult(null);
+          setFile(null);
+          setPageCount(0);
+        }}
+        onSelectTool={(toolId: ViewMode) => {
+          setCompletedResult(null);
+          setFile(null);
+          if (onSelectTool) onSelectTool(toolId);
+        }}
+        t={t}
+        lang={lang}
+      />
+    );
+  }
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">

@@ -8,13 +8,23 @@ import PrivacyNotice from './PrivacyNotice';
 import { htmlToPdf, HtmlToPdfOptions } from '@/lib/pdf/htmlToPdf';
 import { HumanError } from '@/lib/errors/messages';
 
+import ProcessingProgress from './ProcessingProgress';
+import SuccessDownloadScreen from './SuccessDownloadScreen';
+import { ViewMode } from '@/components/Header';
+
 interface HtmlToPdfWorkspaceProps {
   onBack: () => void;
+  onSelectTool?: (toolId: ViewMode) => void;
   t: TranslationDictionary;
   lang: Language;
 }
 
-export const HtmlToPdfWorkspace: React.FC<HtmlToPdfWorkspaceProps> = ({ onBack, t, lang }) => {
+export const HtmlToPdfWorkspace: React.FC<HtmlToPdfWorkspaceProps> = ({
+  onBack,
+  onSelectTool,
+  t,
+  lang,
+}) => {
   const [docTitle, setDocTitle] = useState('My Document');
   const [content, setContent] = useState(
     '<h1>Welcome to Kindpdf</h1>\n<p>This is a sample document generated directly inside your web browser without uploading any data to external servers.</p>\n<p>Add your text or HTML formatted notes here and download a clean PDF immediately.</p>'
@@ -22,7 +32,14 @@ export const HtmlToPdfWorkspace: React.FC<HtmlToPdfWorkspaceProps> = ({ onBack, 
   const [pageSize, setPageSize] = useState<'a4' | 'letter'>('a4');
   const [fontSize, setFontSize] = useState<number>(12);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [progressMsg, setProgressMsg] = useState('');
+  const [currentStep, setCurrentStep] = useState(0);
+  const [totalSteps, setTotalSteps] = useState(0);
   const [errorToast, setErrorToast] = useState<HumanError | null>(null);
+  const [completedResult, setCompletedResult] = useState<{
+    blob: Blob;
+    filename: string;
+  } | null>(null);
 
   const handleConvert = async () => {
     if (!content.trim()) {
@@ -37,6 +54,12 @@ export const HtmlToPdfWorkspace: React.FC<HtmlToPdfWorkspaceProps> = ({ onBack, 
     setIsProcessing(true);
     setErrorToast(null);
 
+    setIsProcessing(true);
+    setCurrentStep(1);
+    setTotalSteps(2);
+    setProgressMsg(lang === 'en' ? 'Rendering HTML/Text document into PDF...' : 'Mengonversi HTML/Teks ke berkas PDF...');
+    setErrorToast(null);
+
     try {
       const options: HtmlToPdfOptions = {
         title: docTitle,
@@ -47,17 +70,48 @@ export const HtmlToPdfWorkspace: React.FC<HtmlToPdfWorkspaceProps> = ({ onBack, 
 
       const pdfBytes = await htmlToPdf(options);
       const blob = new Blob([pdfBytes.buffer as ArrayBuffer], { type: 'application/pdf' });
-      downloadBlob(blob, `${docTitle.replace(/\s+/g, '_')}.pdf`);
+      const filename = `${docTitle.replace(/\s+/g, '_')}.pdf`;
+
+      setCurrentStep(2);
+      setTotalSteps(2);
+
+      setIsProcessing(false);
+      setCompletedResult({
+        blob,
+        filename,
+      });
     } catch (err: any) {
+      setIsProcessing(false);
       setErrorToast({
         type: 'CORRUPTED',
         title: lang === 'en' ? 'Conversion Failed' : 'Gagal Mengonversi',
         message: err?.message || 'Unexpected error building PDF.',
       });
-    } finally {
-      setIsProcessing(false);
     }
   };
+
+  if (completedResult) {
+    return (
+      <SuccessDownloadScreen
+        title={lang === 'en' ? 'PDF Generated Successfully!' : 'PDF Berhasil Dibuat dari HTML!'}
+        downloadFileName={completedResult.filename}
+        downloadButtonText={lang === 'en' ? 'Download PDF' : 'Unduh PDF'}
+        onDownload={(customName?: string) =>
+          downloadBlob(completedResult.blob, customName || completedResult.filename)
+        }
+        onStartOver={() => {
+          setCompletedResult(null);
+          setContent('');
+        }}
+        onSelectTool={(toolId: ViewMode) => {
+          setCompletedResult(null);
+          if (onSelectTool) onSelectTool(toolId);
+        }}
+        t={t}
+        lang={lang}
+      />
+    );
+  }
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">
@@ -82,6 +136,18 @@ export const HtmlToPdfWorkspace: React.FC<HtmlToPdfWorkspaceProps> = ({ onBack, 
             : 'Ubah format teks & HTML menjadi dokumen PDF yang rapi 100% di browser.'}
         </p>
       </div>
+
+      {/* Privacy Notice */}
+      <PrivacyNotice t={t} />
+
+      {/* Progress Modal */}
+      <ProcessingProgress
+        isOpen={isProcessing}
+        progressMessage={progressMsg}
+        currentStep={currentStep}
+        totalSteps={totalSteps}
+        t={t}
+      />
 
       {/* Error Toast */}
       {errorToast && (

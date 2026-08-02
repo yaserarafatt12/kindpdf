@@ -1,28 +1,43 @@
 'use client';
 
 import React, { useState } from 'react';
-import { ArrowLeft, ScanText, Copy, Check, Download, ShieldCheck, ArrowRight, AlertCircle, X } from 'lucide-react';
+import { ArrowLeft, ScanText, Copy, Check, Download, ShieldCheck, AlertCircle, X } from 'lucide-react';
 import { Language, TranslationDictionary } from '@/lib/i18n/translations';
 import { validatePdfFile } from '@/lib/files/validateFile';
 import { downloadBlob } from '@/lib/files/downloadBlob';
 import FileDropzone from './FileDropzone';
-import PrivacyNotice from './PrivacyNotice';
 import { ocrPdf, OcrResult } from '@/lib/pdf/ocrPdf';
 import { HumanError } from '@/lib/errors/messages';
+import ProcessingProgress from './ProcessingProgress';
+import SuccessDownloadScreen from './SuccessDownloadScreen';
+import { ViewMode } from '@/components/Header';
 
 interface OcrPdfWorkspaceProps {
   onBack: () => void;
+  onSelectTool?: (toolId: ViewMode) => void;
   t: TranslationDictionary;
   lang: Language;
 }
 
-export const OcrPdfWorkspace: React.FC<OcrPdfWorkspaceProps> = ({ onBack, t, lang }) => {
+export const OcrPdfWorkspace: React.FC<OcrPdfWorkspaceProps> = ({
+  onBack,
+  onSelectTool,
+  t,
+  lang,
+}) => {
   const [file, setFile] = useState<File | null>(null);
   const [ocrLang, setOcrLang] = useState<'eng' | 'ind'>('eng');
   const [isProcessing, setIsProcessing] = useState(false);
+  const [progressMsg, setProgressMsg] = useState('');
+  const [currentStep, setCurrentStep] = useState(0);
+  const [totalSteps, setTotalSteps] = useState(0);
   const [result, setResult] = useState<OcrResult | null>(null);
   const [copied, setCopied] = useState(false);
   const [errorToast, setErrorToast] = useState<HumanError | null>(null);
+  const [completedResult, setCompletedResult] = useState<{
+    blob: Blob;
+    filename: string;
+  } | null>(null);
 
   const handleFileSelected = async (files: File[]) => {
     setErrorToast(null);
@@ -43,19 +58,34 @@ export const OcrPdfWorkspace: React.FC<OcrPdfWorkspaceProps> = ({ onBack, t, lan
     if (!file) return;
 
     setIsProcessing(true);
+    setCurrentStep(1);
+    setTotalSteps(2);
+    setProgressMsg(lang === 'en' ? 'Scanning text layer with OCR engine...' : 'Memindai lapisan teks dengan mesin OCR...');
     setErrorToast(null);
 
     try {
       const ocrRes = await ocrPdf(file, ocrLang);
       setResult(ocrRes);
+      
+      const blob = new Blob([ocrRes.extractedText], { type: 'text/plain;charset=utf-8' });
+      const baseName = file.name.replace(/\.pdf$/i, '');
+      const filename = `Kindpdf_${baseName}_OCR.txt`;
+
+      setCurrentStep(2);
+      setTotalSteps(2);
+
+      setIsProcessing(false);
+      setCompletedResult({
+        blob,
+        filename,
+      });
     } catch (err: any) {
+      setIsProcessing(false);
       setErrorToast({
         type: 'CORRUPTED',
         title: lang === 'en' ? 'OCR Failed' : 'OCR Gagal',
         message: err?.message || 'Unexpected error running OCR.',
       });
-    } finally {
-      setIsProcessing(false);
     }
   };
 
@@ -66,12 +96,30 @@ export const OcrPdfWorkspace: React.FC<OcrPdfWorkspaceProps> = ({ onBack, t, lan
     setTimeout(() => setCopied(false), 1500);
   };
 
-  const handleDownloadTxt = () => {
-    if (!result || !file) return;
-    const blob = new Blob([result.extractedText], { type: 'text/plain;charset=utf-8' });
-    const baseName = file.name.replace(/\.pdf$/i, '');
-    downloadBlob(blob, `Kindpdf_${baseName}_OCR.txt`);
-  };
+  if (completedResult) {
+    return (
+      <SuccessDownloadScreen
+        title={lang === 'en' ? 'OCR Text Extracted Successfully!' : 'Teks OCR Berhasil Diekstrak!'}
+        downloadFileName={completedResult.filename}
+        downloadButtonText={lang === 'en' ? 'Download Text (.TXT)' : 'Unduh Teks (.TXT)'}
+        onDownload={(customName?: string) =>
+          downloadBlob(completedResult.blob, customName || completedResult.filename)
+        }
+        onStartOver={() => {
+          setCompletedResult(null);
+          setResult(null);
+          setFile(null);
+        }}
+        onSelectTool={(toolId: ViewMode) => {
+          setCompletedResult(null);
+          setFile(null);
+          if (onSelectTool) onSelectTool(toolId);
+        }}
+        t={t}
+        lang={lang}
+      />
+    );
+  }
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">
@@ -167,15 +215,6 @@ export const OcrPdfWorkspace: React.FC<OcrPdfWorkspaceProps> = ({ onBack, t, lan
                     {copied ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5" />}
                     <span>{copied ? (lang === 'en' ? 'Copied' : 'Tersalin') : (lang === 'en' ? 'Copy Text' : 'Salin Teks')}</span>
                   </button>
-
-                  <button
-                    type="button"
-                    onClick={handleDownloadTxt}
-                    className="px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold flex items-center gap-1 shadow-sm btn-press-effect"
-                  >
-                    <Download className="w-3.5 h-3.5" />
-                    <span>{lang === 'en' ? 'Download .TXT' : 'Unduh .TXT'}</span>
-                  </button>
                 </div>
               </div>
 
@@ -208,12 +247,20 @@ export const OcrPdfWorkspace: React.FC<OcrPdfWorkspaceProps> = ({ onBack, t, lan
               >
                 <ScanText className="w-4 h-4" />
                 <span>{isProcessing ? (lang === 'en' ? 'Running OCR...' : 'Menjalankan OCR...') : (lang === 'en' ? 'Run OCR & Extract Text' : 'Jalankan OCR & Ekstrak Teks')}</span>
-                
               </button>
             </div>
           )}
         </div>
       )}
+
+      {/* Progress Modal */}
+      <ProcessingProgress
+        isOpen={isProcessing}
+        progressMessage={progressMsg}
+        currentStep={currentStep}
+        totalSteps={totalSteps}
+        t={t}
+      />
     </div>
   );
 };

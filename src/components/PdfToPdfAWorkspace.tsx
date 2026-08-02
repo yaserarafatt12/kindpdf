@@ -1,31 +1,44 @@
 'use client';
 
 import React, { useState } from 'react';
-import { ArrowLeft, Archive, ShieldCheck, ArrowRight, AlertCircle, X, CheckCircle2 } from 'lucide-react';
+import { ArrowLeft, Archive, ShieldCheck, AlertCircle, X } from 'lucide-react';
 import { Language, TranslationDictionary } from '@/lib/i18n/translations';
 import { validatePdfFile } from '@/lib/files/validateFile';
 import { downloadBlob } from '@/lib/files/downloadBlob';
 import FileDropzone from './FileDropzone';
-import PrivacyNotice from './PrivacyNotice';
 import { convertToPdfA, PdfAConformance } from '@/lib/pdf/pdfToPdfA';
 import { HumanError } from '@/lib/errors/messages';
+import ProcessingProgress from './ProcessingProgress';
+import SuccessDownloadScreen from './SuccessDownloadScreen';
+import { ViewMode } from '@/components/Header';
 
 interface PdfToPdfAWorkspaceProps {
   onBack: () => void;
+  onSelectTool?: (toolId: ViewMode) => void;
   t: TranslationDictionary;
   lang: Language;
 }
 
-export const PdfToPdfAWorkspace: React.FC<PdfToPdfAWorkspaceProps> = ({ onBack, t, lang }) => {
+export const PdfToPdfAWorkspace: React.FC<PdfToPdfAWorkspaceProps> = ({
+  onBack,
+  onSelectTool,
+  t,
+  lang,
+}) => {
   const [file, setFile] = useState<File | null>(null);
   const [conformance, setConformance] = useState<PdfAConformance>('2b');
   const [isProcessing, setIsProcessing] = useState(false);
-  const [successMsg, setSuccessMsg] = useState<string | null>(null);
+  const [progressMsg, setProgressMsg] = useState('');
+  const [currentStep, setCurrentStep] = useState(0);
+  const [totalSteps, setTotalSteps] = useState(0);
   const [errorToast, setErrorToast] = useState<HumanError | null>(null);
+  const [completedResult, setCompletedResult] = useState<{
+    blob: Blob;
+    filename: string;
+  } | null>(null);
 
   const handleFileSelected = async (files: File[]) => {
     setErrorToast(null);
-    setSuccessMsg(null);
     if (files.length === 0) return;
 
     const selected = files[0];
@@ -42,30 +55,58 @@ export const PdfToPdfAWorkspace: React.FC<PdfToPdfAWorkspaceProps> = ({ onBack, 
     if (!file) return;
 
     setIsProcessing(true);
+    setCurrentStep(1);
+    setTotalSteps(2);
+    setProgressMsg(lang === 'en' ? 'Converting PDF to PDF/A compliant format...' : 'Mengonversi PDF ke standar PDF/A...');
     setErrorToast(null);
-    setSuccessMsg(null);
 
     try {
       const bytes = await convertToPdfA(file, conformance);
       const blob = new Blob([bytes.buffer as ArrayBuffer], { type: 'application/pdf' });
       const baseName = file.name.replace(/\.pdf$/i, '');
-      downloadBlob(blob, `Kindpdf_${baseName}_PDFA.pdf`);
+      const filename = `Kindpdf_${baseName}_PDFA.pdf`;
 
-      setSuccessMsg(
-        lang === 'en'
-          ? 'PDF/A document successfully generated and downloaded!'
-          : 'Dokumen PDF/A berhasil dibuat dan diunduh!'
-      );
+      setCurrentStep(2);
+      setTotalSteps(2);
+
+      setIsProcessing(false);
+      setCompletedResult({
+        blob,
+        filename,
+      });
     } catch (err: any) {
+      setIsProcessing(false);
       setErrorToast({
         type: 'CORRUPTED',
         title: lang === 'en' ? 'Conversion Failed' : 'Konversi Gagal',
         message: err?.message || 'Unexpected error converting to PDF/A.',
       });
-    } finally {
-      setIsProcessing(false);
     }
   };
+
+  if (completedResult) {
+    return (
+      <SuccessDownloadScreen
+        title={lang === 'en' ? 'PDF/A Converted Successfully!' : 'PDF/A Berhasil Dibuat!'}
+        downloadFileName={completedResult.filename}
+        downloadButtonText={lang === 'en' ? 'Download PDF/A' : 'Unduh PDF/A'}
+        onDownload={(customName?: string) =>
+          downloadBlob(completedResult.blob, customName || completedResult.filename)
+        }
+        onStartOver={() => {
+          setCompletedResult(null);
+          setFile(null);
+        }}
+        onSelectTool={(toolId: ViewMode) => {
+          setCompletedResult(null);
+          setFile(null);
+          if (onSelectTool) onSelectTool(toolId);
+        }}
+        t={t}
+        lang={lang}
+      />
+    );
+  }
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">
@@ -107,14 +148,6 @@ export const PdfToPdfAWorkspace: React.FC<PdfToPdfAWorkspaceProps> = ({ onBack, 
         </div>
       )}
 
-      {/* Success Toast */}
-      {successMsg && (
-        <div className="w-full p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 text-emerald-900 dark:text-emerald-200 flex items-center gap-3 shadow-md animate-fade-in">
-          <CheckCircle2 className="w-5 h-5 text-emerald-600 dark:text-emerald-400 shrink-0" />
-          <p className="text-xs font-extrabold">{successMsg}</p>
-        </div>
-      )}
-
       {/* Upload File */}
       {!file && <FileDropzone onFilesSelected={handleFileSelected} disabled={isProcessing} t={t} colorTheme="indigo" />}
 
@@ -129,7 +162,6 @@ export const PdfToPdfAWorkspace: React.FC<PdfToPdfAWorkspaceProps> = ({ onBack, 
               type="button"
               onClick={() => {
                 setFile(null);
-                setSuccessMsg(null);
               }}
               className="text-xs font-extrabold text-rose-600 hover:text-rose-700 px-3 py-1.5 rounded-xl border border-rose-200 dark:border-rose-800 hover:bg-rose-50 dark:hover:bg-rose-950/50 btn-press-effect"
             >
@@ -182,12 +214,20 @@ export const PdfToPdfAWorkspace: React.FC<PdfToPdfAWorkspaceProps> = ({ onBack, 
               }`}
             >
               <Archive className="w-4 h-4" />
-              <span>{isProcessing ? (lang === 'en' ? 'Converting...' : 'Mengonversi...') : (lang === 'en' ? 'Convert & Download PDF/A' : 'Konversi & Unduh PDF/A')}</span>
-              
+              <span>{isProcessing ? (lang === 'en' ? 'Converting...' : 'Mengonversi...') : (lang === 'en' ? 'Convert to PDF/A' : 'Konversi ke PDF/A')}</span>
             </button>
           </div>
         </div>
       )}
+
+      {/* Progress Modal */}
+      <ProcessingProgress
+        isOpen={isProcessing}
+        progressMessage={progressMsg}
+        currentStep={currentStep}
+        totalSteps={totalSteps}
+        t={t}
+      />
     </div>
   );
 };

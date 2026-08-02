@@ -21,13 +21,22 @@ import {
   Settings2,
 } from 'lucide-react';
 
+import SuccessDownloadScreen from './SuccessDownloadScreen';
+import { ViewMode } from '@/components/Header';
+
 interface PageNumbersWorkspaceProps {
   onBack: () => void;
+  onSelectTool?: (toolId: ViewMode) => void;
   t: TranslationDictionary;
   lang: 'en' | 'id';
 }
 
-export const PageNumbersWorkspace: React.FC<PageNumbersWorkspaceProps> = ({ onBack, t, lang }) => {
+export const PageNumbersWorkspace: React.FC<PageNumbersWorkspaceProps> = ({
+  onBack,
+  onSelectTool,
+  t,
+  lang,
+}) => {
   const [file, setFile] = useState<File | null>(null);
   const [pageCount, setPageCount] = useState<number>(0);
   const [position, setPosition] = useState<PageNumberPosition>('bottom-center');
@@ -38,6 +47,10 @@ export const PageNumbersWorkspace: React.FC<PageNumbersWorkspaceProps> = ({ onBa
   const [currentStep, setCurrentStep] = useState(0);
   const [totalSteps, setTotalSteps] = useState(0);
   const [errorToast, setErrorToast] = useState<{ title: string; message: string } | null>(null);
+  const [completedResult, setCompletedResult] = useState<{
+    blob: Blob;
+    filename: string;
+  } | null>(null);
 
   const handleFileChange = async (selectedFiles: File[]) => {
     if (!selectedFiles || selectedFiles.length === 0) return;
@@ -78,11 +91,11 @@ export const PageNumbersWorkspace: React.FC<PageNumbersWorkspaceProps> = ({ onBa
         }
       );
 
-      downloadBlob(result.blob, result.filename);
-
-      setTimeout(() => {
-        setIsProcessing(false);
-      }, 500);
+      setIsProcessing(false);
+      setCompletedResult({
+        blob: result.blob,
+        filename: result.filename,
+      });
     } catch (err: any) {
       setIsProcessing(false);
       setErrorToast({
@@ -91,6 +104,31 @@ export const PageNumbersWorkspace: React.FC<PageNumbersWorkspaceProps> = ({ onBa
       });
     }
   };
+
+  if (completedResult) {
+    return (
+      <SuccessDownloadScreen
+        title={lang === 'en' ? 'Page Numbers Added Successfully!' : 'Nomor Halaman Berhasil Ditambahkan!'}
+        downloadFileName={completedResult.filename}
+        downloadButtonText={lang === 'en' ? 'Download Numbered PDF' : 'Unduh PDF Berpenomoran'}
+        onDownload={(customName?: string) =>
+          downloadBlob(completedResult.blob, customName || completedResult.filename)
+        }
+        onStartOver={() => {
+          setCompletedResult(null);
+          setFile(null);
+          setPageCount(0);
+        }}
+        onSelectTool={(toolId: ViewMode) => {
+          setCompletedResult(null);
+          setFile(null);
+          if (onSelectTool) onSelectTool(toolId);
+        }}
+        t={t}
+        lang={lang}
+      />
+    );
+  }
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">

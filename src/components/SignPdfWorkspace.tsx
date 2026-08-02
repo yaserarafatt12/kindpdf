@@ -10,17 +10,34 @@ import PrivacyNotice from './PrivacyNotice';
 import { signPdf, SignatureOptions } from '@/lib/pdf/signPdf';
 import { HumanError } from '@/lib/errors/messages';
 
+import ProcessingProgress from './ProcessingProgress';
+import SuccessDownloadScreen from './SuccessDownloadScreen';
+import { ViewMode } from '@/components/Header';
+
 interface SignPdfWorkspaceProps {
   onBack: () => void;
+  onSelectTool?: (toolId: ViewMode) => void;
   t: TranslationDictionary;
   lang: Language;
 }
 
-export const SignPdfWorkspace: React.FC<SignPdfWorkspaceProps> = ({ onBack, t, lang }) => {
+export const SignPdfWorkspace: React.FC<SignPdfWorkspaceProps> = ({
+  onBack,
+  onSelectTool,
+  t,
+  lang,
+}) => {
   const [file, setFile] = useState<File | null>(null);
   const [pageCount, setPageCount] = useState(0);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [progressMsg, setProgressMsg] = useState('');
+  const [currentStep, setCurrentStep] = useState(0);
+  const [totalSteps, setTotalSteps] = useState(0);
   const [errorToast, setErrorToast] = useState<HumanError | null>(null);
+  const [completedResult, setCompletedResult] = useState<{
+    blob: Blob;
+    filename: string;
+  } | null>(null);
 
   // Sign mode: 'draw' | 'type'
   const [signMode, setSignMode] = useState<'draw' | 'type'>('draw');
@@ -127,6 +144,10 @@ export const SignPdfWorkspace: React.FC<SignPdfWorkspaceProps> = ({ onBack, t, l
     }
 
     setIsProcessing(true);
+    setIsProcessing(true);
+    setCurrentStep(1);
+    setTotalSteps(2);
+    setProgressMsg(lang === 'en' ? 'Embedding signature into PDF...' : 'Menempelkan tanda tangan ke PDF...');
     setErrorToast(null);
 
     try {
@@ -143,17 +164,50 @@ export const SignPdfWorkspace: React.FC<SignPdfWorkspaceProps> = ({ onBack, t, l
       const signedBytes = await signPdf(file, options);
       const blob = new Blob([signedBytes.buffer as ArrayBuffer], { type: 'application/pdf' });
       const baseName = file.name.replace(/\.pdf$/i, '');
-      downloadBlob(blob, `Kindpdf_${baseName}_Signed.pdf`);
+      const filename = `Kindpdf_${baseName}_Signed.pdf`;
+
+      setCurrentStep(2);
+      setTotalSteps(2);
+
+      setIsProcessing(false);
+      setCompletedResult({
+        blob,
+        filename,
+      });
     } catch (err: any) {
+      setIsProcessing(false);
       setErrorToast({
         type: 'CORRUPTED',
         title: lang === 'en' ? 'Signing Failed' : 'Gagal Menandatangani',
         message: err?.message || 'Unexpected error signing document.',
       });
-    } finally {
-      setIsProcessing(false);
     }
   };
+
+  if (completedResult) {
+    return (
+      <SuccessDownloadScreen
+        title={lang === 'en' ? 'PDF Signed Successfully!' : 'Dokumen PDF Berhasil Ditandatangani!'}
+        downloadFileName={completedResult.filename}
+        downloadButtonText={lang === 'en' ? 'Download Signed PDF' : 'Unduh PDF Hasil Tanda Tangan'}
+        onDownload={(customName?: string) =>
+          downloadBlob(completedResult.blob, customName || completedResult.filename)
+        }
+        onStartOver={() => {
+          setCompletedResult(null);
+          setFile(null);
+          setPageCount(0);
+        }}
+        onSelectTool={(toolId: ViewMode) => {
+          setCompletedResult(null);
+          setFile(null);
+          if (onSelectTool) onSelectTool(toolId);
+        }}
+        t={t}
+        lang={lang}
+      />
+    );
+  }
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">
@@ -369,6 +423,15 @@ export const SignPdfWorkspace: React.FC<SignPdfWorkspaceProps> = ({ onBack, t, l
 
       {/* Privacy Notice */}
       <PrivacyNotice t={t} />
+
+      {/* Progress Modal */}
+      <ProcessingProgress
+        isOpen={isProcessing}
+        progressMessage={progressMsg}
+        currentStep={currentStep}
+        totalSteps={totalSteps}
+        t={t}
+      />
     </div>
   );
 };

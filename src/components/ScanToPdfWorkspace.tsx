@@ -8,17 +8,34 @@ import PrivacyNotice from './PrivacyNotice';
 import { captureFrameFromVideo, buildPdfFromScans, ScanOptions } from '@/lib/pdf/scanToPdf';
 import { HumanError } from '@/lib/errors/messages';
 
+import ProcessingProgress from './ProcessingProgress';
+import SuccessDownloadScreen from './SuccessDownloadScreen';
+import { ViewMode } from '@/components/Header';
+
 interface ScanToPdfWorkspaceProps {
   onBack: () => void;
+  onSelectTool?: (toolId: ViewMode) => void;
   t: TranslationDictionary;
   lang: Language;
 }
 
-export const ScanToPdfWorkspace: React.FC<ScanToPdfWorkspaceProps> = ({ onBack, t, lang }) => {
+export const ScanToPdfWorkspace: React.FC<ScanToPdfWorkspaceProps> = ({
+  onBack,
+  onSelectTool,
+  t,
+  lang,
+}) => {
   const [cameraActive, setCameraActive] = useState(false);
   const [scannedImages, setScannedImages] = useState<string[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [progressMsg, setProgressMsg] = useState('');
+  const [currentStep, setCurrentStep] = useState(0);
+  const [totalSteps, setTotalSteps] = useState(0);
   const [errorToast, setErrorToast] = useState<HumanError | null>(null);
+  const [completedResult, setCompletedResult] = useState<{
+    blob: Blob;
+    filename: string;
+  } | null>(null);
 
   // Scan options
   const [pageSize, setPageSize] = useState<'a4' | 'letter' | 'fit'>('a4');
@@ -107,6 +124,10 @@ export const ScanToPdfWorkspace: React.FC<ScanToPdfWorkspaceProps> = ({ onBack, 
     if (scannedImages.length === 0) return;
 
     setIsProcessing(true);
+    setIsProcessing(true);
+    setCurrentStep(1);
+    setTotalSteps(2);
+    setProgressMsg(lang === 'en' ? 'Building scanned PDF document...' : 'Membuat dokumen PDF hasil scan...');
     setErrorToast(null);
 
     try {
@@ -119,17 +140,51 @@ export const ScanToPdfWorkspace: React.FC<ScanToPdfWorkspaceProps> = ({ onBack, 
 
       const pdfBytes = await buildPdfFromScans(scannedImages, options);
       const blob = new Blob([pdfBytes.buffer as ArrayBuffer], { type: 'application/pdf' });
-      downloadBlob(blob, `Kindpdf_Scanned_Document.pdf`);
+      const filename = `Kindpdf_Scanned_Document.pdf`;
+
+      setCurrentStep(2);
+      setTotalSteps(2);
+
+      setIsProcessing(false);
+      setCompletedResult({
+        blob,
+        filename,
+      });
     } catch (err: any) {
+      setIsProcessing(false);
       setErrorToast({
         type: 'CORRUPTED',
         title: lang === 'en' ? 'Scan to PDF Failed' : 'Gagal Membuat PDF',
         message: err?.message || 'Unexpected error building scanned PDF.',
       });
-    } finally {
-      setIsProcessing(false);
     }
   };
+
+  if (completedResult) {
+    return (
+      <SuccessDownloadScreen
+        title={lang === 'en' ? 'Scanned PDF Ready!' : 'Dokumen PDF Hasil Scan Siap!'}
+        downloadFileName={completedResult.filename}
+        downloadButtonText={lang === 'en' ? 'Download Scanned PDF' : 'Unduh PDF Hasil Scan'}
+        onDownload={(customName?: string) =>
+          downloadBlob(completedResult.blob, customName || completedResult.filename)
+        }
+        onStartOver={() => {
+          stopCamera();
+          setCompletedResult(null);
+          setScannedImages([]);
+        }}
+        onSelectTool={(toolId: ViewMode) => {
+          stopCamera();
+          setCompletedResult(null);
+          setScannedImages([]);
+          if (onSelectTool) onSelectTool(toolId);
+        }}
+        t={t}
+        lang={lang}
+      />
+    );
+  }
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">

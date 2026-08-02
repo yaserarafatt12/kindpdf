@@ -10,17 +10,34 @@ import PrivacyNotice from './PrivacyNotice';
 import { applyOverlays, OverlayItem, OverlayType } from '@/lib/pdf/editPdfOverlay';
 import { HumanError } from '@/lib/errors/messages';
 
+import ProcessingProgress from './ProcessingProgress';
+import SuccessDownloadScreen from './SuccessDownloadScreen';
+import { ViewMode } from '@/components/Header';
+
 interface EditPdfWorkspaceProps {
   onBack: () => void;
+  onSelectTool?: (toolId: ViewMode) => void;
   t: TranslationDictionary;
   lang: Language;
 }
 
-export const EditPdfWorkspace: React.FC<EditPdfWorkspaceProps> = ({ onBack, t, lang }) => {
+export const EditPdfWorkspace: React.FC<EditPdfWorkspaceProps> = ({
+  onBack,
+  onSelectTool,
+  t,
+  lang,
+}) => {
   const [file, setFile] = useState<File | null>(null);
   const [pageCount, setPageCount] = useState(0);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [progressMsg, setProgressMsg] = useState('');
+  const [currentStep, setCurrentStep] = useState(0);
+  const [totalSteps, setTotalSteps] = useState(0);
   const [errorToast, setErrorToast] = useState<HumanError | null>(null);
+  const [completedResult, setCompletedResult] = useState<{
+    blob: Blob;
+    filename: string;
+  } | null>(null);
 
   // Overlay state
   const [overlays, setOverlays] = useState<OverlayItem[]>([]);
@@ -89,23 +106,60 @@ export const EditPdfWorkspace: React.FC<EditPdfWorkspaceProps> = ({ onBack, t, l
     }
 
     setIsProcessing(true);
+    setCurrentStep(1);
+    setTotalSteps(2);
+    setProgressMsg(lang === 'en' ? 'Applying annotations and text overlays to PDF...' : 'Menerapkan anotasi dan hamparan teks ke PDF...');
     setErrorToast(null);
 
     try {
       const editedBytes = await applyOverlays(file, overlays);
       const blob = new Blob([editedBytes.buffer as ArrayBuffer], { type: 'application/pdf' });
       const baseName = file.name.replace(/\.pdf$/i, '');
-      downloadBlob(blob, `Kindpdf_${baseName}_Edited.pdf`);
+      const filename = `Kindpdf_${baseName}_Edited.pdf`;
+
+      setCurrentStep(2);
+      setTotalSteps(2);
+
+      setIsProcessing(false);
+      setCompletedResult({
+        blob,
+        filename,
+      });
     } catch (err: any) {
+      setIsProcessing(false);
       setErrorToast({
         type: 'CORRUPTED',
         title: lang === 'en' ? 'Edit Failed' : 'Gagal Mengedit',
         message: err?.message || 'Unexpected error while modifying PDF.',
       });
-    } finally {
-      setIsProcessing(false);
     }
   };
+
+  if (completedResult) {
+    return (
+      <SuccessDownloadScreen
+        title={lang === 'en' ? 'PDF Edited Successfully!' : 'Dokumen PDF Berhasil Diedit!'}
+        downloadFileName={completedResult.filename}
+        downloadButtonText={lang === 'en' ? 'Download Edited PDF' : 'Unduh PDF Hasil Edit'}
+        onDownload={(customName?: string) =>
+          downloadBlob(completedResult.blob, customName || completedResult.filename)
+        }
+        onStartOver={() => {
+          setCompletedResult(null);
+          setFile(null);
+          setPageCount(0);
+          setOverlays([]);
+        }}
+        onSelectTool={(toolId: ViewMode) => {
+          setCompletedResult(null);
+          setFile(null);
+          if (onSelectTool) onSelectTool(toolId);
+        }}
+        t={t}
+        lang={lang}
+      />
+    );
+  }
 
   const handleReset = () => {
     setFile(null);
@@ -389,6 +443,15 @@ export const EditPdfWorkspace: React.FC<EditPdfWorkspaceProps> = ({ onBack, t, l
 
       {/* Privacy Notice */}
       <PrivacyNotice t={t} />
+
+      {/* Progress Modal */}
+      <ProcessingProgress
+        isOpen={isProcessing}
+        progressMessage={progressMsg}
+        currentStep={currentStep}
+        totalSteps={totalSteps}
+        t={t}
+      />
     </div>
   );
 };

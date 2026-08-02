@@ -10,17 +10,34 @@ import PrivacyNotice from './PrivacyNotice';
 import { redactPdf, RedactRegion } from '@/lib/pdf/redactPdf';
 import { HumanError } from '@/lib/errors/messages';
 
+import ProcessingProgress from './ProcessingProgress';
+import SuccessDownloadScreen from './SuccessDownloadScreen';
+import { ViewMode } from '@/components/Header';
+
 interface RedactPdfWorkspaceProps {
   onBack: () => void;
+  onSelectTool?: (toolId: ViewMode) => void;
   t: TranslationDictionary;
   lang: Language;
 }
 
-export const RedactPdfWorkspace: React.FC<RedactPdfWorkspaceProps> = ({ onBack, t, lang }) => {
+export const RedactPdfWorkspace: React.FC<RedactPdfWorkspaceProps> = ({
+  onBack,
+  onSelectTool,
+  t,
+  lang,
+}) => {
   const [file, setFile] = useState<File | null>(null);
   const [pageCount, setPageCount] = useState(0);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [progressMsg, setProgressMsg] = useState('');
+  const [currentStep, setCurrentStep] = useState(0);
+  const [totalSteps, setTotalSteps] = useState(0);
   const [errorToast, setErrorToast] = useState<HumanError | null>(null);
+  const [completedResult, setCompletedResult] = useState<{
+    blob: Blob;
+    filename: string;
+  } | null>(null);
 
   const [regions, setRegions] = useState<RedactRegion[]>([]);
   const [targetPage, setTargetPage] = useState(1);
@@ -74,23 +91,60 @@ export const RedactPdfWorkspace: React.FC<RedactPdfWorkspaceProps> = ({ onBack, 
     }
 
     setIsProcessing(true);
+    setCurrentStep(1);
+    setTotalSteps(2);
+    setProgressMsg(lang === 'en' ? 'Sanitizing and redacting PDF content...' : 'Membersihkan dan me-redaksi konten PDF...');
     setErrorToast(null);
 
     try {
       const redactedBytes = await redactPdf(file, regions);
       const blob = new Blob([redactedBytes.buffer as ArrayBuffer], { type: 'application/pdf' });
       const baseName = file.name.replace(/\.pdf$/i, '');
-      downloadBlob(blob, `Kindpdf_${baseName}_Redacted.pdf`);
+      const filename = `Kindpdf_${baseName}_Redacted.pdf`;
+
+      setCurrentStep(2);
+      setTotalSteps(2);
+
+      setIsProcessing(false);
+      setCompletedResult({
+        blob,
+        filename,
+      });
     } catch (err: any) {
+      setIsProcessing(false);
       setErrorToast({
         type: 'CORRUPTED',
         title: lang === 'en' ? 'Redaction Failed' : 'Gagal Melakukan Redaksi',
         message: err?.message || 'Unexpected error redacting file.',
       });
-    } finally {
-      setIsProcessing(false);
     }
   };
+
+  if (completedResult) {
+    return (
+      <SuccessDownloadScreen
+        title={lang === 'en' ? 'PDF Redacted Successfully!' : 'Dokumen PDF Berhasil Diredaksi!'}
+        downloadFileName={completedResult.filename}
+        downloadButtonText={lang === 'en' ? 'Download Redacted PDF' : 'Unduh PDF Hasil Redaksi'}
+        onDownload={(customName?: string) =>
+          downloadBlob(completedResult.blob, customName || completedResult.filename)
+        }
+        onStartOver={() => {
+          setCompletedResult(null);
+          setFile(null);
+          setPageCount(0);
+          setRegions([]);
+        }}
+        onSelectTool={(toolId: ViewMode) => {
+          setCompletedResult(null);
+          setFile(null);
+          if (onSelectTool) onSelectTool(toolId);
+        }}
+        t={t}
+        lang={lang}
+      />
+    );
+  }
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">
@@ -283,6 +337,15 @@ export const RedactPdfWorkspace: React.FC<RedactPdfWorkspaceProps> = ({ onBack, 
 
       {/* Privacy Notice */}
       <PrivacyNotice t={t} />
+
+      {/* Progress Modal */}
+      <ProcessingProgress
+        isOpen={isProcessing}
+        progressMessage={progressMsg}
+        currentStep={currentStep}
+        totalSteps={totalSteps}
+        t={t}
+      />
     </div>
   );
 };

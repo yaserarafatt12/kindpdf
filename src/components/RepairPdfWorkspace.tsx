@@ -1,29 +1,42 @@
 'use client';
 
 import React, { useState } from 'react';
-import { ArrowLeft, Wrench, ShieldCheck, ArrowRight, AlertCircle, X, CheckCircle2 } from 'lucide-react';
+import { ArrowLeft, Wrench, ShieldCheck, AlertCircle, X } from 'lucide-react';
 import { Language, TranslationDictionary } from '@/lib/i18n/translations';
 import { downloadBlob } from '@/lib/files/downloadBlob';
 import FileDropzone from './FileDropzone';
-import PrivacyNotice from './PrivacyNotice';
 import { repairPdf } from '@/lib/pdf/repairPdf';
 import { HumanError } from '@/lib/errors/messages';
+import ProcessingProgress from './ProcessingProgress';
+import SuccessDownloadScreen from './SuccessDownloadScreen';
+import { ViewMode } from '@/components/Header';
 
 interface RepairPdfWorkspaceProps {
   onBack: () => void;
+  onSelectTool?: (toolId: ViewMode) => void;
   t: TranslationDictionary;
   lang: Language;
 }
 
-export const RepairPdfWorkspace: React.FC<RepairPdfWorkspaceProps> = ({ onBack, t, lang }) => {
+export const RepairPdfWorkspace: React.FC<RepairPdfWorkspaceProps> = ({
+  onBack,
+  onSelectTool,
+  t,
+  lang,
+}) => {
   const [file, setFile] = useState<File | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
-  const [successMsg, setSuccessMsg] = useState<string | null>(null);
+  const [progressMsg, setProgressMsg] = useState('');
+  const [currentStep, setCurrentStep] = useState(0);
+  const [totalSteps, setTotalSteps] = useState(0);
   const [errorToast, setErrorToast] = useState<HumanError | null>(null);
+  const [completedResult, setCompletedResult] = useState<{
+    blob: Blob;
+    filename: string;
+  } | null>(null);
 
   const handleFileSelected = (files: File[]) => {
     setErrorToast(null);
-    setSuccessMsg(null);
     if (files.length === 0) return;
     setFile(files[0]);
   };
@@ -32,33 +45,61 @@ export const RepairPdfWorkspace: React.FC<RepairPdfWorkspaceProps> = ({ onBack, 
     if (!file) return;
 
     setIsProcessing(true);
+    setCurrentStep(1);
+    setTotalSteps(2);
+    setProgressMsg(lang === 'en' ? 'Analyzing and repairing PDF structure...' : 'Menganalisis dan me-repair struktur PDF...');
     setErrorToast(null);
-    setSuccessMsg(null);
 
     try {
       const repairedBytes = await repairPdf(file, (msg) => {
-        // progress callback
+        if (msg) setProgressMsg(msg);
       });
 
       const blob = new Blob([repairedBytes.buffer as ArrayBuffer], { type: 'application/pdf' });
       const baseName = file.name.replace(/\.pdf$/i, '');
-      downloadBlob(blob, `Kindpdf_${baseName}_Repaired.pdf`);
+      const filename = `Kindpdf_${baseName}_Repaired.pdf`;
 
-      setSuccessMsg(
-        lang === 'en'
-          ? 'PDF document structure successfully repaired and downloaded!'
-          : 'Struktur dokumen PDF berhasil diperbaiki dan diunduh!'
-      );
+      setCurrentStep(2);
+      setTotalSteps(2);
+
+      setIsProcessing(false);
+      setCompletedResult({
+        blob,
+        filename,
+      });
     } catch (err: any) {
+      setIsProcessing(false);
       setErrorToast({
         type: 'CORRUPTED',
         title: lang === 'en' ? 'Repair Failed' : 'Perbaikan Gagal',
         message: err?.message || 'The file is severely damaged and could not be recovered.',
       });
-    } finally {
-      setIsProcessing(false);
     }
   };
+
+  if (completedResult) {
+    return (
+      <SuccessDownloadScreen
+        title={lang === 'en' ? 'PDF Repaired Successfully!' : 'Dokumen PDF Berhasil Diperbaiki!'}
+        downloadFileName={completedResult.filename}
+        downloadButtonText={lang === 'en' ? 'Download Repaired PDF' : 'Unduh PDF Hasil Perbaikan'}
+        onDownload={(customName?: string) =>
+          downloadBlob(completedResult.blob, customName || completedResult.filename)
+        }
+        onStartOver={() => {
+          setCompletedResult(null);
+          setFile(null);
+        }}
+        onSelectTool={(toolId: ViewMode) => {
+          setCompletedResult(null);
+          setFile(null);
+          if (onSelectTool) onSelectTool(toolId);
+        }}
+        t={t}
+        lang={lang}
+      />
+    );
+  }
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">
@@ -100,14 +141,6 @@ export const RepairPdfWorkspace: React.FC<RepairPdfWorkspaceProps> = ({ onBack, 
         </div>
       )}
 
-      {/* Success Toast */}
-      {successMsg && (
-        <div className="w-full p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 text-emerald-900 dark:text-emerald-200 flex items-center gap-3 shadow-md animate-fade-in">
-          <CheckCircle2 className="w-5 h-5 text-emerald-600 dark:text-emerald-400 shrink-0" />
-          <p className="text-xs font-extrabold">{successMsg}</p>
-        </div>
-      )}
-
       {/* Upload File */}
       {!file && <FileDropzone onFilesSelected={handleFileSelected} disabled={isProcessing} t={t} colorTheme="amber" />}
 
@@ -122,7 +155,6 @@ export const RepairPdfWorkspace: React.FC<RepairPdfWorkspaceProps> = ({ onBack, 
               type="button"
               onClick={() => {
                 setFile(null);
-                setSuccessMsg(null);
               }}
               className="text-xs font-extrabold text-rose-600 hover:text-rose-700 px-3 py-1.5 rounded-xl border border-rose-200 dark:border-rose-800 hover:bg-rose-50 dark:hover:bg-rose-950/50 btn-press-effect"
             >
@@ -147,15 +179,20 @@ export const RepairPdfWorkspace: React.FC<RepairPdfWorkspaceProps> = ({ onBack, 
               }`}
             >
               <Wrench className="w-4 h-4" />
-              <span>{isProcessing ? (lang === 'en' ? 'Repairing...' : 'Memperbaiki...') : (lang === 'en' ? 'Repair & Download' : 'Perbaiki & Unduh')}</span>
-              
+              <span>{isProcessing ? (lang === 'en' ? 'Repairing...' : 'Memperbaiki...') : (lang === 'en' ? 'Repair PDF' : 'Perbaiki PDF')}</span>
             </button>
           </div>
         </div>
       )}
 
-      {/* Privacy Notice */}
-      <PrivacyNotice t={t} />
+      {/* Progress Modal */}
+      <ProcessingProgress
+        isOpen={isProcessing}
+        progressMessage={progressMsg}
+        currentStep={currentStep}
+        totalSteps={totalSteps}
+        t={t}
+      />
     </div>
   );
 };

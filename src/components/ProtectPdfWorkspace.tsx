@@ -22,13 +22,22 @@ import {
   EyeOff,
 } from 'lucide-react';
 
+import SuccessDownloadScreen from './SuccessDownloadScreen';
+import { ViewMode } from '@/components/Header';
+
 interface ProtectPdfWorkspaceProps {
   onBack: () => void;
+  onSelectTool?: (toolId: ViewMode) => void;
   t: TranslationDictionary;
   lang: 'en' | 'id';
 }
 
-export const ProtectPdfWorkspace: React.FC<ProtectPdfWorkspaceProps> = ({ onBack, t, lang }) => {
+export const ProtectPdfWorkspace: React.FC<ProtectPdfWorkspaceProps> = ({
+  onBack,
+  onSelectTool,
+  t,
+  lang,
+}) => {
   const [file, setFile] = useState<File | null>(null);
   const [pageCount, setPageCount] = useState<number>(0);
   const [password, setPassword] = useState('');
@@ -39,6 +48,10 @@ export const ProtectPdfWorkspace: React.FC<ProtectPdfWorkspaceProps> = ({ onBack
   const [currentStep, setCurrentStep] = useState(0);
   const [totalSteps, setTotalSteps] = useState(0);
   const [errorToast, setErrorToast] = useState<{ title: string; message: string } | null>(null);
+  const [completedResult, setCompletedResult] = useState<{
+    blob: Blob;
+    filename: string;
+  } | null>(null);
 
   const handleFileChange = async (selectedFiles: File[]) => {
     if (!selectedFiles || selectedFiles.length === 0) return;
@@ -91,11 +104,11 @@ export const ProtectPdfWorkspace: React.FC<ProtectPdfWorkspaceProps> = ({ onBack
         setProgressMsg(msg);
       });
 
-      downloadBlob(result.blob, result.filename);
-
-      setTimeout(() => {
-        setIsProcessing(false);
-      }, 500);
+      setIsProcessing(false);
+      setCompletedResult({
+        blob: result.blob,
+        filename: result.filename,
+      });
     } catch (err: any) {
       setIsProcessing(false);
       setErrorToast({
@@ -104,6 +117,32 @@ export const ProtectPdfWorkspace: React.FC<ProtectPdfWorkspaceProps> = ({ onBack
       });
     }
   };
+
+  if (completedResult) {
+    return (
+      <SuccessDownloadScreen
+        title={lang === 'en' ? 'PDF Protected Successfully!' : 'Dokumen PDF Berhasil Dilindungi!'}
+        downloadFileName={completedResult.filename}
+        downloadButtonText={lang === 'en' ? 'Download Protected PDF' : 'Unduh PDF Terenkripsi'}
+        onDownload={(customName?: string) =>
+          downloadBlob(completedResult.blob, customName || completedResult.filename)
+        }
+        onStartOver={() => {
+          setCompletedResult(null);
+          setFile(null);
+          setPassword('');
+          setConfirmPassword('');
+        }}
+        onSelectTool={(toolId: ViewMode) => {
+          setCompletedResult(null);
+          setFile(null);
+          if (onSelectTool) onSelectTool(toolId);
+        }}
+        t={t}
+        lang={lang}
+      />
+    );
+  }
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">

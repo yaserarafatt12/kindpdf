@@ -446,52 +446,102 @@ export default function Home() {
 
         {/* VIEW MODE 7: PDF TO IMAGES WORKSPACE */}
         {activeView === 'pdf-to-image' && (
-          <PdfToImagesWorkspace onBack={() => setActiveView('grid')} t={t} lang={lang} />
+          <PdfToImagesWorkspace
+            onBack={() => setActiveView('grid')}
+            onSelectTool={(toolId) => setActiveView(toolId)}
+            t={t}
+            lang={lang}
+          />
         )}
 
         {/* VIEW MODE 8: PROTECT PDF WORKSPACE */}
         {activeView === 'protect' && (
-          <ProtectPdfWorkspace onBack={() => setActiveView('grid')} t={t} lang={lang} />
+          <ProtectPdfWorkspace
+            onBack={() => setActiveView('grid')}
+            onSelectTool={(toolId) => setActiveView(toolId)}
+            t={t}
+            lang={lang}
+          />
         )}
 
         {/* VIEW MODE 9: UNLOCK PDF WORKSPACE */}
         {activeView === 'unlock' && (
-          <UnlockPdfWorkspace onBack={() => setActiveView('grid')} t={t} lang={lang} />
+          <UnlockPdfWorkspace
+            onBack={() => setActiveView('grid')}
+            onSelectTool={(toolId) => setActiveView(toolId)}
+            t={t}
+            lang={lang}
+          />
         )}
 
         {/* VIEW MODE 10: PAGE NUMBERS WORKSPACE */}
         {activeView === 'page-numbers' && (
-          <PageNumbersWorkspace onBack={() => setActiveView('grid')} t={t} lang={lang} />
+          <PageNumbersWorkspace
+            onBack={() => setActiveView('grid')}
+            onSelectTool={(toolId) => setActiveView(toolId)}
+            t={t}
+            lang={lang}
+          />
         )}
 
         {/* VIEW MODE 11: WATERMARK WORKSPACE */}
         {activeView === 'watermark' && (
-          <WatermarkWorkspace onBack={() => setActiveView('grid')} t={t} lang={lang} />
+          <WatermarkWorkspace
+            onBack={() => setActiveView('grid')}
+            onSelectTool={(toolId) => setActiveView(toolId)}
+            t={t}
+            lang={lang}
+          />
         )}
 
         {/* VIEW MODE 12: CROP PDF WORKSPACE */}
         {activeView === 'crop' && (
-          <CropPdfWorkspace onBack={() => setActiveView('grid')} t={t} lang={lang} />
+          <CropPdfWorkspace
+            onBack={() => setActiveView('grid')}
+            onSelectTool={(toolId) => setActiveView(toolId)}
+            t={t}
+            lang={lang}
+          />
         )}
 
         {/* VIEW MODE 13: EDIT PDF WORKSPACE */}
         {activeView === 'edit-pdf' && (
-          <EditPdfWorkspace onBack={() => setActiveView('grid')} t={t} lang={lang} />
+          <EditPdfWorkspace
+            onBack={() => setActiveView('grid')}
+            onSelectTool={(toolId) => setActiveView(toolId)}
+            t={t}
+            lang={lang}
+          />
         )}
 
         {/* VIEW MODE 14: SCAN TO PDF WORKSPACE */}
         {activeView === 'scan-to-pdf' && (
-          <ScanToPdfWorkspace onBack={() => setActiveView('grid')} t={t} lang={lang} />
+          <ScanToPdfWorkspace
+            onBack={() => setActiveView('grid')}
+            onSelectTool={(toolId) => setActiveView(toolId)}
+            t={t}
+            lang={lang}
+          />
         )}
 
         {/* VIEW MODE 15: SIGN PDF WORKSPACE */}
         {activeView === 'sign' && (
-          <SignPdfWorkspace onBack={() => setActiveView('grid')} t={t} lang={lang} />
+          <SignPdfWorkspace
+            onBack={() => setActiveView('grid')}
+            onSelectTool={(toolId) => setActiveView(toolId)}
+            t={t}
+            lang={lang}
+          />
         )}
 
         {/* VIEW MODE 16: REDACT PDF WORKSPACE */}
         {activeView === 'redact' && (
-          <RedactPdfWorkspace onBack={() => setActiveView('grid')} t={t} lang={lang} />
+          <RedactPdfWorkspace
+            onBack={() => setActiveView('grid')}
+            onSelectTool={(toolId) => setActiveView(toolId)}
+            t={t}
+            lang={lang}
+          />
         )}
 
         {/* VIEW MODE 17: COMPARE PDF WORKSPACE */}
@@ -501,7 +551,12 @@ export default function Home() {
 
         {/* VIEW MODE 18: REPAIR PDF WORKSPACE */}
         {activeView === 'repair' && (
-          <RepairPdfWorkspace onBack={() => setActiveView('grid')} t={t} lang={lang} />
+          <RepairPdfWorkspace
+            onBack={() => setActiveView('grid')}
+            onSelectTool={(toolId) => setActiveView(toolId)}
+            t={t}
+            lang={lang}
+          />
         )}
 
         {/* VIEW MODE 19: COMPRESS PDF WORKSPACE */}
@@ -516,27 +571,52 @@ export default function Home() {
 
         {/* VIEW MODE 20: HTML TO PDF WORKSPACE */}
         {activeView === 'html-to-pdf' && (
-          <HtmlToPdfWorkspace onBack={() => setActiveView('grid')} t={t} lang={lang} />
+          <HtmlToPdfWorkspace
+            onBack={() => setActiveView('grid')}
+            onSelectTool={(toolId) => setActiveView(toolId)}
+            t={t}
+            lang={lang}
+          />
         )}
 
         {/* VIEW MODE 21: PDF TO PDF/A WORKSPACE */}
         {activeView === 'pdf-to-pdfa' && (
-          <PdfToPdfAWorkspace onBack={() => setActiveView('grid')} t={t} lang={lang} />
+          <PdfToPdfAWorkspace
+            onBack={() => setActiveView('grid')}
+            onSelectTool={(toolId) => setActiveView(toolId)}
+            t={t}
+            lang={lang}
+          />
         )}
 
         {/* VIEW MODE 22: WORD TO PDF WORKSPACE */}
         {activeView === 'word-to-pdf' && (
-          <WordToPdfWorkspace onBack={() => setActiveView('grid')} t={t} lang={lang} />
+          <WordToPdfWorkspace
+            onBack={() => setActiveView('grid')}
+            onSelectTool={(toolId) => setActiveView(toolId)}
+            t={t}
+            lang={lang}
+          />
         )}
 
         {/* VIEW MODE 23: PDF TO WORD WORKSPACE */}
         {activeView === 'pdf-to-word' && (
-          <PdfToWordWorkspace onBack={() => setActiveView('grid')} t={t} lang={lang} />
+          <PdfToWordWorkspace
+            onBack={() => setActiveView('grid')}
+            onSelectTool={(toolId) => setActiveView(toolId)}
+            t={t}
+            lang={lang}
+          />
         )}
 
         {/* VIEW MODE 24: OCR PDF WORKSPACE */}
         {activeView === 'ocr-pdf' && (
-          <OcrPdfWorkspace onBack={() => setActiveView('grid')} t={t} lang={lang} />
+          <OcrPdfWorkspace
+            onBack={() => setActiveView('grid')}
+            onSelectTool={(toolId) => setActiveView(toolId)}
+            t={t}
+            lang={lang}
+          />
         )}
       </main>
 
