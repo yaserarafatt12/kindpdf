@@ -136,7 +136,7 @@ export const PdfToWordWorkspace: React.FC<PdfToWordWorkspaceProps> = ({ onBack, 
             >
               <FileText className="w-4 h-4" />
               <span>{isProcessing ? (lang === 'en' ? 'Extracting...' : 'Mengekstrak...') : (lang === 'en' ? 'Convert & Download Word' : 'Konversi & Unduh Word')}</span>
-              {!isProcessing && <ArrowRight className="w-4 h-4 ml-1" />}
+              
             </button>
           </div>
         </div>

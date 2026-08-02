@@ -148,7 +148,7 @@ export const RepairPdfWorkspace: React.FC<RepairPdfWorkspaceProps> = ({ onBack, 
             >
               <Wrench className="w-4 h-4" />
               <span>{isProcessing ? (lang === 'en' ? 'Repairing...' : 'Memperbaiki...') : (lang === 'en' ? 'Repair & Download' : 'Perbaiki & Unduh')}</span>
-              {!isProcessing && <ArrowRight className="w-4 h-4 ml-1" />}
+              
             </button>
           </div>
         </div>

@@ -161,7 +161,7 @@ export const HtmlToPdfWorkspace: React.FC<HtmlToPdfWorkspaceProps> = ({ onBack, 
         >
           <Code className="w-4 h-4" />
           <span>{isProcessing ? (lang === 'en' ? 'Generating...' : 'Membuat...') : (lang === 'en' ? 'Convert & Download PDF' : 'Konversi & Unduh PDF')}</span>
-          {!isProcessing && <ArrowRight className="w-4 h-4 ml-1" />}
+          
         </button>
       </div>
     </div>

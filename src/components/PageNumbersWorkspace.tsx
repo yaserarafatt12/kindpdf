@@ -246,7 +246,7 @@ export const PageNumbersWorkspace: React.FC<PageNumbersWorkspaceProps> = ({ onBa
             >
               <Hash className="w-4 h-4" />
               <span>{lang === 'en' ? 'Add Page Numbers Now' : 'Beri Nomor Halaman Sekarang'}</span>
-              <ArrowRight className="w-4 h-4 ml-1" />
+              
             </button>
           </div>
         </div>

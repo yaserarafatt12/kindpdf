@@ -400,7 +400,7 @@ export const ImagesToPdfWorkspace: React.FC<ImagesToPdfWorkspaceProps> = ({
             >
               <ImageIcon className="w-4 h-4" />
               <span>{lang === 'en' ? 'Convert to PDF Now' : 'Konversi ke PDF Sekarang'}</span>
-              <ArrowRight className="w-4 h-4 ml-1" />
+              
             </button>
           </div>
         </div>

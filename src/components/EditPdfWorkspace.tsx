@@ -381,7 +381,7 @@ export const EditPdfWorkspace: React.FC<EditPdfWorkspaceProps> = ({ onBack, t, l
             >
               <Edit3 className="w-4 h-4" />
               <span>{isProcessing ? (lang === 'en' ? 'Applying...' : 'Menerapkan...') : (lang === 'en' ? 'Save & Download PDF' : 'Simpan & Unduh PDF')}</span>
-              {!isProcessing && <ArrowRight className="w-4 h-4 ml-1" />}
+              
             </button>
           </div>
         </div>

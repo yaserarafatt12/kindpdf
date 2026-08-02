@@ -259,7 +259,7 @@ export const CropPdfWorkspace: React.FC<CropPdfWorkspaceProps> = ({ onBack, t, l
             >
               <Crop className="w-4 h-4" />
               <span>{isProcessing ? (lang === 'en' ? 'Cropping...' : 'Memotong...') : (lang === 'en' ? 'Crop & Download' : 'Potong & Unduh')}</span>
-              {!isProcessing && <ArrowRight className="w-4 h-4 ml-1" />}
+              
             </button>
           </div>
         </div>

@@ -269,7 +269,7 @@ export const WatermarkWorkspace: React.FC<WatermarkWorkspaceProps> = ({ onBack, 
             >
               <Stamp className="w-4 h-4" />
               <span>{lang === 'en' ? 'Add Watermark Now' : 'Beri Watermark Sekarang'}</span>
-              <ArrowRight className="w-4 h-4 ml-1" />
+              
             </button>
           </div>
         </div>

@@ -208,7 +208,7 @@ export const OcrPdfWorkspace: React.FC<OcrPdfWorkspaceProps> = ({ onBack, t, lan
               >
                 <ScanText className="w-4 h-4" />
                 <span>{isProcessing ? (lang === 'en' ? 'Running OCR...' : 'Menjalankan OCR...') : (lang === 'en' ? 'Run OCR & Extract Text' : 'Jalankan OCR & Ekstrak Teks')}</span>
-                {!isProcessing && <ArrowRight className="w-4 h-4 ml-1" />}
+                
               </button>
             </div>
           )}

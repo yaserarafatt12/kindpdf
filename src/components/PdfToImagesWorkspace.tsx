@@ -247,7 +247,7 @@ export const PdfToImagesWorkspace: React.FC<PdfToImagesWorkspaceProps> = ({ onBa
             >
               <FileImage className="w-4 h-4" />
               <span>{lang === 'en' ? 'Convert PDF to Images Now' : 'Konversi PDF ke Gambar Sekarang'}</span>
-              <ArrowRight className="w-4 h-4 ml-1" />
+              
             </button>
           </div>
         </div>

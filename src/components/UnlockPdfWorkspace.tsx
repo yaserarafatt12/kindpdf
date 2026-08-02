@@ -202,7 +202,7 @@ export const UnlockPdfWorkspace: React.FC<UnlockPdfWorkspaceProps> = ({ onBack, 
             >
               <Unlock className="w-4 h-4" />
               <span>{lang === 'en' ? 'Unlock PDF Now' : 'Buka Enkripsi Sekarang'}</span>
-              <ArrowRight className="w-4 h-4 ml-1" />
+              
             </button>
           </div>
         </div>

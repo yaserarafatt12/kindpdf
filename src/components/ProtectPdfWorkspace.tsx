@@ -245,7 +245,7 @@ export const ProtectPdfWorkspace: React.FC<ProtectPdfWorkspaceProps> = ({ onBack
             >
               <Lock className="w-4 h-4" />
               <span>{lang === 'en' ? 'Protect PDF Now' : 'Proteksi PDF Sekarang'}</span>
-              <ArrowRight className="w-4 h-4 ml-1" />
+              
             </button>
           </div>
         </div>

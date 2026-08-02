@@ -361,7 +361,7 @@ export const SignPdfWorkspace: React.FC<SignPdfWorkspaceProps> = ({ onBack, t, l
             >
               <PenTool className="w-4 h-4" />
               <span>{isProcessing ? (lang === 'en' ? 'Signing...' : 'Menandatangani...') : (lang === 'en' ? 'Sign & Download PDF' : 'Tanda Tangan & Unduh PDF')}</span>
-              {!isProcessing && <ArrowRight className="w-4 h-4 ml-1" />}
+              
             </button>
           </div>
         </div>

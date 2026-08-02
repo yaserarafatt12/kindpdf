@@ -183,7 +183,7 @@ export const PdfToPdfAWorkspace: React.FC<PdfToPdfAWorkspaceProps> = ({ onBack, 
             >
               <Archive className="w-4 h-4" />
               <span>{isProcessing ? (lang === 'en' ? 'Converting...' : 'Mengonversi...') : (lang === 'en' ? 'Convert & Download PDF/A' : 'Konversi & Unduh PDF/A')}</span>
-              {!isProcessing && <ArrowRight className="w-4 h-4 ml-1" />}
+              
             </button>
           </div>
         </div>

@@ -275,7 +275,7 @@ export const RedactPdfWorkspace: React.FC<RedactPdfWorkspaceProps> = ({ onBack, 
             >
               <EyeOff className="w-4 h-4" />
               <span>{isProcessing ? (lang === 'en' ? 'Redacting...' : 'Meredaksi...') : (lang === 'en' ? 'Redact & Download PDF' : 'Redaksi & Unduh PDF')}</span>
-              {!isProcessing && <ArrowRight className="w-4 h-4 ml-1" />}
+              
             </button>
           </div>
         </div>

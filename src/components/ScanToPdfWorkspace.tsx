@@ -345,7 +345,7 @@ export const ScanToPdfWorkspace: React.FC<ScanToPdfWorkspaceProps> = ({ onBack, 
             >
               <FileText className="w-4 h-4" />
               <span>{isProcessing ? (lang === 'en' ? 'Generating PDF...' : 'Membuat PDF...') : (lang === 'en' ? 'Generate & Download PDF' : 'Buat & Unduh PDF')}</span>
-              {!isProcessing && <ArrowRight className="w-4 h-4 ml-1" />}
+              
             </button>
           </div>
         </div>
