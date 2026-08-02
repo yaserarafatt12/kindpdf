@@ -197,9 +197,9 @@ export default function Home() {
           </div>
         )}
 
-        {/* VIEW MODE 2: MERGE PDF WORKSPACE */}
+        {/* VIEW MODE 2: MERGE PDF WORKSPACE (iLovePDF Style Simple Layout) */}
         {activeView === 'merge' && (
-          <div className="max-w-4xl mx-auto space-y-5">
+          <div className="max-w-3xl mx-auto space-y-6">
             {/* Back Button */}
             <button
               type="button"
@@ -210,16 +210,12 @@ export default function Home() {
               <span>{t.backToAllTools}</span>
             </button>
 
-            {/* Merge Hero Section - Compact */}
-            <div className="text-center space-y-1.5 py-1">
-              <div className="inline-flex items-center gap-2 px-3 py-0.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-600 dark:text-sky-400 text-[11px] font-black">
-                <FileStack className="w-3.5 h-3.5" />
-                <span>{t.mergePdf} Tool</span>
-              </div>
-              <h2 className="text-lg sm:text-2xl font-extrabold tracking-tight text-slate-800 dark:text-slate-200">
+            {/* Merge Hero Section - Clean & Simple */}
+            <div className="text-center space-y-2 py-2 max-w-lg mx-auto">
+              <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900 dark:text-white">
                 {t.mergeHeroTitle}
               </h2>
-              <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium max-w-xl mx-auto">
+              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 font-medium leading-relaxed">
                 {t.mergeHeroSubtitle}
               </p>
             </div>
@@ -246,7 +242,7 @@ export default function Home() {
               </div>
             )}
 
-            {/* Dropzone Upload Section */}
+            {/* Simple Prominent CTA Dropzone Upload Section */}
             <FileDropzone onFilesSelected={handleFilesSelected} disabled={isProcessing} t={t} />
 
             {/* Selected Documents Workspace */}

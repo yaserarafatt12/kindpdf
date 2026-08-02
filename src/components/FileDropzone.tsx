@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef } from 'react';
-import { UploadCloud, FileText } from 'lucide-react';
+import { UploadCloud } from 'lucide-react';
 import { TranslationDictionary } from '@/lib/i18n/translations';
 
 interface FileDropzoneProps {
@@ -56,10 +56,10 @@ export const FileDropzone: React.FC<FileDropzoneProps> = ({ onFilesSelected, dis
           fileInputRef.current.click();
         }
       }}
-      className={`w-full rounded-[28px] border-2 border-dashed p-8 sm:p-12 text-center flex flex-col items-center justify-center gap-4 transition-all duration-300 cursor-pointer ${
+      className={`w-full max-w-xl mx-auto rounded-3xl border-2 border-dashed p-8 sm:p-12 text-center flex flex-col items-center justify-center gap-5 transition-all duration-300 cursor-pointer ${
         isDragOver
           ? 'border-blue-600 bg-blue-500/10 dark:bg-blue-500/15 scale-[1.01] shadow-xl'
-          : 'border-slate-400 dark:border-slate-700 bg-white dark:bg-slate-900 hover:border-blue-600 hover:bg-slate-100/60 dark:hover:bg-slate-800/80 shadow-sm'
+          : 'border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 hover:border-blue-600 hover:bg-slate-50 dark:hover:bg-slate-800/60 shadow-sm'
       } ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
     >
       <input
@@ -72,28 +72,25 @@ export const FileDropzone: React.FC<FileDropzoneProps> = ({ onFilesSelected, dis
         disabled={disabled}
       />
 
-      <div className="p-4 rounded-3xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-sky-400 border border-blue-200 dark:border-blue-900 shadow-sm">
-        <UploadCloud className="w-8 h-8 sm:w-10 sm:h-10 animate-bounce-slow" />
-      </div>
+      {/* Prominent Primary CTA Button (iLovePDF Style) */}
+      <div className="space-y-3 flex flex-col items-center">
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            if (!disabled && fileInputRef.current) {
+              fileInputRef.current.click();
+            }
+          }}
+          className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-blue-600 to-sky-500 hover:from-blue-500 hover:to-sky-400 text-white font-black text-base sm:text-lg shadow-lg shadow-blue-500/30 transition-all duration-200 btn-press-effect flex items-center justify-center gap-2.5"
+        >
+          <UploadCloud className="w-5 h-5 sm:w-6 sm:h-6" />
+          <span>{t.dropzoneClick}</span>
+        </button>
 
-      <div className="space-y-1.5 max-w-sm">
-        <h3 className="text-sm sm:text-base font-extrabold text-slate-900 dark:text-white">
+        <p className="text-xs text-slate-500 dark:text-slate-400 font-medium pt-1">
           {t.dropzoneTitle}
-        </h3>
-        <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
-          {t.dropzoneSubtitle} <span className="text-blue-600 dark:text-sky-400 font-black underline underline-offset-2">{t.dropzoneClick}</span>
         </p>
-      </div>
-
-      <div className="pt-2 flex flex-wrap items-center justify-center gap-3 text-[11px] text-slate-600 dark:text-slate-400 font-bold border-t border-slate-200 dark:border-slate-800/80 w-full max-w-md">
-        <span className="flex items-center gap-1 text-slate-700 dark:text-slate-300 font-extrabold">
-          <FileText className="w-3.5 h-3.5 text-blue-600 dark:text-sky-400" />
-          {t.formatPdfOnly}
-        </span>
-        <span>•</span>
-        <span>{t.maxFileSize}</span>
-        <span>•</span>
-        <span>{t.maxFilesCount}</span>
       </div>
     </div>
   );
