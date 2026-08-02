@@ -73,40 +73,30 @@ export const SuccessDownloadScreen: React.FC<SuccessDownloadScreenProps> = ({
           className="inline-flex items-center gap-2 text-xs font-black text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-sky-400 transition-colors btn-press-effect"
         >
           <ArrowLeft className="w-4 h-4" />
-          <span>{lang === 'en' ? 'Back to Merge PDF' : 'Kembali ke Merge PDF'}</span>
+          <span>{lang === 'en' ? 'Back to Tool' : 'Kembali'}</span>
         </button>
       </div>
 
       {/* Hero Success Download Area */}
       <div className="text-center space-y-4 py-2 sm:py-4">
-        <h2 className="text-2xl sm:text-4xl font-black tracking-tight text-slate-900 dark:text-white">
+        <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900 dark:text-white">
           {title}
         </h2>
 
-        {/* Optional Stats Badge (e.g. Compression Results) */}
-        {statBadge && (
-          <div className="inline-flex items-center gap-3 px-4 py-2 rounded-2xl bg-emerald-50 dark:bg-emerald-950/80 border border-emerald-300 dark:border-emerald-800 text-emerald-900 dark:text-emerald-200 font-extrabold text-xs sm:text-sm shadow-xs">
-            <span className="px-2.5 py-0.5 rounded-full bg-emerald-600 text-white font-black text-xs">
-              {statBadge.label}
-            </span>
-            {statBadge.detail && <span>{statBadge.detail}</span>}
-          </div>
-        )}
-
-        {/* Big Prominent High-Impact Download Button */}
-        <div className="pt-2 max-w-lg mx-auto space-y-4">
+        {/* Ideal Compact Download Button */}
+        <div className="pt-2 max-w-md mx-auto space-y-4">
           <button
             type="button"
             onClick={() => onDownload(fileName)}
-            className="w-full py-5 sm:py-6 px-8 sm:px-10 rounded-2xl bg-gradient-to-r from-blue-600 via-sky-600 to-blue-700 hover:from-blue-500 hover:to-sky-500 text-white font-black text-lg sm:text-xl flex items-center justify-center gap-3.5 shadow-2xl shadow-blue-600/35 hover:shadow-blue-500/50 scale-[1.01] hover:scale-[1.03] transition-all duration-200 btn-press-effect"
+            className="w-full py-3.5 sm:py-4 px-6 sm:px-8 rounded-2xl bg-gradient-to-r from-blue-600 via-sky-600 to-blue-700 hover:from-blue-500 hover:to-sky-500 text-white font-black text-sm sm:text-base flex items-center justify-center gap-3 shadow-xl shadow-blue-600/30 hover:shadow-blue-500/40 scale-[1.01] hover:scale-[1.02] transition-all duration-200 btn-press-effect"
           >
-            <Download className="w-7 h-7 stroke-[3] shrink-0" />
+            <Download className="w-5 h-5 stroke-[2.5] shrink-0" />
             <span>
               {downloadButtonText || (lang === 'en' ? 'Download PDF' : 'Unduh PDF')}
             </span>
           </button>
 
-          {/* Output Filename (Enlarged Text & Inline Rename Mode) */}
+          {/* Output Filename (Truncated text + ALWAYS Visible (Edit name) link) */}
           <div className="px-2">
             {isEditing ? (
               <form onSubmit={handleSaveRename} className="flex items-center gap-2 max-w-md mx-auto">
@@ -115,26 +105,28 @@ export const SuccessDownloadScreen: React.FC<SuccessDownloadScreenProps> = ({
                   value={fileName}
                   onChange={(e) => setFileName(e.target.value)}
                   autoFocus
-                  className="flex-1 px-3 py-2 rounded-xl text-sm font-extrabold bg-white dark:bg-slate-800 border-2 border-blue-500 dark:border-sky-400 text-slate-900 dark:text-white outline-none shadow-sm"
+                  className="flex-1 px-3 py-1.5 rounded-xl text-xs sm:text-sm font-extrabold bg-white dark:bg-slate-800 border-2 border-blue-500 dark:border-sky-400 text-slate-900 dark:text-white outline-none shadow-sm"
                 />
                 <button
                   type="submit"
-                  className="px-3 py-2 rounded-xl text-xs font-black bg-blue-600 text-white hover:bg-blue-500 transition-colors btn-press-effect"
+                  className="px-3 py-1.5 rounded-xl text-xs font-black bg-blue-600 text-white hover:bg-blue-500 transition-colors btn-press-effect shrink-0"
                 >
                   {lang === 'en' ? 'Save' : 'Simpan'}
                 </button>
               </form>
             ) : (
-              <p className="text-sm sm:text-base font-black text-slate-800 dark:text-slate-200 truncate flex items-center justify-center gap-2">
-                <span>{fileName}</span>
+              <div className="flex items-center justify-center gap-2 max-w-md mx-auto">
+                <span className="text-xs sm:text-sm font-extrabold text-slate-800 dark:text-slate-200 truncate min-w-0 flex-1 text-center">
+                  {fileName}
+                </span>
                 <button
                   type="button"
                   onClick={() => setIsEditing(true)}
-                  className="text-xs text-blue-600 dark:text-sky-400 hover:underline font-bold"
+                  className="text-xs font-extrabold text-blue-600 dark:text-sky-400 hover:underline shrink-0"
                 >
                   ({lang === 'en' ? 'Edit name' : 'Ubah nama'})
                 </button>
-              </p>
+              </div>
             )}
           </div>
         </div>
