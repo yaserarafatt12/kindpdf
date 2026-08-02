@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from 'react';
 import Header, { ViewMode } from '@/components/Header';
-import PrivacyNotice from '@/components/PrivacyNotice';
 import ToolGrid, { ToolId } from '@/components/ToolGrid';
 import FileDropzone from '@/components/FileDropzone';
 import FileCard, { PdfFileItem } from '@/components/FileCard';
@@ -153,7 +152,7 @@ export default function Home() {
       // Convert Uint8Array to Blob and download
       const blob = new Blob([mergedBytes.buffer as ArrayBuffer], { type: 'application/pdf' });
       const firstFileName = files[0].name.replace(/\.pdf$/i, '');
-      const downloadName = `KindPDF_${firstFileName}_Merged.pdf`;
+      const downloadName = `Kindpdf_${firstFileName}_Merged.pdf`;
 
       downloadBlob(blob, downloadName);
 
@@ -174,7 +173,6 @@ export default function Home() {
     <div className="min-h-screen flex flex-col bg-slate-100 dark:bg-slate-950 text-slate-900 dark:text-slate-100">
       {/* Header Bar */}
       <Header
-        activeView={activeView}
         onViewChange={setActiveView}
         lang={lang}
         onLangToggle={toggleLanguage}
@@ -185,14 +183,11 @@ export default function Home() {
 
       {/* Main Workspace */}
       <main className="flex-1 max-w-6xl w-full mx-auto px-4 py-6 sm:py-10 space-y-6">
-        {/* Privacy Banner */}
-        <PrivacyNotice t={t} />
-
         {/* VIEW MODE 1: GRID LANDING PAGE */}
         {activeView === 'grid' && (
           <div className="space-y-6">
             {/* Main Landing Hero */}
-            <div className="text-center space-y-3 py-6 sm:py-8 max-w-3xl mx-auto">
+            <div className="text-center space-y-3 py-4 sm:py-8 max-w-3xl mx-auto">
               <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-slate-900 dark:text-white leading-tight">
                 {t.heroTitle}
               </h2>
