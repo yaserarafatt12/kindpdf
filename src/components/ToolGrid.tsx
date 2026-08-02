@@ -9,7 +9,7 @@ import {
   ExtractPagesIcon,
   ImageToPdfIcon,
 } from './icons/CustomPdfIcons';
-import { FileImage, Lock, Unlock, Hash, Stamp, Crop, Edit3, Camera, PenTool, EyeOff, GitCompare, Wrench, Minimize2, Code, Archive } from 'lucide-react';
+import { FileImage, Lock, Unlock, Hash, Stamp, Crop, Edit3, Camera, PenTool, EyeOff, GitCompare, Wrench, Minimize2, Code, Archive, FileText, ScanText } from 'lucide-react';
 import { ViewMode } from './Header';
 
 export type ToolId = Extract<
@@ -34,6 +34,9 @@ export type ToolId = Extract<
   | 'compress'
   | 'html-to-pdf'
   | 'pdf-to-pdfa'
+  | 'word-to-pdf'
+  | 'pdf-to-word'
+  | 'ocr-pdf'
 >;
 
 interface ToolGridProps {
@@ -220,6 +223,33 @@ export const ToolGrid: React.FC<ToolGridProps> = ({ onSelectTool, t }) => {
       description: 'Convert PDF to ISO 19005 compliant archival format.',
       icon: <Archive className="w-6 h-6 text-indigo-600 dark:text-indigo-400" />,
       iconBg: 'bg-indigo-50 dark:bg-indigo-950/80 border border-indigo-200 dark:border-indigo-900',
+      badge: 'NEW',
+      isReady: true,
+    },
+    {
+      id: 'word-to-pdf' as ToolId,
+      title: 'Word to PDF',
+      description: 'Convert Word documents (.docx) to formatted PDF files.',
+      icon: <FileText className="w-6 h-6 text-blue-600 dark:text-sky-400" />,
+      iconBg: 'bg-blue-50 dark:bg-blue-950/80 border border-blue-200 dark:border-blue-900',
+      badge: 'NEW',
+      isReady: true,
+    },
+    {
+      id: 'pdf-to-word' as ToolId,
+      title: 'PDF to Word',
+      description: 'Extract PDF content into editable Word documents (.docx).',
+      icon: <FileText className="w-6 h-6 text-indigo-600 dark:text-indigo-400" />,
+      iconBg: 'bg-indigo-50 dark:bg-indigo-950/80 border border-indigo-200 dark:border-indigo-900',
+      badge: 'NEW',
+      isReady: true,
+    },
+    {
+      id: 'ocr-pdf' as ToolId,
+      title: 'OCR PDF',
+      description: 'Extract selectable text from scanned PDF documents.',
+      icon: <ScanText className="w-6 h-6 text-purple-600 dark:text-purple-400" />,
+      iconBg: 'bg-purple-50 dark:bg-purple-950/80 border border-purple-200 dark:border-purple-900',
       badge: 'NEW',
       isReady: true,
     },

@@ -25,6 +25,9 @@ import RepairPdfWorkspace from '@/components/RepairPdfWorkspace';
 import CompressPdfWorkspace from '@/components/CompressPdfWorkspace';
 import HtmlToPdfWorkspace from '@/components/HtmlToPdfWorkspace';
 import PdfToPdfAWorkspace from '@/components/PdfToPdfAWorkspace';
+import WordToPdfWorkspace from '@/components/WordToPdfWorkspace';
+import PdfToWordWorkspace from '@/components/PdfToWordWorkspace';
+import OcrPdfWorkspace from '@/components/OcrPdfWorkspace';
 
 import { validatePdfFile } from '@/lib/files/validateFile';
 import { mergePdfFiles } from '@/lib/pdf/mergePdfs';
@@ -431,6 +434,21 @@ export default function Home() {
         {/* VIEW MODE 21: PDF TO PDF/A WORKSPACE */}
         {activeView === 'pdf-to-pdfa' && (
           <PdfToPdfAWorkspace onBack={() => setActiveView('grid')} t={t} lang={lang} />
+        )}
+
+        {/* VIEW MODE 22: WORD TO PDF WORKSPACE */}
+        {activeView === 'word-to-pdf' && (
+          <WordToPdfWorkspace onBack={() => setActiveView('grid')} t={t} lang={lang} />
+        )}
+
+        {/* VIEW MODE 23: PDF TO WORD WORKSPACE */}
+        {activeView === 'pdf-to-word' && (
+          <PdfToWordWorkspace onBack={() => setActiveView('grid')} t={t} lang={lang} />
+        )}
+
+        {/* VIEW MODE 24: OCR PDF WORKSPACE */}
+        {activeView === 'ocr-pdf' && (
+          <OcrPdfWorkspace onBack={() => setActiveView('grid')} t={t} lang={lang} />
         )}
       </main>
 

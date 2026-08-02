@@ -41,7 +41,10 @@ export type ViewMode =
   | 'repair'
   | 'compress'
   | 'html-to-pdf'
-  | 'pdf-to-pdfa';
+  | 'pdf-to-pdfa'
+  | 'word-to-pdf'
+  | 'pdf-to-word'
+  | 'ocr-pdf';
 
 interface HeaderProps {
   onViewChange: (view: ViewMode) => void;
