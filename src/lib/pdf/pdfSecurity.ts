@@ -1,4 +1,5 @@
 import { PDFDocument } from 'pdf-lib';
+import { encryptPDF } from '@pdfsmaller/pdf-encrypt-lite';
 
 export interface ProtectPdfOptions {
   userPassword: string;
@@ -6,7 +7,7 @@ export interface ProtectPdfOptions {
 }
 
 /**
- * Validates and applies password security headers to a PDF document 100% in browser RAM.
+ * Validates and applies real RC4 128-bit PDF encryption to a PDF document 100% in browser RAM.
  */
 export async function protectPdfDocument(
   file: File,
@@ -22,23 +23,25 @@ export async function protectPdfDocument(
   }
 
   const arrayBuffer = await file.arrayBuffer();
-  const pdfDoc = await PDFDocument.load(arrayBuffer, { ignoreEncryption: true });
+  const inputBytes = new Uint8Array(arrayBuffer);
 
   if (onProgress) {
-    onProgress(2, 2, 'Applying password security metadata...');
+    onProgress(2, 2, 'Encrypting PDF streams & setting password protection...');
   }
 
-  // Set document security metadata
-  pdfDoc.setTitle(`${file.name.replace(/\.pdf$/i, '')} (Protected)`);
-  pdfDoc.setProducer('Kindpdf Security Engine');
+  // Real PDF Standard Security Handler Encryption (RC4 128-bit)
+  const encryptedBytes = await encryptPDF(
+    inputBytes,
+    options.userPassword,
+    options.ownerPassword || options.userPassword
+  );
 
-  const pdfBytes = await pdfDoc.save();
   const baseName = file.name.replace(/\.pdf$/i, '');
-  const blob = new Blob([pdfBytes.buffer as ArrayBuffer], { type: 'application/pdf' });
+  const blob = new Blob([encryptedBytes.buffer as ArrayBuffer], { type: 'application/pdf' });
 
   return {
     blob,
-    filename: `${baseName}_Protected.pdf`,
+    filename: `Kindpdf_${baseName}_Protected.pdf`,
   };
 }
 
@@ -61,6 +64,11 @@ export async function unlockPdfDocument(
       ignoreEncryption: true,
     });
 
+    // Remove Encrypt reference from trailer so saved output is clean & unencrypted
+    if (pdfDoc.context.trailerInfo) {
+      delete (pdfDoc.context.trailerInfo as any).Encrypt;
+    }
+
     if (onProgress) {
       onProgress(2, 2, 'Exporting unlocked PDF...');
     }
@@ -71,7 +79,7 @@ export async function unlockPdfDocument(
 
     return {
       blob,
-      filename: `${baseName}_Unlocked.pdf`,
+      filename: `Kindpdf_${baseName}_Unlocked.pdf`,
     };
   } catch (err: any) {
     throw new Error('Unable to decrypt PDF document. Please ensure the file is valid.');
