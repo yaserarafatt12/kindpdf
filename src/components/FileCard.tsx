@@ -54,37 +54,36 @@ export const FileCard: React.FC<FileCardProps> = ({
         </div>
       </div>
 
-      {/* Action Controls: Vertical Stacked Reorder [▲/▼] + Trash Button */}
-      <div className="flex items-center gap-2 shrink-0">
-        {/* Vertical Stacked Up/Down Column Container */}
+      {/* Action Controls: Unboxed Vertical Stacked Reorder [▲/▼] + Trash Button */}
+      <div className="flex items-center gap-1.5 shrink-0">
+        {/* Vertical Stacked Up/Down Column (Clean Unboxed) */}
         {(onMoveUp || onMoveDown) && (
-          <div className="flex flex-col justify-center rounded-xl bg-slate-100 dark:bg-slate-800/80 p-0.5 border border-slate-200 dark:border-slate-700/80 w-8 h-[48px] shrink-0 shadow-xs">
+          <div className="flex flex-col justify-center gap-0.5 w-7 h-[44px] shrink-0">
             <button
               type="button"
               onClick={() => onMoveUp && onMoveUp(index)}
               disabled={!onMoveUp || index === 0}
               title="Move Up"
-              className={`flex-1 w-full rounded-lg flex items-center justify-center transition-all ${
+              className={`flex-1 w-full rounded-md flex items-center justify-center transition-colors ${
                 index === 0
-                  ? 'text-slate-300 dark:text-slate-700 cursor-not-allowed'
-                  : 'text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-sky-400 hover:bg-white dark:hover:bg-slate-700 shadow-xs btn-press-effect'
+                  ? 'text-slate-200 dark:text-slate-800 cursor-not-allowed pointer-events-none'
+                  : 'text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-sky-400 hover:bg-slate-100 dark:hover:bg-slate-800 btn-press-effect'
               }`}
             >
-              <ChevronUp className="w-3.5 h-3.5" strokeWidth={2.75} />
+              <ChevronUp className="w-4 h-4" strokeWidth={2.75} />
             </button>
-            <div className="w-3.5 h-[1px] bg-slate-200 dark:bg-slate-700 mx-auto my-0.5" />
             <button
               type="button"
               onClick={() => onMoveDown && onMoveDown(index)}
               disabled={!onMoveDown || index === totalItems - 1}
               title="Move Down"
-              className={`flex-1 w-full rounded-lg flex items-center justify-center transition-all ${
+              className={`flex-1 w-full rounded-md flex items-center justify-center transition-colors ${
                 index === totalItems - 1
-                  ? 'text-slate-300 dark:text-slate-700 cursor-not-allowed'
-                  : 'text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-sky-400 hover:bg-white dark:hover:bg-slate-700 shadow-xs btn-press-effect'
+                  ? 'text-slate-200 dark:text-slate-800 cursor-not-allowed pointer-events-none'
+                  : 'text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-sky-400 hover:bg-slate-100 dark:hover:bg-slate-800 btn-press-effect'
               }`}
             >
-              <ChevronDown className="w-3.5 h-3.5" strokeWidth={2.75} />
+              <ChevronDown className="w-4 h-4" strokeWidth={2.75} />
             </button>
           </div>
         )}
@@ -94,7 +93,7 @@ export const FileCard: React.FC<FileCardProps> = ({
           type="button"
           onClick={() => onRemove(item.id)}
           title="Remove from list"
-          className="w-9 h-[48px] rounded-xl flex items-center justify-center text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/50 transition-colors btn-press-effect shrink-0"
+          className="p-2 rounded-xl text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/50 transition-colors btn-press-effect shrink-0 ml-0.5"
         >
           <Trash2 className="w-4 h-4" />
         </button>
