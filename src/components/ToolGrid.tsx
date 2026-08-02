@@ -40,7 +40,7 @@ interface ToolGridProps {
   t: TranslationDictionary;
 }
 
-const getToolIcon = (id: string) => {
+export const getToolIcon = (id: string) => {
   switch (id) {
     case 'merge':
       return <MergePdfIcon className="w-6 h-6" />;
@@ -93,7 +93,7 @@ const getToolIcon = (id: string) => {
   }
 };
 
-const getIconBg = (id: string) => {
+export const getIconBg = (id: string) => {
   switch (id) {
     case 'merge':
     case 'word-to-pdf':
