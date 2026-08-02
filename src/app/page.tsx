@@ -18,6 +18,11 @@ import WatermarkWorkspace from '@/components/WatermarkWorkspace';
 import CropPdfWorkspace from '@/components/CropPdfWorkspace';
 import EditPdfWorkspace from '@/components/EditPdfWorkspace';
 import ScanToPdfWorkspace from '@/components/ScanToPdfWorkspace';
+import SignPdfWorkspace from '@/components/SignPdfWorkspace';
+import RedactPdfWorkspace from '@/components/RedactPdfWorkspace';
+import ComparePdfWorkspace from '@/components/ComparePdfWorkspace';
+import RepairPdfWorkspace from '@/components/RepairPdfWorkspace';
+import CompressPdfWorkspace from '@/components/CompressPdfWorkspace';
 
 import { validatePdfFile } from '@/lib/files/validateFile';
 import { mergePdfFiles } from '@/lib/pdf/mergePdfs';
@@ -389,6 +394,31 @@ export default function Home() {
         {/* VIEW MODE 14: SCAN TO PDF WORKSPACE */}
         {activeView === 'scan-to-pdf' && (
           <ScanToPdfWorkspace onBack={() => setActiveView('grid')} t={t} lang={lang} />
+        )}
+
+        {/* VIEW MODE 15: SIGN PDF WORKSPACE */}
+        {activeView === 'sign' && (
+          <SignPdfWorkspace onBack={() => setActiveView('grid')} t={t} lang={lang} />
+        )}
+
+        {/* VIEW MODE 16: REDACT PDF WORKSPACE */}
+        {activeView === 'redact' && (
+          <RedactPdfWorkspace onBack={() => setActiveView('grid')} t={t} lang={lang} />
+        )}
+
+        {/* VIEW MODE 17: COMPARE PDF WORKSPACE */}
+        {activeView === 'compare' && (
+          <ComparePdfWorkspace onBack={() => setActiveView('grid')} t={t} lang={lang} />
+        )}
+
+        {/* VIEW MODE 18: REPAIR PDF WORKSPACE */}
+        {activeView === 'repair' && (
+          <RepairPdfWorkspace onBack={() => setActiveView('grid')} t={t} lang={lang} />
+        )}
+
+        {/* VIEW MODE 19: COMPRESS PDF WORKSPACE */}
+        {activeView === 'compress' && (
+          <CompressPdfWorkspace onBack={() => setActiveView('grid')} t={t} lang={lang} />
         )}
       </main>
 

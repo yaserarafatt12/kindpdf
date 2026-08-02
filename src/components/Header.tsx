@@ -34,7 +34,12 @@ export type ViewMode =
   | 'watermark'
   | 'crop'
   | 'edit-pdf'
-  | 'scan-to-pdf';
+  | 'scan-to-pdf'
+  | 'sign'
+  | 'redact'
+  | 'compare'
+  | 'repair'
+  | 'compress';
 
 interface HeaderProps {
   onViewChange: (view: ViewMode) => void;

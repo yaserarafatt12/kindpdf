@@ -9,7 +9,7 @@ import {
   ExtractPagesIcon,
   ImageToPdfIcon,
 } from './icons/CustomPdfIcons';
-import { FileImage, Lock, Unlock, Hash, Stamp, Crop, Edit3, Camera } from 'lucide-react';
+import { FileImage, Lock, Unlock, Hash, Stamp, Crop, Edit3, Camera, PenTool, EyeOff, GitCompare, Wrench, Minimize2 } from 'lucide-react';
 import { ViewMode } from './Header';
 
 export type ToolId = Extract<
@@ -27,6 +27,11 @@ export type ToolId = Extract<
   | 'crop'
   | 'edit-pdf'
   | 'scan-to-pdf'
+  | 'sign'
+  | 'redact'
+  | 'compare'
+  | 'repair'
+  | 'compress'
 >;
 
 interface ToolGridProps {
@@ -150,6 +155,51 @@ export const ToolGrid: React.FC<ToolGridProps> = ({ onSelectTool, t }) => {
       description: 'Capture documents with webcam/camera and compile into PDF.',
       icon: <Camera className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />,
       iconBg: 'bg-emerald-50 dark:bg-emerald-950/80 border border-emerald-200 dark:border-emerald-900',
+      badge: 'NEW',
+      isReady: true,
+    },
+    {
+      id: 'sign' as ToolId,
+      title: 'Sign PDF',
+      description: 'Draw or type signature and place it securely on your PDF document.',
+      icon: <PenTool className="w-6 h-6 text-blue-600 dark:text-sky-400" />,
+      iconBg: 'bg-blue-50 dark:bg-blue-950/80 border border-blue-200 dark:border-blue-900',
+      badge: 'NEW',
+      isReady: true,
+    },
+    {
+      id: 'redact' as ToolId,
+      title: 'Redact PDF',
+      description: 'Permanently cover sensitive text or regions with black redaction boxes.',
+      icon: <EyeOff className="w-6 h-6 text-rose-600 dark:text-rose-400" />,
+      iconBg: 'bg-rose-50 dark:bg-rose-950/80 border border-rose-200 dark:border-rose-900',
+      badge: 'NEW',
+      isReady: true,
+    },
+    {
+      id: 'compare' as ToolId,
+      title: 'Compare PDF',
+      description: 'Compare two PDF documents side-by-side to detect differences.',
+      icon: <GitCompare className="w-6 h-6 text-purple-600 dark:text-purple-400" />,
+      iconBg: 'bg-purple-50 dark:bg-purple-950/80 border border-purple-200 dark:border-purple-900',
+      badge: 'NEW',
+      isReady: true,
+    },
+    {
+      id: 'repair' as ToolId,
+      title: 'Repair PDF',
+      description: 'Fix corrupted PDF files and re-encode clean object streams.',
+      icon: <Wrench className="w-6 h-6 text-amber-600 dark:text-amber-400" />,
+      iconBg: 'bg-amber-50 dark:bg-amber-950/80 border border-amber-200 dark:border-amber-900',
+      badge: 'NEW',
+      isReady: true,
+    },
+    {
+      id: 'compress' as ToolId,
+      title: 'Compress PDF',
+      description: 'Reduce PDF file size while maintaining document quality.',
+      icon: <Minimize2 className="w-6 h-6 text-teal-600 dark:text-teal-400" />,
+      iconBg: 'bg-teal-50 dark:bg-teal-950/80 border border-teal-200 dark:border-teal-900',
       badge: 'NEW',
       isReady: true,
     },
