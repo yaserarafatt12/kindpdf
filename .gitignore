@@ -1,0 +1,34 @@
+# dependencies
+/node_modules
+/.pnpm-store
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# local env files
+.env*.local
+.env
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# tests & playwright
+/test-results/
+/playwright-report/
+
+# OS store files
+.DS_Store
+Thumbs.db
