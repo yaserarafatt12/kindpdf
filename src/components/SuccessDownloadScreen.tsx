@@ -32,6 +32,10 @@ export const SuccessDownloadScreen: React.FC<SuccessDownloadScreenProps> = ({
   const [fileName, setFileName] = React.useState(downloadFileName);
   const [isEditing, setIsEditing] = React.useState(false);
 
+  React.useEffect(() => {
+    setFileName(downloadFileName);
+  }, [downloadFileName]);
+
   // Official iLovePDF Popular Hierarchy Rank
   const POPULAR_RANK: Record<string, number> = {
     compress: 1,       // Kompres PDF (#1 Most Used)
@@ -53,13 +57,30 @@ export const SuccessDownloadScreen: React.FC<SuccessDownloadScreenProps> = ({
     .sort((a, b) => (POPULAR_RANK[a.id] || 99) - (POPULAR_RANK[b.id] || 99))
     .slice(0, 5);
 
+  const getExtension = (name: string): string => {
+    const match = name.match(/\.[a-zA-Z0-9]+$/);
+    return match ? match[0].toLowerCase() : '.pdf';
+  };
+
   const handleSaveRename = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
-    if (!fileName.trim()) {
+    let trimmed = fileName.trim();
+    if (!trimmed) {
       setFileName(downloadFileName);
-    } else if (!fileName.toLowerCase().endsWith('.pdf')) {
-      setFileName(`${fileName.trim()}.pdf`);
+      setIsEditing(false);
+      return;
     }
+
+    const expectedExt = getExtension(downloadFileName);
+    if (!trimmed.toLowerCase().endsWith(expectedExt)) {
+      const lastDot = trimmed.lastIndexOf('.');
+      if (lastDot > 0) {
+        trimmed = trimmed.substring(0, lastDot);
+      }
+      trimmed = `${trimmed}${expectedExt}`;
+    }
+
+    setFileName(trimmed);
     setIsEditing(false);
   };
 
@@ -102,7 +123,7 @@ export const SuccessDownloadScreen: React.FC<SuccessDownloadScreenProps> = ({
           >
             <Download className="w-5 h-5 stroke-[2.5] shrink-0" />
             <span>
-              {downloadButtonText || (lang === 'en' ? 'Download PDF' : 'Unduh PDF')}
+              {downloadButtonText || (lang === 'en' ? 'Download File' : 'Unduh Berkas')}
             </span>
           </button>
 
