@@ -6,6 +6,7 @@ import ToolGrid, { ToolId } from '@/components/ToolGrid';
 import FileDropzone from '@/components/FileDropzone';
 import FileCard, { PdfFileItem } from '@/components/FileCard';
 import ProcessingProgress from '@/components/ProcessingProgress';
+import SplitPdfWorkspace from '@/components/SplitPdfWorkspace';
 import { validatePdfFile } from '@/lib/files/validateFile';
 import { mergePdfFiles } from '@/lib/pdf/mergePdfs';
 import { downloadBlob } from '@/lib/files/downloadBlob';
@@ -197,7 +198,7 @@ export default function Home() {
           </div>
         )}
 
-        {/* VIEW MODE 2: MERGE PDF WORKSPACE (iLovePDF Style Simple Layout) */}
+        {/* VIEW MODE 2: MERGE PDF WORKSPACE */}
         {activeView === 'merge' && (
           <div className="max-w-3xl mx-auto space-y-6">
             {/* Back Button */}
@@ -210,7 +211,7 @@ export default function Home() {
               <span>{t.backToAllTools}</span>
             </button>
 
-            {/* Merge Hero Section - Clean & Simple */}
+            {/* Merge Hero Section */}
             <div className="text-center space-y-2 py-2 max-w-lg mx-auto">
               <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900 dark:text-white">
                 {t.mergeHeroTitle}
@@ -242,7 +243,7 @@ export default function Home() {
               </div>
             )}
 
-            {/* Simple Prominent CTA Dropzone Upload Section */}
+            {/* Dropzone Upload Section */}
             <FileDropzone onFilesSelected={handleFilesSelected} disabled={isProcessing} t={t} />
 
             {/* Selected Documents Workspace */}
@@ -316,6 +317,11 @@ export default function Home() {
               </div>
             )}
           </div>
+        )}
+
+        {/* VIEW MODE 3: SPLIT PDF WORKSPACE */}
+        {activeView === 'split' && (
+          <SplitPdfWorkspace onBack={() => setActiveView('grid')} t={t} lang={lang} />
         )}
       </main>
 

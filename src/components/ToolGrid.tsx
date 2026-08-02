@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { TranslationDictionary } from '@/lib/i18n/translations';
 import {
   MergePdfIcon,
@@ -34,8 +34,8 @@ export const ToolGrid: React.FC<ToolGridProps> = ({ onSelectTool, t }) => {
       description: 'Separate one page or a whole set into independent PDF files.',
       icon: <SplitPdfIcon className="w-6 h-6" />,
       iconBg: 'bg-amber-50 dark:bg-amber-950/80 border border-amber-200 dark:border-amber-900',
-      badge: t.soon,
-      isReady: false,
+      badge: null,
+      isReady: true,
     },
     {
       id: 'organize' as ToolId,
@@ -68,7 +68,7 @@ export const ToolGrid: React.FC<ToolGridProps> = ({ onSelectTool, t }) => {
 
   return (
     <div className="space-y-4 py-2">
-      {/* Tool Cards Grid - Direct compact list without category pills */}
+      {/* Tool Cards Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
         {tools.map((item) => (
           <div
