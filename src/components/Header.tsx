@@ -38,9 +38,11 @@ export const Header: React.FC<HeaderProps> = ({
   }, []);
 
   const languages = [
-    { code: 'en' as Language, label: 'English', flag: '🇬🇧' },
-    { code: 'id' as Language, label: 'Bahasa Indonesia', flag: '🇮🇩' },
+    { code: 'en' as Language, label: 'English' },
+    { code: 'id' as Language, label: 'Bahasa Indonesia' },
   ];
+
+  const currentLangLabel = lang === 'en' ? 'English' : 'Bahasa Indonesia';
 
   return (
     <header className="w-full bg-white dark:bg-slate-900 border-b-2 border-slate-300 dark:border-slate-800 sticky top-0 z-40 shadow-sm">
@@ -68,7 +70,7 @@ export const Header: React.FC<HeaderProps> = ({
             <span>GitHub</span>
           </a>
 
-          {/* Interactive Language Dropdown */}
+          {/* Interactive Language Dropdown - Clean Text Labels */}
           <div className="relative" ref={dropdownRef}>
             <button
               type="button"
@@ -76,13 +78,13 @@ export const Header: React.FC<HeaderProps> = ({
               className="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border-2 border-slate-300 dark:border-slate-700 text-xs font-black text-slate-800 dark:text-slate-100 flex items-center gap-1.5 transition-colors btn-press-effect shadow-sm"
             >
               <Globe className="w-4 h-4 text-blue-600 dark:text-sky-400" />
-              <span>{lang.toUpperCase()}</span>
+              <span>{currentLangLabel}</span>
               <ChevronDown className={`w-3.5 h-3.5 text-slate-500 transition-transform ${isLangDropdownOpen ? 'rotate-180' : ''}`} />
             </button>
 
             {/* Dropdown Options Menu */}
             {isLangDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-44 rounded-2xl bg-white dark:bg-slate-900 border-2 border-slate-300 dark:border-slate-700 shadow-xl py-1.5 z-50 animate-fade-in">
+              <div className="absolute right-0 mt-2 w-48 rounded-2xl bg-white dark:bg-slate-900 border-2 border-slate-300 dark:border-slate-700 shadow-xl py-1.5 z-50 animate-fade-in">
                 {languages.map((item) => (
                   <button
                     key={item.code}
@@ -97,10 +99,7 @@ export const Header: React.FC<HeaderProps> = ({
                         : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
                     }`}
                   >
-                    <span className="flex items-center gap-2">
-                      <span className="text-base">{item.flag}</span>
-                      <span>{item.label}</span>
-                    </span>
+                    <span>{item.label}</span>
                     {lang === item.code && <Check className="w-4 h-4 text-blue-600 dark:text-sky-400" />}
                   </button>
                 ))}
