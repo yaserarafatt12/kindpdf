@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef } from 'react';
-import { UploadCloud, ShieldCheck } from 'lucide-react';
+import { UploadCloud } from 'lucide-react';
 import { TranslationDictionary } from '@/lib/i18n/translations';
 
 export type DropzoneColorTheme =
@@ -116,11 +116,6 @@ export const FileDropzone: React.FC<FileDropzoneProps> = ({
         <p className="text-xs text-[#0A1128]/60 dark:text-white/60 font-medium pt-0.5">
           {t.dropzoneTitle}
         </p>
-
-        <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-[#0A1128]/70 dark:text-white/75 bg-black/[0.04] dark:bg-white/[0.07] border border-black/[0.08] dark:border-white/[0.16] px-3 py-1 rounded-full">
-          <ShieldCheck className="w-3.5 h-3.5" strokeWidth={1.85} />
-          {t.localProcessing}
-        </span>
       </div>
     </div>
   );
