@@ -5,7 +5,6 @@ import {
   Settings,
   X,
   Smartphone,
-  Download,
   UserCheck,
   Moon,
   Sun,
@@ -14,11 +13,6 @@ import {
   ChevronRight,
   Send,
   CheckCircle2,
-  ShieldCheck,
-  Lock,
-  Cpu,
-  FileCode,
-  Sparkles,
 } from 'lucide-react';
 import { Language, TranslationDictionary } from '@/lib/i18n/translations';
 
@@ -39,7 +33,6 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   onLangChange,
   isDarkMode,
   onThemeToggle,
-  t,
 }) => {
   const [feedbackText, setFeedbackText] = useState('');
   const [feedbackSent, setFeedbackSent] = useState(false);
@@ -58,7 +51,6 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
     );
     const mailtoUrl = `mailto:${targetEmail}?subject=${subject}&body=${body}`;
 
-    // Trigger direct mail client
     window.location.href = mailtoUrl;
 
     setFeedbackSent(true);
@@ -66,7 +58,6 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
     setTimeout(() => setFeedbackSent(false), 4000);
   };
 
-  // Theme-aware color helpers
   const d = isDarkMode;
 
   const guideItems = [
@@ -133,35 +124,26 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
       <div
         onClick={onClose}
         className={`fixed inset-0 backdrop-blur-md animate-fade-in ${
-          d ? 'bg-slate-950/70' : 'bg-black/40'
+          d ? 'bg-[#040914]/75' : 'bg-slate-900/35'
         }`}
       />
 
-      {/* Main Settings Modal Box */}
-      <div className={`relative w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden z-50 animate-scale-up flex flex-col max-h-[90vh] border-2 ${
-        d
-          ? 'bg-slate-900 border-slate-800 text-slate-100'
-          : 'bg-white border-gray-200 text-gray-900'
-      }`}>
+      {/* Midnight Navy Tempered Glass Modal Box */}
+      <div className="glass-modal relative w-full max-w-lg rounded-3xl z-50 animate-scale-up flex flex-col max-h-[90vh] text-slate-900 dark:text-slate-100">
+        {/* Top Tempered Glass Sheen */}
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-white/40 dark:from-white/[0.08] to-transparent" />
+
         {/* Modal Header */}
-        <div className={`p-4 sm:p-5 border-b flex items-center justify-between shrink-0 ${
-          d ? 'border-slate-800 bg-slate-900/90' : 'border-gray-200 bg-gray-50/90'
-        }`}>
+        <div className="relative z-10 p-4 sm:p-5 border-b border-slate-200/80 dark:border-white/[0.12] flex items-center justify-between shrink-0">
           <div className="flex items-center gap-3">
-            <div className={`p-2.5 rounded-2xl border ${
-              d
-                ? 'bg-blue-600/20 text-sky-400 border-blue-500/30'
-                : 'bg-blue-50 text-blue-600 border-blue-200'
-            }`}>
+            <div className="p-2.5 rounded-2xl bg-sky-500/15 dark:bg-sky-400/15 text-sky-600 dark:text-sky-300 border border-sky-500/25">
               <Settings className="w-5 h-5" />
             </div>
             <div>
-              <h3 className={`text-base sm:text-lg font-black tracking-tight ${
-                d ? 'text-white' : 'text-gray-900'
-              }`}>
+              <h3 className="text-base sm:text-lg font-black tracking-tight text-slate-900 dark:text-white">
                 {lang === 'en' ? 'Settings & User Manual' : 'Pengaturan & Buku Panduan'}
               </h3>
-              <p className={`text-xs font-medium ${d ? 'text-slate-400' : 'text-gray-500'}`}>
+              <p className="text-xs font-medium text-slate-500 dark:text-slate-400">
                 {lang === 'en'
                   ? 'Manage session, appearance, and feature guides'
                   : 'Kelola sesi, tampilan, dan panduan fitur'}
@@ -172,20 +154,17 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className={`p-2 rounded-xl transition-colors btn-press-effect ${
-              d
-                ? 'text-slate-400 hover:text-white hover:bg-slate-800'
-                : 'text-gray-400 hover:text-gray-900 hover:bg-gray-200'
-            }`}
+            aria-label="Close settings"
+            className="p-2 rounded-full text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10 transition-colors btn-press-effect"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Modal Scrollable Body */}
-        <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6">
+        <div className="relative z-10 flex-1 overflow-y-auto p-4 sm:p-6 space-y-6">
           {/* PWA / App Installation Banner */}
-          <div className="p-4 rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white shadow-lg space-y-3 relative overflow-hidden">
+          <div className="p-4 rounded-2xl bg-gradient-to-r from-sky-500 via-blue-600 to-indigo-600 text-white shadow-[0_12px_32px_rgba(37,99,235,0.35),inset_0_1px_0_rgba(255,255,255,0.45)] space-y-3 relative overflow-hidden">
             <div className="flex items-start justify-between gap-3 relative z-10">
               <div className="flex items-center gap-3">
                 <div className="p-2.5 rounded-xl bg-white/20 backdrop-blur-md shrink-0">
@@ -197,7 +176,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                       ? 'Install Kindpdf Web App (iOS & Android)'
                       : 'Pasang Aplikasi di HP (iOS & Android)'}
                   </h4>
-                  <p className="text-[11px] text-blue-100 font-medium mt-0.5">
+                  <p className="text-[11px] text-sky-100 font-medium mt-0.5">
                     {lang === 'en'
                       ? 'Run as standalone app offline without server uploads'
                       : 'Jadikan aplikasi mandiri tanpa peramban (Offline Ready)'}
@@ -208,96 +187,76 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           </div>
 
           {/* Guest User Session Badge */}
-          <div className={`p-3.5 rounded-2xl border flex items-center justify-between gap-3 ${
-            d
-              ? 'bg-slate-800/80 border-slate-700/80'
-              : 'bg-gray-50 border-gray-200'
-          }`}>
+          <div className="p-3.5 rounded-2xl border border-slate-200/80 dark:border-white/[0.12] bg-slate-50/80 dark:bg-white/[0.04] flex items-center justify-between gap-3">
             <div className="flex items-center gap-2.5">
-              <div className={`p-2 rounded-xl ${
-                d ? 'bg-slate-700 text-sky-400' : 'bg-gray-200 text-blue-600'
-              }`}>
+              <div className="p-2 rounded-xl bg-sky-500/15 dark:bg-sky-400/15 text-sky-600 dark:text-sky-300">
                 <UserCheck className="w-4 h-4" />
               </div>
-              <span className={`text-xs font-black ${d ? 'text-slate-200' : 'text-gray-700'}`}>
+              <span className="text-xs font-black text-slate-800 dark:text-slate-100">
                 {lang === 'en' ? 'Guest User Session' : 'Profil Pengguna Tamu'}
               </span>
             </div>
-            <span className="text-xs font-black px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
+            <span className="text-xs font-black px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-300 border border-emerald-500/25">
               {lang === 'en' ? '100% Private RAM' : '100% Privat RAM'}
             </span>
           </div>
 
           {/* APPLICATION SETTINGS */}
           <div className="space-y-3">
-            <h4 className={`text-[11px] font-black tracking-wider uppercase px-1 ${
-              d ? 'text-slate-400' : 'text-gray-500'
-            }`}>
+            <h4 className="text-[10px] font-black tracking-[0.12em] uppercase px-1 text-slate-400 dark:text-sky-300/60">
               {lang === 'en' ? 'APPLICATION SETTINGS' : 'PENGATURAN APLIKASI'}
             </h4>
 
             {/* Theme Toggle Option */}
-            <div className={`p-3.5 rounded-2xl border flex items-center justify-between gap-3 ${
-              d
-                ? 'bg-slate-800/50 border-slate-700/60'
-                : 'bg-gray-50 border-gray-200'
-            }`}>
+            <div className="p-3.5 rounded-2xl border border-slate-200/80 dark:border-white/[0.12] bg-slate-50/80 dark:bg-white/[0.04] flex items-center justify-between gap-3">
               <div className="flex items-center gap-3">
                 {isDarkMode ? (
-                  <Moon className={`w-4 h-4 ${d ? 'text-sky-400' : 'text-blue-600'}`} />
+                  <Moon className="w-4 h-4 text-sky-400" />
                 ) : (
                   <Sun className="w-4 h-4 text-amber-500" />
                 )}
-                <span className={`text-xs font-extrabold ${d ? 'text-slate-200' : 'text-gray-700'}`}>
+                <span className="text-xs font-extrabold text-slate-800 dark:text-slate-100">
                   {lang === 'en' ? 'Appearance & Theme' : 'Tampilan & Tema'}
                 </span>
               </div>
               <button
                 type="button"
                 onClick={onThemeToggle}
-                className="px-4 py-1.5 rounded-xl text-xs font-black bg-blue-600 text-white hover:bg-blue-500 transition-colors btn-press-effect"
+                className="px-4 py-1.5 rounded-full glass-pill-active text-xs font-black btn-press-effect"
               >
                 {isDarkMode ? (lang === 'en' ? 'Dark Mode' : 'Mode Gelap') : (lang === 'en' ? 'Light Mode' : 'Mode Terang')}
               </button>
             </div>
 
             {/* Language Switch Option */}
-            <div className={`p-3.5 rounded-2xl border flex items-center justify-between gap-3 ${
-              d
-                ? 'bg-slate-800/50 border-slate-700/60'
-                : 'bg-gray-50 border-gray-200'
-            }`}>
+            <div className="p-3.5 rounded-2xl border border-slate-200/80 dark:border-white/[0.12] bg-slate-50/80 dark:bg-white/[0.04] flex items-center justify-between gap-3">
               <div className="flex items-center gap-3">
-                <Globe className={`w-4 h-4 ${d ? 'text-sky-400' : 'text-blue-600'}`} />
-                <span className={`text-xs font-extrabold ${d ? 'text-slate-200' : 'text-gray-700'}`}>
+                <Globe className="w-4 h-4 text-sky-600 dark:text-sky-400" />
+                <span className="text-xs font-extrabold text-slate-800 dark:text-slate-100">
                   {lang === 'en' ? 'App Language' : 'Bahasa Aplikasi'}
                 </span>
               </div>
               <button
                 type="button"
                 onClick={() => onLangChange(lang === 'en' ? 'id' : 'en')}
-                className="px-4 py-1.5 rounded-xl text-xs font-black bg-blue-600 text-white hover:bg-blue-500 transition-colors btn-press-effect"
+                className="px-4 py-1.5 rounded-full glass-pill-active text-xs font-black btn-press-effect"
               >
                 {lang === 'en' ? 'English' : 'Indonesia'}
               </button>
             </div>
           </div>
 
-          {/* BUG REPORT & FEEDBACK FORM (Direct to Email yaserarafatt03@gmail.com) */}
-          <div className={`p-4 rounded-2xl border space-y-3 ${
-            d
-              ? 'bg-slate-800/60 border-slate-700/80'
-              : 'bg-gray-50 border-gray-200'
-          }`}>
+          {/* BUG REPORT & FEEDBACK FORM */}
+          <div className="p-4 rounded-2xl border border-slate-200/80 dark:border-white/[0.12] bg-slate-50/80 dark:bg-white/[0.04] space-y-3">
             <div className="flex items-center gap-2">
-              <Send className={`w-4 h-4 ${d ? 'text-sky-400' : 'text-blue-600'}`} />
-              <h4 className={`text-xs font-black ${d ? 'text-slate-200' : 'text-gray-700'}`}>
+              <Send className="w-4 h-4 text-sky-600 dark:text-sky-400" />
+              <h4 className="text-xs font-black text-slate-800 dark:text-slate-100">
                 {lang === 'en' ? 'Bug Report & Feedback' : 'Laporan Bug & Masukan Pengembang'}
               </h4>
             </div>
 
             {feedbackSent && (
-              <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-500 text-xs font-bold flex items-center gap-2 animate-fade-in">
+              <div className="p-3 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-600 dark:text-emerald-300 text-xs font-bold flex items-center gap-2 animate-fade-in">
                 <CheckCircle2 className="w-4 h-4 shrink-0" />
                 <span>
                   {lang === 'en'
@@ -317,16 +276,12 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                     ? 'Type any bug report or feature request here...'
                     : 'Tuliskan laporan kendala atau masukan Anda di sini...'
                 }
-                className={`w-full px-3 py-2 rounded-xl border text-xs font-medium outline-none resize-none transition-colors ${
-                  d
-                    ? 'bg-slate-900 border-slate-700 text-slate-100 focus:border-sky-400 placeholder:text-slate-500'
-                    : 'bg-white border-gray-300 text-gray-900 focus:border-blue-500 placeholder:text-gray-400'
-                }`}
+                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200/90 dark:border-white/[0.14] bg-white/90 dark:bg-[#081226]/70 text-slate-900 dark:text-slate-100 text-xs font-medium outline-none resize-none focus:border-sky-400 placeholder:text-slate-400 dark:placeholder:text-slate-500 transition-colors"
               />
 
               <button
                 type="submit"
-                className="w-full py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-sky-600 hover:from-blue-500 hover:to-sky-500 text-white font-extrabold text-xs flex items-center justify-center gap-2 transition-all btn-press-effect shadow-md"
+                className="w-full py-2.5 rounded-xl glass-cta bg-gradient-to-r from-blue-600 via-sky-500 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white font-extrabold text-xs flex items-center justify-center gap-2 btn-press-effect"
               >
                 <Send className="w-3.5 h-3.5" />
                 <span>{lang === 'en' ? 'Send Report to Developer' : 'Kirim Laporan ke Pengembang'}</span>
@@ -336,10 +291,8 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
 
           {/* USER HELP MANUAL ACCORDION */}
           <div className="space-y-3">
-            <h4 className={`text-[11px] font-black tracking-wider uppercase px-1 flex items-center gap-1.5 ${
-              d ? 'text-slate-400' : 'text-gray-500'
-            }`}>
-              <BookOpen className={`w-3.5 h-3.5 ${d ? 'text-sky-400' : 'text-blue-600'}`} />
+            <h4 className="text-[10px] font-black tracking-[0.12em] uppercase px-1 flex items-center gap-1.5 text-slate-400 dark:text-sky-300/60">
+              <BookOpen className="w-3.5 h-3.5 text-sky-500 dark:text-sky-400" />
               <span>{lang === 'en' ? 'FULL USER MANUAL' : 'BUKU PANDUAN PENGGUNAAN LENGKAP'}</span>
             </h4>
 
@@ -347,36 +300,24 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               {guideItems.map((item, idx) => (
                 <div
                   key={item.id}
-                  className={`rounded-2xl border overflow-hidden transition-all ${
-                    d
-                      ? 'bg-slate-800/40 border-slate-800'
-                      : 'bg-gray-50 border-gray-200'
-                  }`}
+                  className="rounded-2xl border border-slate-200/80 dark:border-white/[0.12] bg-slate-50/80 dark:bg-white/[0.04] overflow-hidden transition-all"
                 >
                   <button
                     type="button"
                     onClick={() => setOpenGuideIndex(openGuideIndex === idx ? null : idx)}
-                    className={`w-full p-3.5 text-left text-xs font-extrabold flex items-center justify-between transition-colors ${
-                      d
-                        ? 'text-slate-200 hover:bg-slate-800/70'
-                        : 'text-gray-700 hover:bg-gray-100'
-                    }`}
+                    className="w-full p-3.5 text-left text-xs font-extrabold flex items-center justify-between text-slate-800 dark:text-slate-100 hover:bg-slate-100/80 dark:hover:bg-white/[0.06] transition-colors"
                   >
                     <span>{item.title}</span>
                     <ChevronRight
                       className={`w-4 h-4 transition-transform ${
                         openGuideIndex === idx
-                          ? `rotate-90 ${d ? 'text-sky-400' : 'text-blue-600'}`
-                          : `${d ? 'text-slate-400' : 'text-gray-400'}`
+                          ? 'rotate-90 text-sky-500 dark:text-sky-400'
+                          : 'text-slate-400'
                       }`}
                     />
                   </button>
                   {openGuideIndex === idx && (
-                    <div className={`px-3.5 pb-3.5 text-[11px] font-medium leading-relaxed border-t pt-2.5 animate-fade-in ${
-                      d
-                        ? 'text-slate-400 border-slate-800/80'
-                        : 'text-gray-500 border-gray-200'
-                    }`}>
+                    <div className="px-3.5 pb-3.5 text-[11px] font-medium leading-relaxed border-t border-slate-200/80 dark:border-white/[0.1] pt-2.5 text-slate-600 dark:text-slate-300/85 animate-fade-in">
                       {item.content}
                     </div>
                   )}
@@ -385,17 +326,15 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             </div>
           </div>
 
-          {/* FOOTER AUTHOR CREDIT (Matching Project 1 specification) */}
-          <div className={`pt-4 border-t text-center space-y-1.5 shrink-0 ${
-            d ? 'border-slate-800' : 'border-gray-200'
-          }`}>
-            <p className={`text-xs font-black ${d ? 'text-slate-200' : 'text-gray-800'}`}>Kindpdf Suite v1.0.0</p>
-            <p className={`text-[11px] font-bold ${d ? 'text-slate-400' : 'text-gray-500'}`}>
-              Built with Next.js 14, TypeScript & Tailwind CSS by{' '}
-              <span className={`font-black ${d ? 'text-sky-400' : 'text-blue-600'}`}>Yaser Arafat</span>.
+          {/* FOOTER AUTHOR CREDIT */}
+          <div className="pt-4 border-t border-slate-200/80 dark:border-white/[0.1] text-center space-y-1.5 shrink-0">
+            <p className="text-xs font-black text-slate-800 dark:text-slate-100">Kindpdf Suite v1.0.0</p>
+            <p className="text-[11px] font-bold text-slate-500 dark:text-slate-400">
+              Built with Next.js 14, TypeScript &amp; Tailwind CSS by{' '}
+              <span className="font-black text-sky-600 dark:text-sky-400">Yaser Arafat</span>.
             </p>
-            <p className={`text-[10px] font-semibold ${d ? 'text-slate-500' : 'text-gray-400'}`}>
-              Licensed under MIT © 2026. Zero 'eval()', 100% Local-First.
+            <p className="text-[10px] font-semibold text-slate-400 dark:text-slate-500">
+              Licensed under MIT © 2026. Zero &apos;eval()&apos;, 100% Local-First.
             </p>
           </div>
         </div>

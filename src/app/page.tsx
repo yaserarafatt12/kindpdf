@@ -53,7 +53,7 @@ import {
 export default function Home() {
   const [activeView, setActiveView] = useState<ViewMode>('grid');
   const [lang, setLang] = useState<Language>('en');
-  const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(true);
   const [files, setFiles] = useState<PdfFileItem[]>([]);
   const [sortAsc, setSortAsc] = useState<boolean>(true);
 
@@ -79,6 +79,7 @@ export default function Home() {
   useEffect(() => {
     const detected = detectBrowserLanguage();
     setLang(detected);
+    document.documentElement.classList.add('dark');
   }, []);
 
   const toggleTheme = () => {
@@ -212,7 +213,14 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-100 dark:bg-slate-950 text-slate-900 dark:text-slate-100">
+    <div className="relative min-h-screen flex flex-col bg-[#f3f6fc] dark:bg-[#060d1c] text-slate-900 dark:text-slate-100 overflow-x-hidden">
+      {/* Ambient Midnight Navy Radial Glow Backdrop */}
+      <div className="fixed inset-0 -z-10 pointer-events-none overflow-hidden" aria-hidden="true">
+        <div className="absolute -top-36 left-1/2 -translate-x-1/2 w-[56rem] h-[34rem] rounded-full bg-sky-400/20 dark:bg-sky-500/20 blur-[120px]" />
+        <div className="absolute top-[28%] -left-32 w-[32rem] h-[32rem] rounded-full bg-blue-500/15 dark:bg-blue-600/15 blur-[120px]" />
+        <div className="absolute bottom-[-10%] -right-24 w-[36rem] h-[36rem] rounded-full bg-indigo-400/15 dark:bg-violet-600/15 blur-[130px]" />
+      </div>
+
       {/* Header Bar */}
       <Header
         onViewChange={setActiveView}
@@ -224,16 +232,20 @@ export default function Home() {
       />
 
       {/* Main Workspace */}
-      <main className="flex-1 max-w-6xl w-full mx-auto px-4 py-4 sm:py-6 space-y-4">
+      <main className="workspace-stage flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6">
         {/* VIEW MODE 1: GRID LANDING PAGE */}
         {activeView === 'grid' && (
-          <div className="space-y-4">
-            {/* Main Landing Hero - Compact */}
-            <div className="text-center space-y-1.5 py-2 sm:py-4 max-w-2xl mx-auto">
-              <h2 className="text-lg sm:text-2xl font-extrabold tracking-tight text-slate-800 dark:text-slate-200 leading-snug">
+          <div className="space-y-6">
+            {/* Main Landing Hero */}
+            <div className="text-center space-y-3 py-3 sm:py-5 max-w-2xl mx-auto">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full glass-pill text-[11px] font-extrabold text-sky-700 dark:text-sky-300">
+                <ShieldCheck className="w-3.5 h-3.5 text-emerald-500 dark:text-emerald-400" />
+                <span>{t.noServerUpload} • {t.localProcessing}</span>
+              </div>
+              <h2 className="text-2xl sm:text-4xl font-black tracking-tight text-slate-900 dark:text-white leading-tight">
                 {t.heroTitle}
               </h2>
-              <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium leading-relaxed">
+              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300/80 font-medium leading-relaxed max-w-xl mx-auto">
                 {t.heroSubtitle}
               </p>
             </div>
@@ -270,7 +282,7 @@ export default function Home() {
               <button
                 type="button"
                 onClick={() => setActiveView('grid')}
-                className="inline-flex items-center gap-2 text-xs font-black text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-sky-400 transition-colors btn-press-effect"
+                className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full glass-pill text-xs font-extrabold btn-press-effect"
               >
                 <ArrowLeft className="w-4 h-4" />
                 <span>{t.backToAllTools}</span>
@@ -280,10 +292,10 @@ export default function Home() {
               {files.length > 0 && (
                 <div className="flex items-center gap-2">
                   {/* Floating Add More Files Button */}
-                  <label className="relative cursor-pointer px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-black flex items-center gap-1.5 shadow-md shadow-blue-500/20 btn-press-effect">
+                  <label className="relative cursor-pointer px-3.5 py-1.5 rounded-full glass-cta bg-gradient-to-r from-blue-600 to-sky-500 hover:from-blue-500 hover:to-sky-400 text-white text-xs font-black flex items-center gap-1.5 btn-press-effect">
                     <span className="text-sm font-black">+</span>
                     <span className="hidden sm:inline">{lang === 'en' ? 'Add PDF' : 'Tambah PDF'}</span>
-                    <span className="w-5 h-5 rounded-full bg-white/20 text-white text-[10px] font-extrabold flex items-center justify-center">
+                    <span className="w-5 h-5 rounded-full bg-white/25 text-white text-[10px] font-extrabold flex items-center justify-center">
                       {files.length}
                     </span>
                     <input
@@ -304,7 +316,7 @@ export default function Home() {
                     type="button"
                     title={sortAsc ? (lang === 'en' ? 'Sort A to Z' : 'Urutkan A ke Z') : (lang === 'en' ? 'Sort Z to A' : 'Urutkan Z ke A')}
                     onClick={handleToggleSort}
-                    className="px-2.5 py-1.5 rounded-xl bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-black border border-slate-300 dark:border-slate-700 transition-colors btn-press-effect flex items-center gap-1"
+                    className="px-3 py-1.5 rounded-full glass-pill text-xs font-black btn-press-effect flex items-center gap-1"
                   >
                     <span>{sortAsc ? 'A-Z' : 'Z-A'}</span>
                   </button>
@@ -314,7 +326,7 @@ export default function Home() {
                     type="button"
                     onClick={handleClearAll}
                     title={t.clearAll}
-                    className="p-1.5 rounded-xl text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/50 border border-rose-200 dark:border-rose-900/50 transition-colors btn-press-effect"
+                    className="p-2 rounded-full text-rose-600 dark:text-rose-400 bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/25 transition-colors btn-press-effect"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
@@ -324,7 +336,7 @@ export default function Home() {
 
             {/* Error Toast Banner */}
             {errorToast && (
-              <div className="w-full p-4 rounded-2xl bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-800 text-rose-900 dark:text-rose-200 flex items-start justify-between gap-3 shadow-md animate-fade-in">
+              <div className="w-full p-4 rounded-2xl bg-rose-50/90 dark:bg-rose-950/70 backdrop-blur-xl border border-rose-200 dark:border-rose-500/35 text-rose-900 dark:text-rose-200 flex items-start justify-between gap-3 shadow-lg animate-fade-in">
                 <div className="flex items-start gap-3">
                   <AlertCircle className="w-5 h-5 text-rose-600 dark:text-rose-400 shrink-0 mt-0.5" />
                   <div>
@@ -351,7 +363,7 @@ export default function Home() {
                   <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900 dark:text-white">
                     {t.mergeHeroTitle}
                   </h2>
-                  <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 font-medium leading-relaxed">
+                  <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300/80 font-medium leading-relaxed">
                     {t.mergeHeroSubtitle}
                   </p>
                 </div>
@@ -363,7 +375,7 @@ export default function Home() {
             {files.length > 0 && (
               <div className="space-y-4">
                 {/* File Count Summary Sub-bar */}
-                <div className="flex items-center justify-between text-xs font-extrabold text-slate-600 dark:text-slate-400 px-1">
+                <div className="flex items-center justify-between text-xs font-extrabold text-slate-600 dark:text-slate-300 px-1">
                   <span>
                     {files.length} {t.documentsCount} • {totalPages} {t.pagesTotal} ({formatFileSize(totalSizeBytes)})
                   </span>
@@ -390,13 +402,14 @@ export default function Home() {
                     type="button"
                     onClick={handleMergePdfs}
                     disabled={files.length < 2 || isProcessing}
-                    className={`w-full sm:w-auto min-w-[240px] px-8 py-3.5 rounded-2xl font-black text-sm flex items-center justify-center text-white shadow-xl transition-all duration-200 btn-press-effect ${
+                    className={`w-full sm:w-auto min-w-[240px] px-8 py-4 rounded-2xl font-black text-sm flex items-center justify-center gap-2 text-white transition-all duration-200 btn-press-effect ${
                       files.length >= 2 && !isProcessing
-                        ? 'bg-gradient-to-r from-blue-600 to-sky-500 hover:from-blue-500 hover:to-sky-400 shadow-blue-500/30 scale-[1.02]'
-                        : 'bg-slate-300 dark:bg-slate-800 text-slate-500 dark:text-slate-500 cursor-not-allowed shadow-none'
+                        ? 'glass-cta bg-gradient-to-r from-blue-600 via-sky-500 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 scale-[1.02]'
+                        : 'bg-slate-300/80 dark:bg-white/10 text-slate-500 dark:text-slate-500 border border-transparent dark:border-white/10 cursor-not-allowed shadow-none'
                     }`}
                   >
                     <span>{t.mergeNow}</span>
+                    <ArrowRight className="w-4 h-4" />
                   </button>
                 </div>
               </div>
@@ -621,16 +634,16 @@ export default function Home() {
       </main>
 
       {/* Footer */}
-      <footer className="w-full border-t border-slate-300 dark:border-slate-800 py-6 mt-12 text-center text-xs font-semibold text-slate-600 dark:text-slate-400 space-y-1.5">
+      <footer className="w-full border-t border-slate-200/80 dark:border-white/[0.1] bg-white/50 dark:bg-[#081226]/65 backdrop-blur-xl py-6 mt-12 text-center text-xs font-semibold text-slate-600 dark:text-slate-400 space-y-1.5">
         <p className="font-black text-slate-900 dark:text-white">
-          Kind<span className="text-blue-600 dark:text-sky-400">pdf</span> — Privacy-First PDF Tools v1.0.0
+          Kind<span className="text-sky-600 dark:text-sky-400">pdf</span> — Privacy-First PDF Tools v1.0.0
         </p>
         <p className="text-[11px] text-slate-500 dark:text-slate-400">
-          Built with Next.js 14, TypeScript & Tailwind CSS by{' '}
-          <span className="font-black text-blue-600 dark:text-sky-400">Yaser Arafat</span>.
+          Built with Next.js 14, TypeScript &amp; Tailwind CSS by{' '}
+          <span className="font-black text-sky-600 dark:text-sky-400">Yaser Arafat</span>.
         </p>
         <p className="text-[10px] text-slate-400 dark:text-slate-500">
-          Process documents 100% locally inside your web browser. Zero 'eval()', 100% Local-First.
+          Process documents 100% locally inside your web browser. Zero &apos;eval()&apos;, 100% Local-First.
         </p>
       </footer>
 
