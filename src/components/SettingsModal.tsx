@@ -45,9 +45,9 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
     if (!feedbackText.trim()) return;
 
     const targetEmail = 'yaserarafatt03@gmail.com';
-    const subject = encodeURIComponent(`Kindpdf Bug Report & Feedback (${lang.toUpperCase()})`);
+    const subject = encodeURIComponent(`KindPDF Bug Report & Feedback (${lang.toUpperCase()})`);
     const body = encodeURIComponent(
-      `Kindpdf User Feedback:\n\n${feedbackText.trim()}\n\n---\nLanguage: ${lang}\nDevice: Browser RAM Client`
+      `KindPDF User Feedback:\n\n${feedbackText.trim()}\n\n---\nLanguage: ${lang}\nDevice: Browser RAM Client`
     );
     const mailtoUrl = `mailto:${targetEmail}?subject=${subject}&body=${body}`;
 
@@ -65,12 +65,12 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
       id: 1,
       title:
         lang === 'en'
-          ? '1. Core Purpose & Benefits of Kindpdf'
-          : '1. Kegunaan & Manfaat Utama Aplikasi Kita',
+          ? '1. Core Purpose & Benefits of KindPDF'
+          : '1. Kegunaan & Manfaat Utama KindPDF',
       content:
         lang === 'en'
-          ? 'Kindpdf is a 100% privacy-first PDF toolkit. Unlike traditional online PDF tools that upload confidential paperwork to cloud servers, Kindpdf executes binary PDF operations (merge, split, encrypt, OCR, images) directly in your browser memory.'
-          : 'Kindpdf adalah toolkit PDF privat 100%. Berbeda dengan layanan PDF online umum yang mengunggah dokumen rahasia ke server cloud, Kindpdf menjalankan semua operasi biner (gabung, pisah, enkripsi, OCR, gambar) langsung di memori RAM peramban Anda.',
+          ? 'KindPDF is a 100% privacy-first PDF toolkit. Unlike traditional online PDF tools that upload confidential paperwork to cloud servers, KindPDF executes binary PDF operations (merge, split, encrypt, OCR, images) directly in your browser memory.'
+          : 'KindPDF adalah toolkit PDF privat 100%. Berbeda dengan layanan PDF online umum yang mengunggah dokumen rahasia ke server cloud, KindPDF menjalankan semua operasi biner (gabung, pisah, enkripsi, OCR, gambar) langsung di memori RAM peramban Anda.',
     },
     {
       id: 2,
@@ -102,15 +102,15 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           : '4. Dukungan Penggunaan Offline & PWA',
       content:
         lang === 'en'
-          ? 'Kindpdf can be saved or used offline. Since zero backend APIs are required, all conversion engines remain fully operational even without active internet connection.'
-          : 'Kindpdf dapat disimpan atau digunakan tanpa koneksi internet. Karena tidak ada API backend yang diperlukan, seluruh mesin konversi tetap berfungsi penuh meskipun offline.',
+          ? 'KindPDF can be saved or used offline. Since zero backend APIs are required, all conversion engines remain fully operational even without active internet connection.'
+          : 'KindPDF dapat disimpan atau digunakan tanpa koneksi internet. Karena tidak ada API backend yang diperlukan, seluruh mesin konversi tetap berfungsi penuh meskipun offline.',
     },
     {
       id: 5,
       title:
         lang === 'en'
           ? '5. File Format Details & Limits (100 MB max)'
-          : '5. Rincian & Kegunaan 14+ Kategori Satuan & Format',
+          : '5. Rincian Format & Batas Ukuran (Maks 100 MB)',
       content:
         lang === 'en'
           ? 'Supports .PDF, .DOCX, .JPG, .PNG, .WEBP, .HTML, and .TXT. Maximum recommended file size per batch is 100 MB for optimal browser memory efficiency.'
@@ -124,26 +124,23 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
       <div
         onClick={onClose}
         className={`fixed inset-0 backdrop-blur-md animate-fade-in ${
-          d ? 'bg-[#040914]/75' : 'bg-slate-900/35'
+          d ? 'bg-[#040914]/75' : 'bg-[#0A1128]/30'
         }`}
       />
 
       {/* Midnight Navy Tempered Glass Modal Box */}
-      <div className="glass-modal relative w-full max-w-lg rounded-3xl z-50 animate-scale-up flex flex-col max-h-[90vh] text-slate-900 dark:text-slate-100">
-        {/* Top Tempered Glass Sheen */}
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-white/40 dark:from-white/[0.08] to-transparent" />
-
+      <div className="glass-modal relative w-full max-w-lg rounded-3xl z-50 animate-scale-up flex flex-col max-h-[90vh] text-[#0A1128] dark:text-white">
         {/* Modal Header */}
-        <div className="relative z-10 p-4 sm:p-5 border-b border-slate-200/80 dark:border-white/[0.12] flex items-center justify-between shrink-0">
+        <div className="relative z-10 p-4 sm:p-5 border-b border-black/[0.08] dark:border-white/[0.12] flex items-center justify-between shrink-0">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-2xl bg-sky-500/15 dark:bg-sky-400/15 text-sky-600 dark:text-sky-300 border border-sky-500/25">
-              <Settings className="w-5 h-5" />
+            <div className="w-10 h-10 rounded-xl bg-black/[0.04] dark:bg-white/[0.08] text-[#0A1128]/80 dark:text-white/85 border border-black/[0.08] dark:border-white/[0.18] flex items-center justify-center">
+              <Settings className="w-5 h-5" strokeWidth={1.8} />
             </div>
             <div>
-              <h3 className="text-base sm:text-lg font-black tracking-tight text-slate-900 dark:text-white">
+              <h3 className="text-base sm:text-lg font-bold tracking-tight text-[#0A1128] dark:text-white">
                 {lang === 'en' ? 'Settings & User Manual' : 'Pengaturan & Buku Panduan'}
               </h3>
-              <p className="text-xs font-medium text-slate-500 dark:text-slate-400">
+              <p className="text-xs font-normal text-[#0A1128]/55 dark:text-white/55">
                 {lang === 'en'
                   ? 'Manage session, appearance, and feature guides'
                   : 'Kelola sesi, tampilan, dan panduan fitur'}
@@ -155,91 +152,95 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             type="button"
             onClick={onClose}
             aria-label="Close settings"
-            className="p-2 rounded-full text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10 transition-colors btn-press-effect"
+            className="w-8 h-8 rounded-full flex items-center justify-center text-[#0A1128]/55 dark:text-white/55 hover:text-[#0A1128] dark:hover:text-white hover:bg-black/[0.05] dark:hover:bg-white/10 transition-colors btn-press-effect"
           >
-            <X className="w-5 h-5" />
+            <X className="w-4 h-4" strokeWidth={1.9} />
           </button>
         </div>
 
         {/* Modal Scrollable Body */}
-        <div className="relative z-10 flex-1 overflow-y-auto p-4 sm:p-6 space-y-6">
+        <div className="relative z-10 flex-1 overflow-y-auto p-4 sm:p-6 space-y-5">
           {/* PWA / App Installation Banner */}
-          <div className="p-4 rounded-2xl bg-gradient-to-r from-sky-500 via-blue-600 to-indigo-600 text-white shadow-[0_12px_32px_rgba(37,99,235,0.35),inset_0_1px_0_rgba(255,255,255,0.45)] space-y-3 relative overflow-hidden">
-            <div className="flex items-start justify-between gap-3 relative z-10">
-              <div className="flex items-center gap-3">
-                <div className="p-2.5 rounded-xl bg-white/20 backdrop-blur-md shrink-0">
-                  <Smartphone className="w-5 h-5 text-white" />
-                </div>
-                <div>
-                  <h4 className="text-xs sm:text-sm font-black tracking-wide">
-                    {lang === 'en'
-                      ? 'Install Kindpdf Web App (iOS & Android)'
-                      : 'Pasang Aplikasi di HP (iOS & Android)'}
-                  </h4>
-                  <p className="text-[11px] text-sky-100 font-medium mt-0.5">
-                    {lang === 'en'
-                      ? 'Run as standalone app offline without server uploads'
-                      : 'Jadikan aplikasi mandiri tanpa peramban (Offline Ready)'}
-                  </p>
-                </div>
+          <div className="p-4 rounded-2xl bg-black/[0.04] dark:bg-white/[0.07] border border-black/[0.08] dark:border-white/[0.16] shadow-[inset_0_1px_0_rgba(255,255,255,0.65)] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.18)]">
+            <div className="flex items-center gap-3">
+              <div className="p-2.5 rounded-xl bg-white/75 dark:bg-white/[0.10] border border-black/[0.06] dark:border-white/[0.16] shrink-0 text-[#0A1128] dark:text-white">
+                <Smartphone className="w-5 h-5" strokeWidth={1.8} />
+              </div>
+              <div>
+                <h4 className="text-xs sm:text-sm font-bold tracking-tight text-[#0A1128] dark:text-white">
+                  {lang === 'en'
+                    ? 'Install KindPDF Web App (iOS & Android)'
+                    : 'Pasang Aplikasi di HP (iOS & Android)'}
+                </h4>
+                <p className="text-[11px] text-[#0A1128]/60 dark:text-white/60 font-normal mt-0.5">
+                  {lang === 'en'
+                    ? 'Run as a standalone offline app without server uploads'
+                    : 'Jalankan sebagai aplikasi mandiri offline tanpa unggah ke server'}
+                </p>
               </div>
             </div>
           </div>
 
           {/* Guest User Session Badge */}
-          <div className="p-3.5 rounded-2xl border border-slate-200/80 dark:border-white/[0.12] bg-slate-50/80 dark:bg-white/[0.04] flex items-center justify-between gap-3">
+          <div className="p-3.5 rounded-2xl border border-black/[0.08] dark:border-white/[0.12] bg-white/55 dark:bg-white/[0.04] flex items-center justify-between gap-3">
             <div className="flex items-center gap-2.5">
-              <div className="p-2 rounded-xl bg-sky-500/15 dark:bg-sky-400/15 text-sky-600 dark:text-sky-300">
-                <UserCheck className="w-4 h-4" />
+              <div className="p-2 rounded-xl bg-black/[0.04] dark:bg-white/[0.08] text-[#0A1128]/80 dark:text-white/85">
+                <UserCheck className="w-4 h-4" strokeWidth={1.8} />
               </div>
-              <span className="text-xs font-black text-slate-800 dark:text-slate-100">
+              <span className="text-xs font-bold text-[#0A1128] dark:text-white">
                 {lang === 'en' ? 'Guest User Session' : 'Profil Pengguna Tamu'}
               </span>
             </div>
-            <span className="text-xs font-black px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-300 border border-emerald-500/25">
+            <span className="text-[11px] font-semibold px-2.5 py-1 rounded-full bg-black/[0.04] dark:bg-white/[0.08] text-[#0A1128]/75 dark:text-white/75 border border-black/[0.08] dark:border-white/[0.16]">
               {lang === 'en' ? '100% Private RAM' : '100% Privat RAM'}
             </span>
           </div>
 
           {/* APPLICATION SETTINGS */}
-          <div className="space-y-3">
-            <h4 className="text-[10px] font-black tracking-[0.12em] uppercase px-1 text-slate-400 dark:text-sky-300/60">
+          <div className="space-y-2.5">
+            <h4 className="text-[10px] font-bold tracking-[0.12em] uppercase px-1 text-[#0A1128]/45 dark:text-white/45">
               {lang === 'en' ? 'APPLICATION SETTINGS' : 'PENGATURAN APLIKASI'}
             </h4>
 
             {/* Theme Toggle Option */}
-            <div className="p-3.5 rounded-2xl border border-slate-200/80 dark:border-white/[0.12] bg-slate-50/80 dark:bg-white/[0.04] flex items-center justify-between gap-3">
+            <div className="p-3.5 rounded-2xl border border-black/[0.08] dark:border-white/[0.12] bg-white/55 dark:bg-white/[0.04] flex items-center justify-between gap-3">
               <div className="flex items-center gap-3">
                 {isDarkMode ? (
-                  <Moon className="w-4 h-4 text-sky-400" />
+                  <Moon className="w-4 h-4 text-[#0A1128]/80 dark:text-white/80" strokeWidth={1.85} />
                 ) : (
-                  <Sun className="w-4 h-4 text-amber-500" />
+                  <Sun className="w-4 h-4 text-[#0A1128]/80 dark:text-white/80" strokeWidth={1.85} />
                 )}
-                <span className="text-xs font-extrabold text-slate-800 dark:text-slate-100">
+                <span className="text-xs font-semibold text-[#0A1128] dark:text-white">
                   {lang === 'en' ? 'Appearance & Theme' : 'Tampilan & Tema'}
                 </span>
               </div>
               <button
                 type="button"
                 onClick={onThemeToggle}
-                className="px-4 py-1.5 rounded-full glass-pill-active text-xs font-black btn-press-effect"
+                className="px-3.5 py-1.5 rounded-full glass-pill text-xs font-semibold btn-press-effect"
               >
-                {isDarkMode ? (lang === 'en' ? 'Dark Mode' : 'Mode Gelap') : (lang === 'en' ? 'Light Mode' : 'Mode Terang')}
+                {isDarkMode
+                  ? lang === 'en'
+                    ? 'Dark Mode'
+                    : 'Mode Gelap'
+                  : lang === 'en'
+                  ? 'Light Mode'
+                  : 'Mode Terang'}
               </button>
             </div>
 
             {/* Language Switch Option */}
-            <div className="p-3.5 rounded-2xl border border-slate-200/80 dark:border-white/[0.12] bg-slate-50/80 dark:bg-white/[0.04] flex items-center justify-between gap-3">
+            <div className="p-3.5 rounded-2xl border border-black/[0.08] dark:border-white/[0.12] bg-white/55 dark:bg-white/[0.04] flex items-center justify-between gap-3">
               <div className="flex items-center gap-3">
-                <Globe className="w-4 h-4 text-sky-600 dark:text-sky-400" />
-                <span className="text-xs font-extrabold text-slate-800 dark:text-slate-100">
+                <Globe className="w-4 h-4 text-[#0A1128]/80 dark:text-white/80" strokeWidth={1.85} />
+                <span className="text-xs font-semibold text-[#0A1128] dark:text-white">
                   {lang === 'en' ? 'App Language' : 'Bahasa Aplikasi'}
                 </span>
               </div>
               <button
                 type="button"
                 onClick={() => onLangChange(lang === 'en' ? 'id' : 'en')}
-                className="px-4 py-1.5 rounded-full glass-pill-active text-xs font-black btn-press-effect"
+                className="px-3.5 py-1.5 rounded-full glass-pill text-xs font-semibold btn-press-effect"
               >
                 {lang === 'en' ? 'English' : 'Indonesia'}
               </button>
@@ -247,17 +248,17 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           </div>
 
           {/* BUG REPORT & FEEDBACK FORM */}
-          <div className="p-4 rounded-2xl border border-slate-200/80 dark:border-white/[0.12] bg-slate-50/80 dark:bg-white/[0.04] space-y-3">
+          <div className="p-4 rounded-2xl border border-black/[0.08] dark:border-white/[0.12] bg-white/55 dark:bg-white/[0.04] space-y-3">
             <div className="flex items-center gap-2">
-              <Send className="w-4 h-4 text-sky-600 dark:text-sky-400" />
-              <h4 className="text-xs font-black text-slate-800 dark:text-slate-100">
+              <Send className="w-4 h-4 text-[#0A1128]/75 dark:text-white/75" strokeWidth={1.85} />
+              <h4 className="text-xs font-bold text-[#0A1128] dark:text-white">
                 {lang === 'en' ? 'Bug Report & Feedback' : 'Laporan Bug & Masukan Pengembang'}
               </h4>
             </div>
 
             {feedbackSent && (
-              <div className="p-3 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-600 dark:text-emerald-300 text-xs font-bold flex items-center gap-2 animate-fade-in">
-                <CheckCircle2 className="w-4 h-4 shrink-0" />
+              <div className="p-3 rounded-xl bg-black/[0.05] dark:bg-white/[0.08] border border-black/[0.10] dark:border-white/[0.18] text-[#0A1128] dark:text-white text-xs font-semibold flex items-center gap-2 animate-fade-in">
+                <CheckCircle2 className="w-4 h-4 shrink-0" strokeWidth={1.9} />
                 <span>
                   {lang === 'en'
                     ? 'Feedback email triggered to yaserarafatt03@gmail.com!'
@@ -276,23 +277,23 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                     ? 'Type any bug report or feature request here...'
                     : 'Tuliskan laporan kendala atau masukan Anda di sini...'
                 }
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200/90 dark:border-white/[0.14] bg-white/90 dark:bg-[#081226]/70 text-slate-900 dark:text-slate-100 text-xs font-medium outline-none resize-none focus:border-sky-400 placeholder:text-slate-400 dark:placeholder:text-slate-500 transition-colors"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-black/[0.10] dark:border-white/[0.14] bg-white/85 dark:bg-white/[0.05] text-[#0A1128] dark:text-white text-xs font-normal outline-none resize-none focus:border-[#00A3FF] dark:focus:border-[#38BDF8] placeholder:text-[#0A1128]/40 dark:placeholder:text-white/40 transition-colors"
               />
 
               <button
                 type="submit"
-                className="w-full py-2.5 rounded-xl glass-cta bg-gradient-to-r from-blue-600 via-sky-500 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white font-extrabold text-xs flex items-center justify-center gap-2 btn-press-effect"
+                className="w-full py-2.5 rounded-xl glass-cta font-bold text-xs flex items-center justify-center gap-2 btn-press-effect"
               >
-                <Send className="w-3.5 h-3.5" />
+                <Send className="w-3.5 h-3.5" strokeWidth={2} />
                 <span>{lang === 'en' ? 'Send Report to Developer' : 'Kirim Laporan ke Pengembang'}</span>
               </button>
             </form>
           </div>
 
           {/* USER HELP MANUAL ACCORDION */}
-          <div className="space-y-3">
-            <h4 className="text-[10px] font-black tracking-[0.12em] uppercase px-1 flex items-center gap-1.5 text-slate-400 dark:text-sky-300/60">
-              <BookOpen className="w-3.5 h-3.5 text-sky-500 dark:text-sky-400" />
+          <div className="space-y-2.5">
+            <h4 className="text-[10px] font-bold tracking-[0.12em] uppercase px-1 flex items-center gap-1.5 text-[#0A1128]/45 dark:text-white/45">
+              <BookOpen className="w-3.5 h-3.5" strokeWidth={1.85} />
               <span>{lang === 'en' ? 'FULL USER MANUAL' : 'BUKU PANDUAN PENGGUNAAN LENGKAP'}</span>
             </h4>
 
@@ -300,24 +301,25 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               {guideItems.map((item, idx) => (
                 <div
                   key={item.id}
-                  className="rounded-2xl border border-slate-200/80 dark:border-white/[0.12] bg-slate-50/80 dark:bg-white/[0.04] overflow-hidden transition-all"
+                  className="rounded-2xl border border-black/[0.08] dark:border-white/[0.12] bg-white/55 dark:bg-white/[0.04] overflow-hidden transition-all"
                 >
                   <button
                     type="button"
                     onClick={() => setOpenGuideIndex(openGuideIndex === idx ? null : idx)}
-                    className="w-full p-3.5 text-left text-xs font-extrabold flex items-center justify-between text-slate-800 dark:text-slate-100 hover:bg-slate-100/80 dark:hover:bg-white/[0.06] transition-colors"
+                    className="w-full p-3.5 text-left text-xs font-semibold flex items-center justify-between text-[#0A1128] dark:text-white hover:bg-black/[0.03] dark:hover:bg-white/[0.05] transition-colors"
                   >
                     <span>{item.title}</span>
                     <ChevronRight
                       className={`w-4 h-4 transition-transform ${
                         openGuideIndex === idx
-                          ? 'rotate-90 text-sky-500 dark:text-sky-400'
-                          : 'text-slate-400'
+                          ? 'rotate-90 text-[#0A1128] dark:text-white'
+                          : 'text-[#0A1128]/40 dark:text-white/40'
                       }`}
+                      strokeWidth={2}
                     />
                   </button>
                   {openGuideIndex === idx && (
-                    <div className="px-3.5 pb-3.5 text-[11px] font-medium leading-relaxed border-t border-slate-200/80 dark:border-white/[0.1] pt-2.5 text-slate-600 dark:text-slate-300/85 animate-fade-in">
+                    <div className="px-3.5 pb-3.5 text-[11px] font-normal leading-relaxed border-t border-black/[0.07] dark:border-white/[0.10] pt-2.5 text-[#0A1128]/65 dark:text-white/65 animate-fade-in">
                       {item.content}
                     </div>
                   )}
@@ -327,13 +329,13 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           </div>
 
           {/* FOOTER AUTHOR CREDIT */}
-          <div className="pt-4 border-t border-slate-200/80 dark:border-white/[0.1] text-center space-y-1.5 shrink-0">
-            <p className="text-xs font-black text-slate-800 dark:text-slate-100">Kindpdf Suite v1.0.0</p>
-            <p className="text-[11px] font-bold text-slate-500 dark:text-slate-400">
+          <div className="pt-4 border-t border-black/[0.07] dark:border-white/[0.10] text-center space-y-1.5 shrink-0">
+            <p className="text-xs font-bold text-[#0A1128] dark:text-white">KindPDF Suite v1.0.0</p>
+            <p className="text-[11px] font-medium text-[#0A1128]/60 dark:text-white/55">
               Built with Next.js 14, TypeScript &amp; Tailwind CSS by{' '}
-              <span className="font-black text-sky-600 dark:text-sky-400">Yaser Arafat</span>.
+              <span className="font-semibold text-[#0A1128] dark:text-white">Yaser Arafat</span>.
             </p>
-            <p className="text-[10px] font-semibold text-slate-400 dark:text-slate-500">
+            <p className="text-[10px] text-[#0A1128]/45 dark:text-white/40">
               Licensed under MIT © 2026. Zero &apos;eval()&apos;, 100% Local-First.
             </p>
           </div>

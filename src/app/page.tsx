@@ -213,13 +213,9 @@ export default function Home() {
   };
 
   return (
-    <div className="relative min-h-screen flex flex-col bg-[#f3f6fc] dark:bg-[#060d1c] text-slate-900 dark:text-slate-100 overflow-x-hidden">
-      {/* Ambient Midnight Navy Radial Glow Backdrop */}
-      <div className="fixed inset-0 -z-10 pointer-events-none overflow-hidden" aria-hidden="true">
-        <div className="absolute -top-36 left-1/2 -translate-x-1/2 w-[56rem] h-[34rem] rounded-full bg-sky-400/20 dark:bg-sky-500/20 blur-[120px]" />
-        <div className="absolute top-[28%] -left-32 w-[32rem] h-[32rem] rounded-full bg-blue-500/15 dark:bg-blue-600/15 blur-[120px]" />
-        <div className="absolute bottom-[-10%] -right-24 w-[36rem] h-[36rem] rounded-full bg-indigo-400/15 dark:bg-violet-600/15 blur-[130px]" />
-      </div>
+    <div className="relative min-h-screen flex flex-col text-[#0A1128] dark:text-white overflow-x-hidden">
+      {/* Quest Ambient Cyan / Energy Overlay */}
+      <div className="quest-ambient-energy" aria-hidden="true" />
 
       {/* Header Bar */}
       <Header
@@ -232,20 +228,20 @@ export default function Home() {
       />
 
       {/* Main Workspace */}
-      <main className="workspace-stage flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6">
+      <main className="relative z-10 workspace-stage flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6">
         {/* VIEW MODE 1: GRID LANDING PAGE */}
         {activeView === 'grid' && (
           <div className="space-y-6">
             {/* Main Landing Hero */}
             <div className="text-center space-y-3 py-3 sm:py-5 max-w-2xl mx-auto">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full glass-pill text-[11px] font-extrabold text-sky-700 dark:text-sky-300">
-                <ShieldCheck className="w-3.5 h-3.5 text-emerald-500 dark:text-emerald-400" />
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/[0.60] dark:bg-white/[0.07] border border-black/[0.08] dark:border-white/[0.16] backdrop-blur-xl text-[11px] font-semibold text-[#0A1128]/75 dark:text-white/75 shadow-[inset_0_1px_0_rgba(255,255,255,0.75)] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.20)]">
+                <ShieldCheck className="w-3.5 h-3.5" strokeWidth={1.85} />
                 <span>{t.noServerUpload} • {t.localProcessing}</span>
               </div>
-              <h2 className="text-2xl sm:text-4xl font-black tracking-tight text-slate-900 dark:text-white leading-tight">
+              <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-[#0A1128] dark:text-white leading-tight">
                 {t.heroTitle}
               </h2>
-              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300/80 font-medium leading-relaxed max-w-xl mx-auto">
+              <p className="text-xs sm:text-sm text-[#0A1128]/65 dark:text-white/60 font-normal leading-relaxed max-w-xl mx-auto">
                 {t.heroSubtitle}
               </p>
             </div>
@@ -292,10 +288,10 @@ export default function Home() {
               {files.length > 0 && (
                 <div className="flex items-center gap-2">
                   {/* Floating Add More Files Button */}
-                  <label className="relative cursor-pointer px-3.5 py-1.5 rounded-full glass-cta bg-gradient-to-r from-blue-600 to-sky-500 hover:from-blue-500 hover:to-sky-400 text-white text-xs font-black flex items-center gap-1.5 btn-press-effect">
-                    <span className="text-sm font-black">+</span>
+                  <label className="relative cursor-pointer px-3.5 py-1.5 rounded-full glass-cta text-xs font-bold flex items-center gap-1.5 btn-press-effect">
+                    <span className="text-sm font-bold">+</span>
                     <span className="hidden sm:inline">{lang === 'en' ? 'Add PDF' : 'Tambah PDF'}</span>
-                    <span className="w-5 h-5 rounded-full bg-white/25 text-white text-[10px] font-extrabold flex items-center justify-center">
+                    <span className="w-5 h-5 rounded-full bg-white/20 dark:bg-black/15 text-[10px] font-bold flex items-center justify-center">
                       {files.length}
                     </span>
                     <input
@@ -360,10 +356,10 @@ export default function Home() {
             {files.length === 0 && (
               <>
                 <div className="text-center space-y-2 py-2 max-w-lg mx-auto">
-                  <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900 dark:text-white">
+                  <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#0A1128] dark:text-white">
                     {t.mergeHeroTitle}
                   </h2>
-                  <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300/80 font-medium leading-relaxed">
+                  <p className="text-xs sm:text-sm text-[#0A1128]/65 dark:text-white/60 font-normal leading-relaxed">
                     {t.mergeHeroSubtitle}
                   </p>
                 </div>
@@ -375,7 +371,7 @@ export default function Home() {
             {files.length > 0 && (
               <div className="space-y-4">
                 {/* File Count Summary Sub-bar */}
-                <div className="flex items-center justify-between text-xs font-extrabold text-slate-600 dark:text-slate-300 px-1">
+                <div className="flex items-center justify-between text-xs font-semibold text-[#0A1128]/70 dark:text-white/70 px-1">
                   <span>
                     {files.length} {t.documentsCount} • {totalPages} {t.pagesTotal} ({formatFileSize(totalSizeBytes)})
                   </span>
@@ -402,14 +398,14 @@ export default function Home() {
                     type="button"
                     onClick={handleMergePdfs}
                     disabled={files.length < 2 || isProcessing}
-                    className={`w-full sm:w-auto min-w-[240px] px-8 py-4 rounded-2xl font-black text-sm flex items-center justify-center gap-2 text-white transition-all duration-200 btn-press-effect ${
+                    className={`w-full sm:w-auto min-w-[240px] px-8 py-4 rounded-2xl font-bold text-sm flex items-center justify-center gap-2 transition-all duration-200 btn-press-effect ${
                       files.length >= 2 && !isProcessing
-                        ? 'glass-cta bg-gradient-to-r from-blue-600 via-sky-500 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 scale-[1.02]'
-                        : 'bg-slate-300/80 dark:bg-white/10 text-slate-500 dark:text-slate-500 border border-transparent dark:border-white/10 cursor-not-allowed shadow-none'
+                        ? 'glass-cta'
+                        : 'bg-black/[0.08] dark:bg-white/[0.08] text-[#0A1128]/35 dark:text-white/35 border border-black/[0.06] dark:border-white/[0.10] cursor-not-allowed shadow-none'
                     }`}
                   >
                     <span>{t.mergeNow}</span>
-                    <ArrowRight className="w-4 h-4" />
+                    <ArrowRight className="w-4 h-4" strokeWidth={2} />
                   </button>
                 </div>
               </div>
@@ -634,15 +630,15 @@ export default function Home() {
       </main>
 
       {/* Footer */}
-      <footer className="w-full border-t border-slate-200/80 dark:border-white/[0.1] bg-white/50 dark:bg-[#081226]/65 backdrop-blur-xl py-6 mt-12 text-center text-xs font-semibold text-slate-600 dark:text-slate-400 space-y-1.5">
-        <p className="font-black text-slate-900 dark:text-white">
-          Kind<span className="text-sky-600 dark:text-sky-400">pdf</span> — Privacy-First PDF Tools v1.0.0
+      <footer className="relative z-10 w-full border-t border-black/[0.07] dark:border-white/[0.10] bg-white/[0.35] dark:bg-[#071124]/55 backdrop-blur-xl py-6 mt-12 text-center text-xs font-medium text-[#0A1128]/60 dark:text-white/55 space-y-1.5">
+        <p className="font-bold text-[#0A1128] dark:text-white tracking-tight">
+          Kind<span className="font-medium text-[#0A1128]/55 dark:text-white/60">PDF</span> — Privacy-First PDF Tools v1.0.0
         </p>
-        <p className="text-[11px] text-slate-500 dark:text-slate-400">
+        <p className="text-[11px] text-[#0A1128]/60 dark:text-white/55">
           Built with Next.js 14, TypeScript &amp; Tailwind CSS by{' '}
-          <span className="font-black text-sky-600 dark:text-sky-400">Yaser Arafat</span>.
+          <span className="font-semibold text-[#0A1128] dark:text-white/90">Yaser Arafat</span>.
         </p>
-        <p className="text-[10px] text-slate-400 dark:text-slate-500">
+        <p className="text-[10px] text-[#0A1128]/45 dark:text-white/40">
           Process documents 100% locally inside your web browser. Zero &apos;eval()&apos;, 100% Local-First.
         </p>
       </footer>

@@ -8,13 +8,25 @@ module.exports = {
   darkMode: 'class',
   theme: {
     extend: {
+      fontFamily: {
+        sans: [
+          'var(--font-inter)',
+          'Inter',
+          'system-ui',
+          '-apple-system',
+          'BlinkMacSystemFont',
+          '"Segoe UI"',
+          'Roboto',
+          'sans-serif',
+        ],
+      },
       colors: {
         brand: {
           50: '#f0f9ff',
           100: '#e0f2fe',
           200: '#bae6fd',
           500: '#38bdf8',
-          600: '#0284c7',
+          600: '#00a3ff',
           700: '#0369a1',
         },
       },
