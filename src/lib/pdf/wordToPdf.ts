@@ -1,9 +1,10 @@
 import { PDFDocument, StandardFonts, rgb, PageSizes } from 'pdf-lib';
 import { unzipSync } from 'fflate';
+import { sanitizeWinAnsi, decodeXmlEntities } from './sanitizeText';
 
 /**
  * Client-side Word (.docx) to PDF conversion engine.
- * Parses document.xml inside .docx ZIP container and builds PDF via pdf-lib.
+ * Parses word/document.xml inside .docx ZIP container and builds PDF via pdf-lib.
  */
 export async function wordToPdf(
   file: File,
@@ -19,7 +20,6 @@ export async function wordToPdf(
   try {
     unzipped = unzipSync(zipData);
   } catch {
-    // If not a valid zip container, fallback to filename header
     unzipped = {};
   }
 
@@ -31,24 +31,22 @@ export async function wordToPdf(
 
   if (documentXmlPath && unzipped[documentXmlPath]) {
     const xmlText = new TextDecoder('utf-8').decode(unzipped[documentXmlPath]);
-    // Extract text from <w:t> XML tags
-    const textMatches = xmlText.match(/<w:t[^>]*>(.*?)<\/w:t>/g) || [];
-    let currentParagraph = '';
-
-    for (const match of textMatches) {
-      const text = match.replace(/<[^>]+>/g, '');
-      currentParagraph += text;
-
-      if (match.endsWith('</w:t>')) {
-        paragraphs.push(currentParagraph);
-        currentParagraph = '';
-      }
-    }
-
-    if (currentParagraph) paragraphs.push(currentParagraph);
+    paragraphs = extractParagraphsFromWordXml(xmlText);
   } else {
-    // Fallback if raw text
-    paragraphs = [file.name.replace(/\.docx$/i, '')];
+    // Fallback if plain text or raw XML buffer was provided
+    const rawText = new TextDecoder('utf-8', { fatal: false }).decode(zipData);
+    if (rawText.includes('<w:document') || rawText.includes('<w:t')) {
+      paragraphs = extractParagraphsFromWordXml(rawText);
+    } else {
+      const cleaned = sanitizeWinAnsi(rawText, true).trim();
+      paragraphs = cleaned
+        ? cleaned.split('\n').map((l) => l.trim()).filter(Boolean)
+        : [sanitizeWinAnsi(file.name.replace(/\.(docx|doc)$/i, '')) || 'Document'];
+    }
+  }
+
+  if (paragraphs.length === 0) {
+    paragraphs = [sanitizeWinAnsi(file.name.replace(/\.(docx|doc)$/i, '')) || 'Document'];
   }
 
   onProgress?.('Generating PDF document...');
@@ -66,7 +64,8 @@ export async function wordToPdf(
   let currentY = pageHeight - margin;
 
   // Title
-  const docTitle = file.name.replace(/\.(docx|doc)$/i, '');
+  const rawTitle = file.name.replace(/\.(docx|doc)$/i, '');
+  const docTitle = sanitizeWinAnsi(rawTitle) || 'Document';
   page.drawText(docTitle, {
     x: margin,
     y: currentY - 20,
@@ -76,10 +75,11 @@ export async function wordToPdf(
   });
   currentY -= 40;
 
-  for (const pText of paragraphs) {
-    if (!pText.trim()) continue;
+  for (const rawParagraph of paragraphs) {
+    const pText = sanitizeWinAnsi(rawParagraph).trim();
+    if (!pText) continue;
 
-    const words = pText.split(' ');
+    const words = pText.split(/\s+/);
     let currentLine = '';
 
     for (const word of words) {
@@ -121,7 +121,7 @@ export async function wordToPdf(
         color: rgb(0.2, 0.2, 0.2),
       });
 
-      currentY -= lineHeight + 6; // paragraph spacing
+      currentY -= lineHeight + 6;
     }
   }
 
@@ -130,4 +130,35 @@ export async function wordToPdf(
   onProgress?.('Conversion complete!');
 
   return pdfBytes;
+}
+
+function extractParagraphsFromWordXml(xmlText: string): string[] {
+  const paragraphs: string[] = [];
+  const pBlocks = xmlText.match(/<w:p[\s>][\s\S]*?<\/w:p>/g);
+
+  if (pBlocks && pBlocks.length > 0) {
+    for (const pBlock of pBlocks) {
+      const tMatches = pBlock.match(/<w:t[^>]*>[\s\S]*?<\/w:t>/g) || [];
+      let pText = '';
+      for (const tMatch of tMatches) {
+        const inner = tMatch.replace(/<[^>]+>/g, '');
+        pText += decodeXmlEntities(inner);
+      }
+      const clean = sanitizeWinAnsi(pText).trim();
+      if (clean) {
+        paragraphs.push(clean);
+      }
+    }
+  } else {
+    const textMatches = xmlText.match(/<w:t[^>]*>[\s\S]*?<\/w:t>/g) || [];
+    for (const match of textMatches) {
+      const text = decodeXmlEntities(match.replace(/<[^>]+>/g, ''));
+      const clean = sanitizeWinAnsi(text).trim();
+      if (clean) {
+        paragraphs.push(clean);
+      }
+    }
+  }
+
+  return paragraphs;
 }

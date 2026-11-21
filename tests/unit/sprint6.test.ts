@@ -27,6 +27,20 @@ describe('Sprint 6: Client-Side Conversion Extras', () => {
     expect(loaded.getPageCount()).toBeGreaterThanOrEqual(1);
   });
 
+  it('should handle CRLF line endings, HTML entities, and smart quotes without WinAnsi crash', async () => {
+    const pdfBytes = await htmlToPdf({
+      title: 'Smart “Quotes” & Em—Dash\r\nTitle',
+      content:
+        '<h1>Heading &amp; Subheading</h1>\r\n<p>First line with “smart quotes”, em—dash, bullets • and\ttabs.&nbsp;</p>\r\n<ul><li>Item 1</li><li>Item 2 🚀</li></ul>',
+      pageSize: 'letter',
+      fontSize: 11,
+    });
+
+    expect(pdfBytes).toBeInstanceOf(Uint8Array);
+    const loaded = await PDFDocument.load(pdfBytes);
+    expect(loaded.getPageCount()).toBeGreaterThanOrEqual(1);
+  });
+
   it('should convert PDF to PDF/A archival standard', async () => {
     const file = await createDummyPdf();
     const pdfaBytes = await convertToPdfA(file, '2b');

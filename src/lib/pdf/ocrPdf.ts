@@ -1,3 +1,5 @@
+import { loadPdfJs } from './pdfjsWorker';
+
 export interface OcrResult {
   extractedText: string;
   pageCount: number;
@@ -13,11 +15,7 @@ export async function ocrPdf(
   onProgress?: (msg: string) => void
 ): Promise<OcrResult> {
   onProgress?.('Loading PDF for text layer analysis...');
-  const pdfjsLib = await import('pdfjs-dist');
-
-  if (typeof window !== 'undefined' && !pdfjsLib.GlobalWorkerOptions.workerSrc) {
-    pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
-  }
+  const pdfjsLib = await loadPdfJs();
 
   const arrayBuffer = await file.arrayBuffer();
   const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
@@ -32,7 +30,11 @@ export async function ocrPdf(
     const page = await pdfDoc.getPage(i);
     const textContent = await page.getTextContent();
 
-    const pageTextItems = textContent.items.map((item: any) => item.str || '').join(' ').trim();
+    const pageTextItems = textContent.items
+      .map((item: any) => item.str || '')
+      .join(' ')
+      .replace(/\s+/g, ' ')
+      .trim();
 
     extractedText += `--- Page ${i} ---\n`;
     if (pageTextItems) {

@@ -84,7 +84,10 @@ export const ExtractPagesWorkspace: React.FC<ExtractPagesWorkspaceProps> = ({
       if (pagesToExtract.length === 0) {
         setErrorToast({
           title: lang === 'en' ? 'No Pages Selected' : 'Tidak Ada Halaman Dipilih',
-          message: lang === 'en' ? 'Please enter valid page numbers (e.g. 1-3, 5).' : 'Masukkan nomor halaman yang valid (contoh: 1-3, 5).',
+          message:
+            lang === 'en'
+              ? 'Please enter valid page numbers (e.g. 1-3, 5).'
+              : 'Masukkan nomor halaman yang valid (contoh: 1-3, 5).',
         });
         return;
       }
@@ -99,7 +102,11 @@ export const ExtractPagesWorkspace: React.FC<ExtractPagesWorkspaceProps> = ({
     setIsProcessing(true);
     setCurrentStep(1);
     setTotalSteps(2);
-    setProgressMsg(lang === 'en' ? 'Extracting selected PDF pages...' : 'Mengekstrak halaman PDF yang dipilih...');
+    setProgressMsg(
+      lang === 'en'
+        ? 'Extracting selected PDF pages...'
+        : 'Mengekstrak halaman PDF yang dipilih...'
+    );
 
     try {
       const result = await extractPagesFromPdf(
@@ -130,7 +137,9 @@ export const ExtractPagesWorkspace: React.FC<ExtractPagesWorkspaceProps> = ({
   if (extractResult) {
     return (
       <SuccessDownloadScreen
-        title={lang === 'en' ? 'Pages Extracted Successfully!' : 'Halaman PDF Berhasil Diekstrak!'}
+        title={
+          lang === 'en' ? 'Pages Extracted Successfully!' : 'Halaman PDF Berhasil Diekstrak!'
+        }
         downloadFileName={extractResult.filename}
         downloadButtonText={lang === 'en' ? 'Download Extracted PDF' : 'Unduh PDF Hasil Ekstrak'}
         onDownload={(customName?: string) =>
@@ -158,7 +167,7 @@ export const ExtractPagesWorkspace: React.FC<ExtractPagesWorkspaceProps> = ({
       <button
         type="button"
         onClick={onBack}
-        className="inline-flex items-center gap-2 text-xs font-black text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-sky-400 transition-colors btn-press-effect"
+        className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full glass-pill text-xs font-extrabold btn-press-effect"
       >
         <ArrowLeft className="w-4 h-4" />
         <span>{t.backToAllTools}</span>
@@ -166,10 +175,10 @@ export const ExtractPagesWorkspace: React.FC<ExtractPagesWorkspaceProps> = ({
 
       {/* Hero Header */}
       <div className="text-center space-y-2 py-2 max-w-lg mx-auto">
-        <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900 dark:text-white">
+        <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#0A1128] dark:text-white">
           {lang === 'en' ? 'Extract PDF Pages' : 'Ekstrak Halaman PDF'}
         </h2>
-        <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 font-medium leading-relaxed">
+        <p className="text-xs sm:text-sm text-[#0A1128]/65 dark:text-white/60 font-normal leading-relaxed">
           {lang === 'en'
             ? 'Extract specific pages from your PDF document into a brand new file.'
             : 'Ekstrak halaman tertentu dari dokumen PDF Anda menjadi berkas baru.'}
@@ -178,7 +187,7 @@ export const ExtractPagesWorkspace: React.FC<ExtractPagesWorkspaceProps> = ({
 
       {/* Error Toast */}
       {errorToast && (
-        <div className="w-full p-4 rounded-2xl bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-800 text-rose-900 dark:text-rose-200 flex items-start justify-between gap-3 shadow-md animate-fade-in">
+        <div className="w-full p-4 rounded-2xl bg-rose-50/90 dark:bg-rose-950/70 backdrop-blur-xl border border-rose-200 dark:border-rose-500/35 text-rose-900 dark:text-rose-200 flex items-start justify-between gap-3 shadow-lg animate-fade-in">
           <div className="flex items-start gap-3">
             <AlertCircle className="w-5 h-5 text-rose-600 dark:text-rose-400 shrink-0 mt-0.5" />
             <div>
@@ -200,20 +209,25 @@ export const ExtractPagesWorkspace: React.FC<ExtractPagesWorkspaceProps> = ({
 
       {/* Upload CTA or Workspace */}
       {!file ? (
-        <FileDropzone onFilesSelected={handleFileChange} disabled={isProcessing} t={t} colorTheme="emerald" />
+        <FileDropzone
+          onFilesSelected={handleFileChange}
+          disabled={isProcessing}
+          t={t}
+          multiple={false}
+        />
       ) : (
         <div className="space-y-6">
           {/* Active File Summary Box */}
-          <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border-2 border-slate-300 dark:border-slate-800 flex items-center justify-between gap-3 shadow-sm min-w-0">
-            <div className="flex items-center gap-3 min-w-0 flex-1">
-              <div className="p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/80 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-900 shrink-0">
-                <FileText className="w-6 h-6" />
+          <div className="glass-card p-4 sm:p-5 rounded-2xl flex items-center justify-between gap-3 min-w-0">
+            <div className="relative z-10 flex items-center gap-3 min-w-0 flex-1">
+              <div className="w-10 h-10 rounded-xl bg-black/[0.04] dark:bg-white/[0.08] border border-black/[0.08] dark:border-white/[0.18] flex items-center justify-center shrink-0">
+                <FileText className="w-5 h-5 text-[#0A1128]/80 dark:text-white/85" />
               </div>
               <div className="min-w-0 flex-1">
-                <h4 className="text-sm font-black text-slate-900 dark:text-white truncate">
+                <h4 className="text-sm font-bold text-[#0A1128] dark:text-white truncate">
                   {file.name}
                 </h4>
-                <p className="text-xs font-medium text-slate-500 dark:text-slate-400 truncate">
+                <p className="text-xs font-medium text-[#0A1128]/60 dark:text-white/55 truncate">
                   {pageCount} {lang === 'en' ? 'Pages' : 'Halaman'} • {formatFileSize(file.size)}
                 </p>
               </div>
@@ -225,7 +239,7 @@ export const ExtractPagesWorkspace: React.FC<ExtractPagesWorkspaceProps> = ({
                 setFile(null);
                 setPageCount(0);
               }}
-              className="p-2 rounded-xl text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/50 transition-colors btn-press-effect shrink-0"
+              className="relative z-10 p-2 rounded-xl text-rose-600 dark:text-rose-400 hover:bg-rose-500/15 transition-colors btn-press-effect shrink-0"
               title="Remove File"
             >
               <Trash2 className="w-5 h-5" />
@@ -233,9 +247,9 @@ export const ExtractPagesWorkspace: React.FC<ExtractPagesWorkspaceProps> = ({
           </div>
 
           {/* Configuration Card */}
-          <div className="p-6 rounded-3xl bg-white dark:bg-slate-900 border-2 border-slate-300 dark:border-slate-800 space-y-4 shadow-sm">
-            <div className="space-y-1.5">
-              <label className="text-xs font-extrabold text-slate-800 dark:text-slate-200">
+          <div className="glass-card p-6 rounded-3xl space-y-4">
+            <div className="relative z-10 space-y-1.5">
+              <label className="text-xs font-bold text-[#0A1128] dark:text-white">
                 {lang === 'en' ? 'Pages to Extract' : 'Halaman yang Diekstrak'}
               </label>
               <input
@@ -243,9 +257,9 @@ export const ExtractPagesWorkspace: React.FC<ExtractPagesWorkspaceProps> = ({
                 value={rangeInput}
                 onChange={(e) => setRangeInput(e.target.value)}
                 placeholder="e.g. 1-3, 5, 8-10"
-                className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-700 text-xs font-bold text-slate-900 dark:text-white focus:outline-none focus:border-emerald-500"
+                className="w-full px-4 py-2.5 rounded-xl bg-white/80 dark:bg-white/[0.07] border border-black/[0.10] dark:border-white/[0.16] text-xs font-bold text-[#0A1128] dark:text-white outline-none focus:border-[#00A3FF] dark:focus:border-[#38BDF8]"
               />
-              <p className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">
+              <p className="text-[10px] text-[#0A1128]/55 dark:text-white/55 font-medium">
                 {lang === 'en'
                   ? `Enter single pages or ranges. Total available pages: ${pageCount}.`
                   : `Masukkan nomor halaman atau rentang. Total halaman: ${pageCount}.`}
@@ -253,21 +267,21 @@ export const ExtractPagesWorkspace: React.FC<ExtractPagesWorkspaceProps> = ({
             </div>
 
             {/* Separate Files Checkbox Option */}
-            <div className="pt-2 border-t border-slate-200 dark:border-slate-800">
+            <div className="relative z-10 pt-2 border-t border-black/[0.08] dark:border-white/[0.12]">
               <label
                 onClick={() => setSeparateFiles(!separateFiles)}
                 className="inline-flex items-center gap-2.5 cursor-pointer select-none"
               >
                 <div
-                  className={`w-5 h-5 rounded-lg border-2 flex items-center justify-center transition-colors ${
+                  className={`w-5 h-5 rounded-lg border flex items-center justify-center transition-colors ${
                     separateFiles
-                      ? 'bg-emerald-600 border-emerald-600 text-white'
-                      : 'border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800'
+                      ? 'bg-[#0A1128] dark:bg-white border-[#0A1128] dark:border-white text-white dark:text-[#071124]'
+                      : 'border-black/20 dark:border-white/25 bg-white/50 dark:bg-white/[0.06]'
                   }`}
                 >
                   {separateFiles && <CheckSquare className="w-3.5 h-3.5 stroke-[3]" />}
                 </div>
-                <span className="text-xs font-extrabold text-slate-800 dark:text-slate-200">
+                <span className="text-xs font-bold text-[#0A1128] dark:text-white">
                   {lang === 'en'
                     ? 'Extract into separate individual PDF files (ZIP)'
                     : 'Ekstrak menjadi berkas PDF terpisah masing-masing (ZIP)'}
@@ -278,8 +292,8 @@ export const ExtractPagesWorkspace: React.FC<ExtractPagesWorkspaceProps> = ({
 
           {/* Action CTA Button */}
           <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-2 text-xs font-semibold text-slate-600 dark:text-slate-400">
-              <ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+            <div className="flex items-center gap-2 text-xs font-medium text-[#0A1128]/65 dark:text-white/60">
+              <ShieldCheck className="w-4 h-4 text-[#0A1128] dark:text-white shrink-0" />
               <span>{t.ramProcessing}</span>
             </div>
 
@@ -287,7 +301,7 @@ export const ExtractPagesWorkspace: React.FC<ExtractPagesWorkspaceProps> = ({
               type="button"
               onClick={handleExecuteExtract}
               disabled={isProcessing}
-              className="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-black text-sm shadow-xl shadow-emerald-500/30 transition-all btn-press-effect flex items-center justify-center gap-2"
+              className="w-full sm:w-auto px-8 py-3.5 rounded-2xl glass-cta font-bold text-sm transition-all btn-press-effect flex items-center justify-center gap-2"
             >
               <Copy className="w-4 h-4" />
               <span>{lang === 'en' ? 'Extract Pages Now' : 'Ekstrak Halaman Sekarang'}</span>
@@ -296,7 +310,6 @@ export const ExtractPagesWorkspace: React.FC<ExtractPagesWorkspaceProps> = ({
         </div>
       )}
 
-      {/* Progress Modal */}
       <ProcessingProgress
         isOpen={isProcessing}
         progressMessage={progressMsg}

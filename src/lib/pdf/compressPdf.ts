@@ -1,4 +1,5 @@
 import { PDFDocument } from 'pdf-lib';
+import { loadPdfJs } from './pdfjsWorker';
 
 export type CompressionLevel = 'recommended' | 'extreme' | 'less';
 
@@ -34,13 +35,10 @@ export async function compressPdf(
   let bestBytes = optBytes;
 
   // Engine 2: Canvas Downscaling (ONLY used if it produces a smaller binary than both original and optBytes!)
-  if (typeof window !== 'undefined') {
+  if (typeof window !== 'undefined' && typeof document !== 'undefined') {
     try {
       onProgress?.('Optimizing page image streams...');
-      const pdfjsLib = await import('pdfjs-dist');
-      if (!pdfjsLib.GlobalWorkerOptions.workerSrc) {
-        pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
-      }
+      const pdfjsLib = await loadPdfJs();
 
       const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer.slice(0) });
       const pdfjsDoc = await loadingTask.promise;
@@ -50,13 +48,13 @@ export async function compressPdf(
         const newPdfDoc = await PDFDocument.create();
 
         // Downscale parameters
-        let scale = 0.80;
-        let quality = 0.50;
+        let scale = 0.8;
+        let quality = 0.5;
         if (level === 'extreme') {
           scale = 0.65;
           quality = 0.35;
         } else if (level === 'less') {
-          scale = 0.90;
+          scale = 0.9;
           quality = 0.65;
         }
 
@@ -115,7 +113,7 @@ export async function compressPdf(
 
   const compressedSize = finalBytes.length;
   const savedBytes = Math.max(0, originalSize - compressedSize);
-  const savedPercentage = Math.round((savedBytes / originalSize) * 100);
+  const savedPercentage = originalSize > 0 ? Math.round((savedBytes / originalSize) * 100) : 0;
 
   onProgress?.('Compression complete!');
 

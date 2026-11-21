@@ -8,19 +8,17 @@ import { downloadBlob } from '@/lib/files/downloadBlob';
 import { formatFileSize } from '@/lib/files/formatFileSize';
 import ProcessingProgress from './ProcessingProgress';
 import FileDropzone from './FileDropzone';
+import LiquidGlassPillBar from './LiquidGlassPillBar';
 import {
   Hash,
-  UploadCloud,
   FileText,
   Trash2,
   AlertCircle,
   X,
-  ArrowRight,
   ShieldCheck,
   ArrowLeft,
   Settings2,
 } from 'lucide-react';
-
 import SuccessDownloadScreen from './SuccessDownloadScreen';
 import { ViewMode } from '@/components/Header';
 
@@ -78,7 +76,11 @@ export const PageNumbersWorkspace: React.FC<PageNumbersWorkspaceProps> = ({
     setIsProcessing(true);
     setCurrentStep(1);
     setTotalSteps(pageCount);
-    setProgressMsg(lang === 'en' ? 'Inserting page numbers into PDF...' : 'Menambahkan nomor halaman ke PDF...');
+    setProgressMsg(
+      lang === 'en'
+        ? 'Inserting page numbers into PDF...'
+        : 'Menambahkan nomor halaman ke PDF...'
+    );
 
     try {
       const result = await addPageNumbersToPdf(
@@ -108,7 +110,11 @@ export const PageNumbersWorkspace: React.FC<PageNumbersWorkspaceProps> = ({
   if (completedResult) {
     return (
       <SuccessDownloadScreen
-        title={lang === 'en' ? 'Page Numbers Added Successfully!' : 'Nomor Halaman Berhasil Ditambahkan!'}
+        title={
+          lang === 'en'
+            ? 'Page Numbers Added Successfully!'
+            : 'Nomor Halaman Berhasil Ditambahkan!'
+        }
         downloadFileName={completedResult.filename}
         downloadButtonText={lang === 'en' ? 'Download Numbered PDF' : 'Unduh PDF Berpenomoran'}
         onDownload={(customName?: string) =>
@@ -136,7 +142,7 @@ export const PageNumbersWorkspace: React.FC<PageNumbersWorkspaceProps> = ({
       <button
         type="button"
         onClick={onBack}
-        className="inline-flex items-center gap-2 text-xs font-black text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-sky-400 transition-colors btn-press-effect"
+        className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full glass-pill text-xs font-extrabold btn-press-effect"
       >
         <ArrowLeft className="w-4 h-4" />
         <span>{t.backToAllTools}</span>
@@ -144,19 +150,19 @@ export const PageNumbersWorkspace: React.FC<PageNumbersWorkspaceProps> = ({
 
       {/* Hero Header */}
       <div className="text-center space-y-2 py-2 max-w-lg mx-auto">
-        <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900 dark:text-white">
+        <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#0A1128] dark:text-white">
           {lang === 'en' ? 'Add Page Numbers' : 'Beri Nomor Halaman'}
         </h2>
-        <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 font-medium leading-relaxed">
+        <p className="text-xs sm:text-sm text-[#0A1128]/65 dark:text-white/60 font-normal leading-relaxed">
           {lang === 'en'
-            ? 'Add customizable page numbers into your PDF document.'
+            ? 'Add customizable header or footer page numbers into your PDF document.'
             : 'Tambahkan nomor halaman yang dapat disesuaikan ke dokumen PDF Anda.'}
         </p>
       </div>
 
       {/* Error Toast */}
       {errorToast && (
-        <div className="w-full p-4 rounded-2xl bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-800 text-rose-900 dark:text-rose-200 flex items-start justify-between gap-3 shadow-md animate-fade-in">
+        <div className="w-full p-4 rounded-2xl bg-rose-50/90 dark:bg-rose-950/70 backdrop-blur-xl border border-rose-200 dark:border-rose-500/35 text-rose-900 dark:text-rose-200 flex items-start justify-between gap-3 shadow-lg animate-fade-in">
           <div className="flex items-start gap-3">
             <AlertCircle className="w-5 h-5 text-rose-600 dark:text-rose-400 shrink-0 mt-0.5" />
             <div>
@@ -178,20 +184,25 @@ export const PageNumbersWorkspace: React.FC<PageNumbersWorkspaceProps> = ({
 
       {/* Upload CTA or Workspace */}
       {!file ? (
-        <FileDropzone onFilesSelected={handleFileChange} disabled={isProcessing} t={t} colorTheme="sky" />
+        <FileDropzone
+          onFilesSelected={handleFileChange}
+          disabled={isProcessing}
+          t={t}
+          multiple={false}
+        />
       ) : (
         <div className="space-y-6">
           {/* Active File Summary Box */}
-          <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border-2 border-slate-300 dark:border-slate-800 flex items-center justify-between gap-3 shadow-sm">
-            <div className="flex items-center gap-3 min-w-0">
-              <div className="p-3 rounded-xl bg-sky-50 dark:bg-sky-950/80 text-sky-600 dark:text-sky-400 border border-sky-200 dark:border-sky-900 shrink-0">
-                <FileText className="w-6 h-6" />
+          <div className="glass-card p-4 sm:p-5 rounded-2xl flex items-center justify-between gap-3">
+            <div className="relative z-10 flex items-center gap-3 min-w-0">
+              <div className="w-10 h-10 rounded-xl bg-black/[0.04] dark:bg-white/[0.08] border border-black/[0.08] dark:border-white/[0.18] flex items-center justify-center shrink-0">
+                <FileText className="w-5 h-5 text-[#0A1128]/80 dark:text-white/85" />
               </div>
               <div className="min-w-0">
-                <h4 className="text-sm font-black text-slate-900 dark:text-white truncate">
+                <h4 className="text-sm font-bold text-[#0A1128] dark:text-white truncate">
                   {file.name}
                 </h4>
-                <p className="text-xs font-medium text-slate-500 dark:text-slate-400">
+                <p className="text-xs font-medium text-[#0A1128]/60 dark:text-white/55">
                   {pageCount} {lang === 'en' ? 'Pages' : 'Halaman'} • {formatFileSize(file.size)}
                 </p>
               </div>
@@ -203,7 +214,7 @@ export const PageNumbersWorkspace: React.FC<PageNumbersWorkspaceProps> = ({
                 setFile(null);
                 setPageCount(0);
               }}
-              className="p-2 rounded-xl text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/50 transition-colors btn-press-effect"
+              className="relative z-10 p-2 rounded-xl text-rose-600 dark:text-rose-400 hover:bg-rose-500/15 transition-colors btn-press-effect"
               title="Remove File"
             >
               <Trash2 className="w-5 h-5" />
@@ -211,68 +222,72 @@ export const PageNumbersWorkspace: React.FC<PageNumbersWorkspaceProps> = ({
           </div>
 
           {/* Settings Box */}
-          <div className="p-6 rounded-3xl bg-white dark:bg-slate-900 border-2 border-slate-300 dark:border-slate-800 space-y-5 shadow-sm">
-            <h3 className="text-xs font-black text-slate-900 dark:text-white flex items-center gap-2">
-              <Settings2 className="w-4 h-4 text-sky-500" />
+          <div className="glass-card p-6 rounded-3xl space-y-5">
+            <h3 className="relative z-10 text-xs font-bold text-[#0A1128] dark:text-white flex items-center gap-2">
+              <Settings2 className="w-4 h-4" />
               <span>{lang === 'en' ? 'Page Number Settings' : 'Pengaturan Nomor Halaman'}</span>
             </h3>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              {/* Position */}
+            <div className="relative z-10 space-y-4">
+              {/* Format with LiquidGlassPillBar */}
               <div className="space-y-1.5">
-                <label className="text-xs font-extrabold text-slate-800 dark:text-slate-200">
-                  {lang === 'en' ? 'Position' : 'Posisi'}
+                <label className="block text-xs font-bold text-[#0A1128] dark:text-white">
+                  {lang === 'en' ? 'Number Format' : 'Format Nomor'}
                 </label>
-                <select
-                  value={position}
-                  onChange={(e: any) => setPosition(e.target.value)}
-                  className="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-700 text-xs font-bold text-slate-900 dark:text-white focus:outline-none focus:border-sky-500"
-                >
-                  <option value="bottom-center">Bottom Center</option>
-                  <option value="bottom-left">Bottom Left</option>
-                  <option value="bottom-right">Bottom Right</option>
-                  <option value="top-center">Top Center</option>
-                  <option value="top-left">Top Left</option>
-                  <option value="top-right">Top Right</option>
-                </select>
-              </div>
-
-              {/* Format */}
-              <div className="space-y-1.5">
-                <label className="text-xs font-extrabold text-slate-800 dark:text-slate-200">
-                  {lang === 'en' ? 'Format' : 'Format'}
-                </label>
-                <select
+                <LiquidGlassPillBar<'page_of_total' | 'number'>
+                  size="sm"
+                  ariaLabel="Page number format"
                   value={format}
-                  onChange={(e: any) => setFormat(e.target.value)}
-                  className="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-700 text-xs font-bold text-slate-900 dark:text-white focus:outline-none focus:border-sky-500"
-                >
-                  <option value="page_of_total">Page X of Y</option>
-                  <option value="number">X (Single Number)</option>
-                </select>
+                  onChange={setFormat}
+                  options={[
+                    { id: 'page_of_total', label: 'Page X of Y' },
+                    { id: 'number', label: 'X (Single Number)' },
+                  ]}
+                />
               </div>
 
-              {/* Font Size */}
-              <div className="space-y-1.5">
-                <label className="text-xs font-extrabold text-slate-800 dark:text-slate-200">
-                  {lang === 'en' ? 'Font Size' : 'Ukuran Font'}
-                </label>
-                <input
-                  type="number"
-                  min="8"
-                  max="24"
-                  value={fontSize}
-                  onChange={(e) => setFontSize(parseInt(e.target.value, 10) || 10)}
-                  className="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-700 text-xs font-bold text-slate-900 dark:text-white focus:outline-none focus:border-sky-500"
-                />
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {/* Position */}
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-[#0A1128] dark:text-white">
+                    {lang === 'en' ? 'Alignment Position' : 'Posisi Penomoran'}
+                  </label>
+                  <select
+                    value={position}
+                    onChange={(e: any) => setPosition(e.target.value)}
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-white/80 dark:bg-white/[0.07] border border-black/[0.10] dark:border-white/[0.16] text-xs font-bold text-[#0A1128] dark:text-white outline-none focus:border-[#00A3FF] dark:focus:border-[#38BDF8]"
+                  >
+                    <option value="bottom-center" className="text-black">Bottom Center</option>
+                    <option value="bottom-left" className="text-black">Bottom Left</option>
+                    <option value="bottom-right" className="text-black">Bottom Right</option>
+                    <option value="top-center" className="text-black">Top Center</option>
+                    <option value="top-left" className="text-black">Top Left</option>
+                    <option value="top-right" className="text-black">Top Right</option>
+                  </select>
+                </div>
+
+                {/* Font Size */}
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-[#0A1128] dark:text-white">
+                    {lang === 'en' ? 'Font Size (pt)' : 'Ukuran Font (pt)'}
+                  </label>
+                  <input
+                    type="number"
+                    min="8"
+                    max="24"
+                    value={fontSize}
+                    onChange={(e) => setFontSize(parseInt(e.target.value, 10) || 10)}
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-white/80 dark:bg-white/[0.07] border border-black/[0.10] dark:border-white/[0.16] text-xs font-bold text-[#0A1128] dark:text-white outline-none focus:border-[#00A3FF] dark:focus:border-[#38BDF8]"
+                  />
+                </div>
               </div>
             </div>
           </div>
 
           {/* Action CTA Button */}
           <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-2 text-xs font-semibold text-slate-600 dark:text-slate-400">
-              <ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+            <div className="flex items-center gap-2 text-xs font-medium text-[#0A1128]/65 dark:text-white/60">
+              <ShieldCheck className="w-4 h-4 text-[#0A1128] dark:text-white shrink-0" />
               <span>{t.ramProcessing}</span>
             </div>
 
@@ -280,17 +295,17 @@ export const PageNumbersWorkspace: React.FC<PageNumbersWorkspaceProps> = ({
               type="button"
               onClick={handleExecuteNumbers}
               disabled={isProcessing}
-              className="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-gradient-to-r from-sky-600 to-cyan-500 hover:from-sky-500 hover:to-cyan-400 text-white font-black text-sm shadow-xl shadow-sky-500/30 transition-all btn-press-effect flex items-center justify-center gap-2"
+              className="w-full sm:w-auto px-8 py-3.5 rounded-2xl glass-cta font-bold text-sm transition-all btn-press-effect flex items-center justify-center gap-2"
             >
               <Hash className="w-4 h-4" />
-              <span>{lang === 'en' ? 'Add Page Numbers Now' : 'Beri Nomor Halaman Sekarang'}</span>
-              
+              <span>
+                {lang === 'en' ? 'Add Page Numbers Now' : 'Beri Nomor Halaman Sekarang'}
+              </span>
             </button>
           </div>
         </div>
       )}
 
-      {/* Progress Modal */}
       <ProcessingProgress
         isOpen={isProcessing}
         progressMessage={progressMsg}

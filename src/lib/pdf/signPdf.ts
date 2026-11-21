@@ -1,4 +1,5 @@
-import { PDFDocument, rgb } from 'pdf-lib';
+import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
+import { sanitizeWinAnsi } from './sanitizeText';
 
 export interface SignatureOptions {
   /** 0-based page index */
@@ -45,15 +46,20 @@ export async function signPdf(
 
   onProgress?.('Embedding signature...');
 
+  let dateOffsetY = 38;
+
   if (options.signatureDataUrl) {
     const base64Data = options.signatureDataUrl.split(',')[1];
     const imageBytes = Uint8Array.from(atob(base64Data), (c) => c.charCodeAt(0));
 
     const isPng = options.signatureDataUrl.includes('image/png');
-    const embeddedImg = isPng ? await pdfDoc.embedPng(imageBytes) : await pdfDoc.embedJpg(imageBytes);
+    const embeddedImg = isPng
+      ? await pdfDoc.embedPng(imageBytes)
+      : await pdfDoc.embedJpg(imageBytes);
 
     const sigW = ((options.width ?? 25) / 100) * pWidth;
-    const sigH = (sigW / embeddedImg.width) * embeddedImg.height;
+    const sigH = (sigW / Math.max(1, embeddedImg.width)) * Math.max(1, embeddedImg.height);
+    dateOffsetY = sigH + 14;
 
     page.drawImage(embeddedImg, {
       x: pdfX,
@@ -64,21 +70,31 @@ export async function signPdf(
   }
 
   if (options.signatureText) {
-    page.drawText(options.signatureText, {
-      x: pdfX,
-      y: pdfY - 20,
-      size: 20,
-      color: rgb(0.1, 0.1, 0.5),
-    });
+    const safeSigText = sanitizeWinAnsi(options.signatureText).trim();
+    if (safeSigText) {
+      const sigFont = await pdfDoc.embedFont(StandardFonts.TimesRomanItalic);
+      page.drawText(safeSigText, {
+        x: pdfX,
+        y: pdfY - 20,
+        size: 20,
+        font: sigFont,
+        color: rgb(0.1, 0.1, 0.5),
+      });
+    }
   }
 
   if (options.dateText) {
-    page.drawText(`Date: ${options.dateText}`, {
-      x: pdfX,
-      y: pdfY - 38,
-      size: 10,
-      color: rgb(0.3, 0.3, 0.3),
-    });
+    const safeDateText = sanitizeWinAnsi(`Date: ${options.dateText}`).trim();
+    if (safeDateText) {
+      const dateFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
+      page.drawText(safeDateText, {
+        x: pdfX,
+        y: Math.max(10, pdfY - dateOffsetY),
+        size: 10,
+        font: dateFont,
+        color: rgb(0.3, 0.3, 0.3),
+      });
+    }
   }
 
   onProgress?.('Finalizing signature...');

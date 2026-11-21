@@ -1,4 +1,5 @@
 import { PDFDocument, StandardFonts, rgb, PageSizes } from 'pdf-lib';
+import { sanitizeWinAnsi, decodeXmlEntities } from './sanitizeText';
 
 export interface HtmlToPdfOptions {
   title?: string;
@@ -9,6 +10,7 @@ export interface HtmlToPdfOptions {
 
 /**
  * Convert text/HTML content to PDF document client-side.
+ * Safely handles CRLF line endings, HTML block tags, HTML entities, and Unicode typography.
  */
 export async function htmlToPdf(
   options: HtmlToPdfOptions,
@@ -31,8 +33,9 @@ export async function htmlToPdf(
   let currentY = pageHeight - margin;
 
   // Title
-  if (options.title) {
-    page.drawText(options.title, {
+  const safeTitle = options.title ? sanitizeWinAnsi(options.title).trim() : '';
+  if (safeTitle) {
+    page.drawText(safeTitle, {
       x: margin,
       y: currentY - 24,
       size: 20,
@@ -42,15 +45,32 @@ export async function htmlToPdf(
     currentY -= 45;
   }
 
-  // Strip HTML tags for clean text rendering
-  const cleanText = options.content.replace(/<[^>]*>?/gm, '');
+  // Convert block-level HTML tags to newlines and list items to bullet points before stripping tags
+  const normalizedHtml = (options.content || '')
+    .replace(/<br\s*\/?>/gi, '\n')
+    .replace(/<\/(p|div|h[1-6]|tr|blockquote|section|article|header|footer)>/gi, '\n')
+    .replace(/<li[^>]*>/gi, '* ')
+    .replace(/<\/li>/gi, '\n')
+    .replace(/<[^>]*>?/gm, '');
+
+  const decodedText = decodeXmlEntities(normalizedHtml);
+  const cleanText = sanitizeWinAnsi(decodedText, true);
   const lines = cleanText.split('\n');
 
   onProgress?.('Rendering document pages...');
 
   for (const rawLine of lines) {
-    // Simple line wrapping
-    const words = rawLine.split(' ');
+    const trimmedRight = rawLine.replace(/\s+$/g, '');
+    if (!trimmedRight.trim()) {
+      currentY -= lineHeight * 0.5;
+      if (currentY - lineHeight < margin) {
+        page = pdfDoc.addPage([pageWidth, pageHeight]);
+        currentY = pageHeight - margin;
+      }
+      continue;
+    }
+
+    const words = trimmedRight.split(' ');
     let currentLine = '';
 
     for (const word of words) {

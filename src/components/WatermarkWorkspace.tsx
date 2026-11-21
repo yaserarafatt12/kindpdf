@@ -8,19 +8,17 @@ import { downloadBlob } from '@/lib/files/downloadBlob';
 import { formatFileSize } from '@/lib/files/formatFileSize';
 import ProcessingProgress from './ProcessingProgress';
 import FileDropzone from './FileDropzone';
+import LiquidGlassPillBar from './LiquidGlassPillBar';
 import {
   Stamp,
-  UploadCloud,
   FileText,
   Trash2,
   AlertCircle,
   X,
-  ArrowRight,
   ShieldCheck,
   ArrowLeft,
   Settings2,
 } from 'lucide-react';
-
 import SuccessDownloadScreen from './SuccessDownloadScreen';
 import { ViewMode } from '@/components/Header';
 
@@ -87,7 +85,9 @@ export const WatermarkWorkspace: React.FC<WatermarkWorkspaceProps> = ({
     setIsProcessing(true);
     setCurrentStep(1);
     setTotalSteps(pageCount);
-    setProgressMsg(lang === 'en' ? 'Applying watermark to PDF...' : 'Menambahkan watermark ke PDF...');
+    setProgressMsg(
+      lang === 'en' ? 'Applying watermark to PDF...' : 'Menambahkan watermark ke PDF...'
+    );
 
     try {
       const result = await addWatermarkToPdf(
@@ -117,7 +117,9 @@ export const WatermarkWorkspace: React.FC<WatermarkWorkspaceProps> = ({
   if (completedResult) {
     return (
       <SuccessDownloadScreen
-        title={lang === 'en' ? 'Watermark Added Successfully!' : 'Watermark Berhasil Ditambahkan!'}
+        title={
+          lang === 'en' ? 'Watermark Added Successfully!' : 'Watermark Berhasil Ditambahkan!'
+        }
         downloadFileName={completedResult.filename}
         downloadButtonText={lang === 'en' ? 'Download Watermarked PDF' : 'Unduh PDF Watermark'}
         onDownload={(customName?: string) =>
@@ -145,7 +147,7 @@ export const WatermarkWorkspace: React.FC<WatermarkWorkspaceProps> = ({
       <button
         type="button"
         onClick={onBack}
-        className="inline-flex items-center gap-2 text-xs font-black text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-sky-400 transition-colors btn-press-effect"
+        className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full glass-pill text-xs font-extrabold btn-press-effect"
       >
         <ArrowLeft className="w-4 h-4" />
         <span>{t.backToAllTools}</span>
@@ -153,10 +155,10 @@ export const WatermarkWorkspace: React.FC<WatermarkWorkspaceProps> = ({
 
       {/* Hero Header */}
       <div className="text-center space-y-2 py-2 max-w-lg mx-auto">
-        <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900 dark:text-white">
+        <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#0A1128] dark:text-white">
           {lang === 'en' ? 'Add PDF Watermark' : 'Beri Watermark PDF'}
         </h2>
-        <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 font-medium leading-relaxed">
+        <p className="text-xs sm:text-sm text-[#0A1128]/65 dark:text-white/60 font-normal leading-relaxed">
           {lang === 'en'
             ? 'Overlay a custom text watermark across every page of your PDF.'
             : 'Tambahkan teks watermark kustom ke setiap halaman dokumen PDF Anda.'}
@@ -165,7 +167,7 @@ export const WatermarkWorkspace: React.FC<WatermarkWorkspaceProps> = ({
 
       {/* Error Toast */}
       {errorToast && (
-        <div className="w-full p-4 rounded-2xl bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-800 text-rose-900 dark:text-rose-200 flex items-start justify-between gap-3 shadow-md animate-fade-in">
+        <div className="w-full p-4 rounded-2xl bg-rose-50/90 dark:bg-rose-950/70 backdrop-blur-xl border border-rose-200 dark:border-rose-500/35 text-rose-900 dark:text-rose-200 flex items-start justify-between gap-3 shadow-lg animate-fade-in">
           <div className="flex items-start gap-3">
             <AlertCircle className="w-5 h-5 text-rose-600 dark:text-rose-400 shrink-0 mt-0.5" />
             <div>
@@ -187,20 +189,25 @@ export const WatermarkWorkspace: React.FC<WatermarkWorkspaceProps> = ({
 
       {/* Upload CTA or Workspace */}
       {!file ? (
-        <FileDropzone onFilesSelected={handleFileChange} disabled={isProcessing} t={t} colorTheme="violet" />
+        <FileDropzone
+          onFilesSelected={handleFileChange}
+          disabled={isProcessing}
+          t={t}
+          multiple={false}
+        />
       ) : (
         <div className="space-y-6">
           {/* Active File Summary Box */}
-          <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border-2 border-slate-300 dark:border-slate-800 flex items-center justify-between gap-3 shadow-sm min-w-0">
-            <div className="flex items-center gap-3 min-w-0 flex-1">
-              <div className="p-3 rounded-xl bg-violet-50 dark:bg-violet-950/80 text-violet-600 dark:text-violet-400 border border-violet-200 dark:border-violet-900 shrink-0">
-                <FileText className="w-6 h-6" />
+          <div className="glass-card p-4 sm:p-5 rounded-2xl flex items-center justify-between gap-3 min-w-0">
+            <div className="relative z-10 flex items-center gap-3 min-w-0 flex-1">
+              <div className="w-10 h-10 rounded-xl bg-black/[0.04] dark:bg-white/[0.08] border border-black/[0.08] dark:border-white/[0.18] flex items-center justify-center shrink-0">
+                <FileText className="w-5 h-5 text-[#0A1128]/80 dark:text-white/85" />
               </div>
               <div className="min-w-0 flex-1">
-                <h4 className="text-sm font-black text-slate-900 dark:text-white truncate">
+                <h4 className="text-sm font-bold text-[#0A1128] dark:text-white truncate">
                   {file.name}
                 </h4>
-                <p className="text-xs font-medium text-slate-500 dark:text-slate-400 truncate">
+                <p className="text-xs font-medium text-[#0A1128]/60 dark:text-white/55 truncate">
                   {pageCount} {lang === 'en' ? 'Pages' : 'Halaman'} • {formatFileSize(file.size)}
                 </p>
               </div>
@@ -212,7 +219,7 @@ export const WatermarkWorkspace: React.FC<WatermarkWorkspaceProps> = ({
                 setFile(null);
                 setPageCount(0);
               }}
-              className="p-2 rounded-xl text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/50 transition-colors btn-press-effect shrink-0"
+              className="relative z-10 p-2 rounded-xl text-rose-600 dark:text-rose-400 hover:bg-rose-500/15 transition-colors btn-press-effect shrink-0"
               title="Remove File"
             >
               <Trash2 className="w-5 h-5" />
@@ -220,15 +227,15 @@ export const WatermarkWorkspace: React.FC<WatermarkWorkspaceProps> = ({
           </div>
 
           {/* Settings Box */}
-          <div className="p-6 rounded-3xl bg-white dark:bg-slate-900 border-2 border-slate-300 dark:border-slate-800 space-y-5 shadow-sm">
-            <h3 className="text-xs font-black text-slate-900 dark:text-white flex items-center gap-2">
-              <Settings2 className="w-4 h-4 text-violet-500" />
+          <div className="glass-card p-6 rounded-3xl space-y-5">
+            <h3 className="relative z-10 text-xs font-bold text-[#0A1128] dark:text-white flex items-center gap-2">
+              <Settings2 className="w-4 h-4" />
               <span>{lang === 'en' ? 'Watermark Styling' : 'Pengaturan Watermark'}</span>
             </h3>
 
-            <div className="space-y-4">
+            <div className="relative z-10 space-y-4">
               <div className="space-y-1">
-                <label className="text-xs font-extrabold text-slate-800 dark:text-slate-200">
+                <label className="text-xs font-bold text-[#0A1128] dark:text-white">
                   {lang === 'en' ? 'Watermark Text' : 'Teks Watermark'}
                 </label>
                 <input
@@ -236,14 +243,14 @@ export const WatermarkWorkspace: React.FC<WatermarkWorkspaceProps> = ({
                   value={text}
                   onChange={(e) => setText(e.target.value)}
                   placeholder="e.g. CONFIDENTIAL, DRAFT"
-                  className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-700 text-xs font-bold text-slate-900 dark:text-white focus:outline-none focus:border-violet-500"
+                  className="w-full px-4 py-2.5 rounded-xl bg-white/80 dark:bg-white/[0.07] border border-black/[0.10] dark:border-white/[0.16] text-xs font-bold text-[#0A1128] dark:text-white outline-none focus:border-[#00A3FF] dark:focus:border-[#38BDF8]"
                 />
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 items-center">
                 {/* Font Size */}
                 <div className="space-y-1">
-                  <label className="text-xs font-extrabold text-slate-800 dark:text-slate-200">
+                  <label className="text-xs font-bold text-[#0A1128] dark:text-white">
                     {lang === 'en' ? 'Font Size' : 'Ukuran Font'}
                   </label>
                   <input
@@ -252,14 +259,14 @@ export const WatermarkWorkspace: React.FC<WatermarkWorkspaceProps> = ({
                     max="100"
                     value={fontSize}
                     onChange={(e) => setFontSize(parseInt(e.target.value, 10) || 40)}
-                    className="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-700 text-xs font-bold text-slate-900 dark:text-white focus:outline-none focus:border-violet-500"
+                    className="w-full px-3 py-2 rounded-xl bg-white/80 dark:bg-white/[0.07] border border-black/[0.10] dark:border-white/[0.16] text-xs font-bold text-[#0A1128] dark:text-white outline-none"
                   />
                 </div>
 
                 {/* Opacity */}
                 <div className="space-y-1">
-                  <label className="text-xs font-extrabold text-slate-800 dark:text-slate-200">
-                    {lang === 'en' ? 'Transparence (Opacity)' : 'Transparansi (Opacity)'}
+                  <label className="text-xs font-bold text-[#0A1128] dark:text-white">
+                    {lang === 'en' ? 'Opacity' : 'Transparansi'} ({Math.round(opacity * 100)}%)
                   </label>
                   <input
                     type="range"
@@ -268,25 +275,27 @@ export const WatermarkWorkspace: React.FC<WatermarkWorkspaceProps> = ({
                     step="0.05"
                     value={opacity}
                     onChange={(e) => setOpacity(parseFloat(e.target.value))}
-                    className="w-full accent-violet-600"
+                    className="w-full accent-[#00A3FF] dark:accent-[#38BDF8]"
                   />
-                  <p className="text-[10px] font-bold text-slate-500 text-right">{Math.round(opacity * 100)}%</p>
                 </div>
 
                 {/* Rotation */}
                 <div className="space-y-1">
-                  <label className="text-xs font-extrabold text-slate-800 dark:text-slate-200">
+                  <label className="block text-xs font-bold text-[#0A1128] dark:text-white">
                     {lang === 'en' ? 'Rotation Angle' : 'Sudut Rotasi'}
                   </label>
-                  <select
-                    value={rotation}
-                    onChange={(e: any) => setRotation(parseInt(e.target.value, 10))}
-                    className="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-700 text-xs font-bold text-slate-900 dark:text-white focus:outline-none focus:border-violet-500"
-                  >
-                    <option value={45}>45° Diagonal</option>
-                    <option value={0}>0° Horizontal</option>
-                    <option value={90}>90° Vertical</option>
-                  </select>
+                  <LiquidGlassPillBar<'45' | '0' | '90'>
+                    size="sm"
+                    equalWidth
+                    ariaLabel="Watermark rotation angle"
+                    value={String(rotation) as '45' | '0' | '90'}
+                    onChange={(r) => setRotation(parseInt(r, 10))}
+                    options={[
+                      { id: '45', label: '45°' },
+                      { id: '0', label: '0°' },
+                      { id: '90', label: '90°' },
+                    ]}
+                  />
                 </div>
               </div>
             </div>
@@ -294,8 +303,8 @@ export const WatermarkWorkspace: React.FC<WatermarkWorkspaceProps> = ({
 
           {/* Action CTA Button */}
           <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-2 text-xs font-semibold text-slate-600 dark:text-slate-400">
-              <ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+            <div className="flex items-center gap-2 text-xs font-medium text-[#0A1128]/65 dark:text-white/60">
+              <ShieldCheck className="w-4 h-4 text-[#0A1128] dark:text-white shrink-0" />
               <span>{t.ramProcessing}</span>
             </div>
 
@@ -303,17 +312,15 @@ export const WatermarkWorkspace: React.FC<WatermarkWorkspaceProps> = ({
               type="button"
               onClick={handleExecuteWatermark}
               disabled={isProcessing}
-              className="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-gradient-to-r from-violet-600 to-purple-500 hover:from-violet-500 hover:to-purple-400 text-white font-black text-sm shadow-xl shadow-violet-500/30 transition-all btn-press-effect flex items-center justify-center gap-2"
+              className="w-full sm:w-auto px-8 py-3.5 rounded-2xl glass-cta font-bold text-sm transition-all btn-press-effect flex items-center justify-center gap-2"
             >
               <Stamp className="w-4 h-4" />
               <span>{lang === 'en' ? 'Add Watermark Now' : 'Beri Watermark Sekarang'}</span>
-              
             </button>
           </div>
         </div>
       )}
 
-      {/* Progress Modal */}
       <ProcessingProgress
         isOpen={isProcessing}
         progressMessage={progressMsg}

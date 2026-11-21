@@ -1,4 +1,5 @@
 import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
+import { sanitizeWinAnsi } from './sanitizeText';
 
 export type OverlayType = 'text' | 'rectangle' | 'circle' | 'line';
 
@@ -71,19 +72,24 @@ export async function applyOverlays(
     const pdfX = (item.x / 100) * pWidth;
     const pdfY = pHeight - (item.y / 100) * pHeight; // Invert Y
 
-    const color = item.color ? rgb(item.color.r / 255, item.color.g / 255, item.color.b / 255) : rgb(0, 0, 0);
+    const color = item.color
+      ? rgb(item.color.r / 255, item.color.g / 255, item.color.b / 255)
+      : rgb(0, 0, 0);
     const opacity = item.opacity ?? 1;
 
     if (item.type === 'text' && item.text) {
-      const fontSize = item.fontSize ?? 16;
-      page.drawText(item.text, {
-        x: pdfX,
-        y: pdfY - fontSize, // Adjust for top baseline
-        size: fontSize,
-        font: helveticaFont,
-        color,
-        opacity,
-      });
+      const safeText = sanitizeWinAnsi(item.text);
+      if (safeText) {
+        const fontSize = item.fontSize ?? 16;
+        page.drawText(safeText, {
+          x: pdfX,
+          y: pdfY - fontSize, // Adjust for top baseline
+          size: fontSize,
+          font: helveticaFont,
+          color,
+          opacity,
+        });
+      }
     } else if (item.type === 'rectangle') {
       const rectWidth = ((item.width ?? 20) / 100) * pWidth;
       const rectHeight = ((item.height ?? 10) / 100) * pHeight;
@@ -106,7 +112,7 @@ export async function applyOverlays(
         opacity,
       });
     } else if (item.type === 'circle') {
-      const radius = (((item.width ?? 10) / 2) / 100) * pWidth;
+      const radius = ((item.width ?? 10) / 2 / 100) * pWidth;
 
       const fillColor = item.fillColor
         ? rgb(item.fillColor.r / 255, item.fillColor.g / 255, item.fillColor.b / 255)

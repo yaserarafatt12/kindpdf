@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { ArrowLeft, Minimize2, ArrowRight, AlertCircle, X } from 'lucide-react';
+import { ArrowLeft, Minimize2, AlertCircle, X, ShieldCheck } from 'lucide-react';
 import { Language, TranslationDictionary } from '@/lib/i18n/translations';
 import { validatePdfFile } from '@/lib/files/validateFile';
 import { downloadBlob } from '@/lib/files/downloadBlob';
@@ -11,6 +11,7 @@ import { compressPdf, CompressionLevel, CompressResult } from '@/lib/pdf/compres
 import { HumanError } from '@/lib/errors/messages';
 import ProcessingProgress from './ProcessingProgress';
 import SuccessDownloadScreen from './SuccessDownloadScreen';
+import LiquidGlassPillBar from './LiquidGlassPillBar';
 import { ViewMode } from './Header';
 
 interface CompressPdfWorkspaceProps {
@@ -20,7 +21,12 @@ interface CompressPdfWorkspaceProps {
   lang: Language;
 }
 
-export const CompressPdfWorkspace: React.FC<CompressPdfWorkspaceProps> = ({ onBack, onSelectTool, t, lang }) => {
+export const CompressPdfWorkspace: React.FC<CompressPdfWorkspaceProps> = ({
+  onBack,
+  onSelectTool,
+  t,
+  lang,
+}) => {
   const [file, setFile] = useState<File | null>(null);
   const [level, setLevel] = useState<CompressionLevel>('recommended');
   const [isProcessing, setIsProcessing] = useState(false);
@@ -72,7 +78,6 @@ export const CompressPdfWorkspace: React.FC<CompressPdfWorkspaceProps> = ({ onBa
     downloadBlob(blob, finalName.endsWith('.pdf') ? finalName : `${finalName}.pdf`);
   };
 
-  // IF COMPRESSION FINISHED SUCCESSFULLY -> SHOW SUCCESS DOWNLOAD SCREEN (SAME AS MERGE PDF)
   if (result && file) {
     return (
       <SuccessDownloadScreen
@@ -105,7 +110,7 @@ export const CompressPdfWorkspace: React.FC<CompressPdfWorkspaceProps> = ({ onBa
       <button
         type="button"
         onClick={onBack}
-        className="inline-flex items-center gap-2 text-xs font-black text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-sky-400 transition-colors btn-press-effect"
+        className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full glass-pill text-xs font-extrabold btn-press-effect"
       >
         <ArrowLeft className="w-4 h-4" />
         <span>{t.backToAllTools}</span>
@@ -113,10 +118,10 @@ export const CompressPdfWorkspace: React.FC<CompressPdfWorkspaceProps> = ({ onBa
 
       {/* Hero Header */}
       <div className="text-center space-y-2 py-2 max-w-lg mx-auto">
-        <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900 dark:text-white">
+        <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#0A1128] dark:text-white">
           Compress PDF
         </h2>
-        <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 font-medium leading-relaxed">
+        <p className="text-xs sm:text-sm text-[#0A1128]/65 dark:text-white/60 font-normal leading-relaxed">
           {lang === 'en'
             ? 'Reduce your PDF file size while maintaining document quality.'
             : 'Kurangi ukuran file PDF Anda sambil menjaga kualitas dokumen.'}
@@ -125,32 +130,50 @@ export const CompressPdfWorkspace: React.FC<CompressPdfWorkspaceProps> = ({ onBa
 
       {/* Error Toast */}
       {errorToast && (
-        <div className="w-full p-4 rounded-2xl bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-800 text-rose-900 dark:text-rose-200 flex items-start justify-between gap-3 shadow-md animate-fade-in">
+        <div className="w-full p-4 rounded-2xl bg-rose-50/90 dark:bg-rose-950/70 backdrop-blur-xl border border-rose-200 dark:border-rose-500/35 text-rose-900 dark:text-rose-200 flex items-start justify-between gap-3 shadow-lg animate-fade-in">
           <div className="flex items-start gap-3">
             <AlertCircle className="w-5 h-5 text-rose-600 dark:text-rose-400 shrink-0 mt-0.5" />
             <div>
               <h4 className="text-xs font-extrabold">{errorToast.title}</h4>
-              <p className="text-xs font-medium text-rose-700 dark:text-rose-300 mt-0.5">{errorToast.message}</p>
+              <p className="text-xs font-medium text-rose-700 dark:text-rose-300 mt-0.5">
+                {errorToast.message}
+              </p>
             </div>
           </div>
-          <button type="button" onClick={() => setErrorToast(null)} className="p-1 rounded-lg hover:bg-rose-100 dark:hover:bg-rose-900/60 transition-colors">
+          <button
+            type="button"
+            onClick={() => setErrorToast(null)}
+            className="p-1 rounded-lg hover:bg-rose-100 dark:hover:bg-rose-900/60 transition-colors"
+          >
             <X className="w-4 h-4 text-rose-500" />
           </button>
         </div>
       )}
 
       {/* Upload File */}
-      {!file && <FileDropzone onFilesSelected={handleFileSelected} disabled={isProcessing} t={t} colorTheme="teal" />}
+      {!file && (
+        <FileDropzone
+          onFilesSelected={handleFileSelected}
+          disabled={isProcessing}
+          t={t}
+          multiple={false}
+        />
+      )}
 
       {/* Compression Options */}
       {file && (
         <div className="space-y-5">
           {/* File Selected Card */}
-          <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border-2 border-slate-300 dark:border-slate-800 shadow-sm flex items-center justify-between gap-3 min-w-0">
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-black text-slate-900 dark:text-white truncate">{file.name}</p>
-              <p className="text-xs text-slate-500 font-semibold mt-0.5 truncate">
-                {lang === 'en' ? 'Original Size:' : 'Ukuran Asli:'} <span className="font-extrabold text-slate-700 dark:text-slate-300">{formatFileSize(file.size)}</span>
+          <div className="glass-card p-4 sm:p-5 rounded-2xl flex items-center justify-between gap-3 min-w-0">
+            <div className="relative z-10 flex-1 min-w-0">
+              <p className="text-sm font-bold text-[#0A1128] dark:text-white truncate">
+                {file.name}
+              </p>
+              <p className="text-xs text-[#0A1128]/60 dark:text-white/55 font-medium mt-0.5 truncate">
+                {lang === 'en' ? 'Original Size:' : 'Ukuran Asli:'}{' '}
+                <span className="font-bold text-[#0A1128] dark:text-white">
+                  {formatFileSize(file.size)}
+                </span>
               </p>
             </div>
             <button
@@ -159,92 +182,84 @@ export const CompressPdfWorkspace: React.FC<CompressPdfWorkspaceProps> = ({ onBa
                 setFile(null);
                 setResult(null);
               }}
-              className="text-xs font-extrabold text-rose-600 hover:text-rose-700 px-3 py-1.5 rounded-xl border border-rose-200 dark:border-rose-800 hover:bg-rose-50 dark:hover:bg-rose-950/50 btn-press-effect shrink-0"
+              className="relative z-10 text-xs font-bold text-rose-600 dark:text-rose-400 px-3.5 py-1.5 rounded-full bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/25 btn-press-effect shrink-0"
             >
               {lang === 'en' ? 'Change File' : 'Ganti File'}
             </button>
           </div>
 
-          {/* Small File Info Notice */}
           {file.size < 20 * 1024 && (
-            <p className="text-[11px] text-amber-800 dark:text-amber-300 font-semibold bg-amber-50 dark:bg-amber-950/60 p-3 rounded-xl border border-amber-200 dark:border-amber-900 leading-relaxed">
-              💡 {lang === 'en'
+            <p className="glass-card text-[11px] text-[#0A1128]/80 dark:text-white/80 font-medium p-3.5 rounded-2xl leading-relaxed">
+              💡{' '}
+              {lang === 'en'
                 ? 'Note: Small text PDFs (< 20 KB) are already near the minimum PDF structure size limit (~3-5 KB). Compression has the highest impact on documents (> 50 KB) containing photos, images, or scanned pages.'
                 : 'Catatan: Berkas PDF teks kecil (< 20 KB) sudah mendekati batas minimum struktur spesifikasi PDF (~3-5 KB). Kompresi berdampak paling besar pada dokumen (> 50 KB) yang berisi foto, gambar, atau hasil scan.'}
             </p>
           )}
 
-          {/* Clean Minimalist Level Selector with Badges & Descriptions */}
-          <div className="p-5 rounded-2xl bg-white dark:bg-slate-900 border-2 border-slate-300 dark:border-slate-800 shadow-sm space-y-4">
-            <label className="text-xs font-extrabold text-slate-700 dark:text-slate-300">
-              {lang === 'en' ? 'Compression Level' : 'Tingkat Kompresi'}
-            </label>
+          {/* Compression Level Selector with LiquidGlassPillBar */}
+          <div className="glass-card p-5 sm:p-6 rounded-3xl space-y-4">
+            <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <label className="text-xs font-bold text-[#0A1128] dark:text-white">
+                {lang === 'en' ? 'Compression Level' : 'Tingkat Kompresi'}
+              </label>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              {[
-                {
-                  id: 'recommended',
-                  title: lang === 'en' ? 'Recommended' : 'Rekomendasi',
-                  desc: lang === 'en' ? 'Good quality & high compression' : 'Kualitas bagus & kompresi tinggi',
-                  badge: '~50%',
-                },
-                {
-                  id: 'extreme',
-                  title: lang === 'en' ? 'Extreme' : 'Ekstrem',
-                  desc: lang === 'en' ? 'Less quality, max compression' : 'Kualitas standar, kompresi maksimal',
-                  badge: '~70%',
-                },
-                {
-                  id: 'less',
-                  title: lang === 'en' ? 'Less Compression' : 'Kompresi Ringan',
-                  desc: lang === 'en' ? 'High quality, low compression' : 'Kualitas tinggi, kompresi ringan',
-                  badge: '~20%',
-                },
-              ].map((item) => (
-                <div
-                  key={item.id}
-                  onClick={() => setLevel(item.id as CompressionLevel)}
-                  className={`p-4 rounded-xl border-2 cursor-pointer transition-all ${
-                    level === item.id
-                      ? 'border-blue-600 bg-blue-50/50 dark:bg-blue-950/40 shadow-xs'
-                      : 'border-slate-200 dark:border-slate-800 hover:border-slate-300'
-                  }`}
-                >
-                  <div className="flex items-center justify-between gap-1">
-                    <h4 className="text-xs font-black text-slate-900 dark:text-white">{item.title}</h4>
-                    <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded-md shrink-0 ${
-                      level === item.id
-                        ? 'bg-blue-600 text-white'
-                        : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400'
-                    }`}>
-                      {item.badge}
-                    </span>
-                  </div>
-                  <p className="text-[11px] text-slate-500 font-medium mt-1.5 leading-snug">{item.desc}</p>
-                </div>
-              ))}
+              <LiquidGlassPillBar<CompressionLevel>
+                size="sm"
+                scrollable
+                ariaLabel="Compression Level"
+                value={level}
+                onChange={setLevel}
+                options={[
+                  {
+                    id: 'recommended',
+                    label: `${lang === 'en' ? 'Recommended' : 'Rekomendasi'} (~50%)`,
+                  },
+                  {
+                    id: 'extreme',
+                    label: `${lang === 'en' ? 'Extreme' : 'Ekstrem'} (~70%)`,
+                  },
+                  {
+                    id: 'less',
+                    label: `${lang === 'en' ? 'Light' : 'Ringan'} (~20%)`,
+                  },
+                ]}
+              />
             </div>
 
             {/* Target Size Estimate Banner */}
-            <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 flex items-center justify-between text-xs font-bold text-slate-700 dark:text-slate-300">
-              <span>{lang === 'en' ? 'Estimated Target Size:' : 'Perkiraan Ukuran Hasil:'}</span>
-              <span className="font-extrabold text-blue-600 dark:text-sky-400">
-                {formatFileSize(file.size)} ➔ <span className="underline font-black">{formatFileSize(Math.max(500, file.size * (1 - (level === 'recommended' ? 0.5 : level === 'extreme' ? 0.7 : 0.2))))}</span> ({level === 'recommended' ? '-50%' : level === 'extreme' ? '-70%' : '-20%'})
+            <div className="relative z-10 p-3.5 rounded-2xl bg-black/[0.03] dark:bg-white/[0.05] border border-black/[0.08] dark:border-white/[0.12] flex items-center justify-between text-xs font-semibold text-[#0A1128]/80 dark:text-white/80">
+              <span>
+                {lang === 'en' ? 'Estimated Target Size:' : 'Perkiraan Ukuran Hasil:'}
+              </span>
+              <span className="font-bold text-[#0A1128] dark:text-white">
+                {formatFileSize(file.size)} ➔{' '}
+                <span className="underline">
+                  {formatFileSize(
+                    Math.max(
+                      500,
+                      file.size *
+                        (1 - (level === 'recommended' ? 0.5 : level === 'extreme' ? 0.7 : 0.2))
+                    )
+                  )}
+                </span>{' '}
+                ({level === 'recommended' ? '-50%' : level === 'extreme' ? '-70%' : '-20%'})
               </span>
             </div>
           </div>
 
           {/* Main Action Button */}
-          <div className="flex items-center justify-end pt-2">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2">
+            <div className="flex items-center gap-2 text-xs font-medium text-[#0A1128]/65 dark:text-white/60">
+              <ShieldCheck className="w-4 h-4 text-[#0A1128] dark:text-white shrink-0" />
+              <span>{t.ramProcessing}</span>
+            </div>
+
             <button
               type="button"
               onClick={handleCompress}
               disabled={isProcessing}
-              className={`w-full sm:w-auto px-8 py-3.5 rounded-2xl font-black text-sm flex items-center justify-center gap-2 text-white shadow-xl transition-all duration-200 btn-press-effect ${
-                !isProcessing
-                  ? 'bg-gradient-to-r from-blue-600 to-sky-500 hover:from-blue-500 hover:to-sky-400 shadow-blue-500/30 scale-[1.02]'
-                  : 'bg-slate-300 dark:bg-slate-800 text-slate-500 cursor-not-allowed shadow-none'
-              }`}
+              className="w-full sm:w-auto px-8 py-3.5 rounded-2xl glass-cta font-bold text-sm flex items-center justify-center gap-2 transition-all duration-200 btn-press-effect"
             >
               <Minimize2 className="w-4 h-4" />
               <span>{lang === 'en' ? 'Compress PDF' : 'Kompres PDF'}</span>
@@ -253,10 +268,11 @@ export const CompressPdfWorkspace: React.FC<CompressPdfWorkspaceProps> = ({ onBa
         </div>
       )}
 
-      {/* Spinning Loader Processing Modal (Same as Merge PDF) */}
       <ProcessingProgress
         isOpen={isProcessing}
-        progressMessage={lang === 'en' ? 'Compressing PDF Document...' : 'Mengompres Dokumen PDF...'}
+        progressMessage={
+          lang === 'en' ? 'Compressing PDF Document...' : 'Mengompres Dokumen PDF...'
+        }
         currentStep={1}
         totalSteps={1}
         t={t}

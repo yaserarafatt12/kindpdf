@@ -1,21 +1,20 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TranslationDictionary } from '@/lib/i18n/translations';
 import { validatePdfFile } from '@/lib/files/validateFile';
 import { organizePdfDocument } from '@/lib/pdf/organizePages';
+import { loadPdfJs } from '@/lib/pdf/pdfjsWorker';
 import { downloadBlob } from '@/lib/files/downloadBlob';
 import { formatFileSize } from '@/lib/files/formatFileSize';
 import ProcessingProgress from './ProcessingProgress';
 import FileDropzone from './FileDropzone';
 import {
   LayoutGrid,
-  UploadCloud,
   FileText,
   Trash2,
   AlertCircle,
   X,
-  ArrowRight,
   ShieldCheck,
   ArrowLeft,
   RotateCw,
@@ -23,7 +22,6 @@ import {
   MoveRight,
   RefreshCw,
 } from 'lucide-react';
-
 import SuccessDownloadScreen from './SuccessDownloadScreen';
 import { ViewMode } from '@/components/Header';
 
@@ -52,7 +50,9 @@ export const OrganizePagesWorkspace: React.FC<OrganizePagesWorkspaceProps> = ({
   const [pageCount, setPageCount] = useState<number>(0);
   const [pages, setPages] = useState<PageCardItem[]>([]);
   const [thumbnails, setThumbnails] = useState<Record<number, string>>({});
-  const [organizeResult, setOrganizeResult] = useState<{ blob: Blob; filename: string } | null>(null);
+  const [organizeResult, setOrganizeResult] = useState<{ blob: Blob; filename: string } | null>(
+    null
+  );
   const [isProcessing, setIsProcessing] = useState(false);
   const [progressMsg, setProgressMsg] = useState('');
   const [currentStep, setCurrentStep] = useState(0);
@@ -76,8 +76,8 @@ export const OrganizePagesWorkspace: React.FC<OrganizePagesWorkspaceProps> = ({
 
     setFile(targetFile);
     setPageCount(validation.pageCount);
+    setThumbnails({});
 
-    // Populate initial page card items
     const initialPages: PageCardItem[] = [];
     for (let i = 1; i <= validation.pageCount; i++) {
       initialPages.push({
@@ -88,6 +88,51 @@ export const OrganizePagesWorkspace: React.FC<OrganizePagesWorkspaceProps> = ({
     }
     setPages(initialPages);
   };
+
+  // Render page thumbnails via local pdfjs-dist worker
+  useEffect(() => {
+    if (!file || pageCount === 0) return;
+    let active = true;
+
+    const renderThumbnails = async () => {
+      try {
+        const pdfjsLib = await loadPdfJs();
+        const arrayBuffer = await file.arrayBuffer();
+        const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
+        const pdfjsDoc = await loadingTask.promise;
+
+        for (let i = 1; i <= Math.min(pageCount, 60); i++) {
+          if (!active) break;
+          try {
+            const page = await pdfjsDoc.getPage(i);
+            const viewport = page.getViewport({ scale: 0.25 });
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            if (ctx) {
+              canvas.width = viewport.width;
+              canvas.height = viewport.height;
+              ctx.fillStyle = '#FFFFFF';
+              ctx.fillRect(0, 0, canvas.width, canvas.height);
+              await page.render({ canvasContext: ctx, viewport }).promise;
+              const dataUrl = canvas.toDataURL('image/jpeg', 0.75);
+              if (active) {
+                setThumbnails((prev) => ({ ...prev, [i]: dataUrl }));
+              }
+            }
+          } catch (e) {
+            console.warn(`Error rendering thumbnail for page ${i}:`, e);
+          }
+        }
+      } catch (err) {
+        console.warn('Thumbnail generation fallback:', err);
+      }
+    };
+
+    renderThumbnails();
+    return () => {
+      active = false;
+    };
+  }, [file, pageCount]);
 
   const handleRotatePage = (index: number) => {
     setPages((prev) => {
@@ -126,8 +171,12 @@ export const OrganizePagesWorkspace: React.FC<OrganizePagesWorkspaceProps> = ({
   const handleRemovePage = (index: number) => {
     if (pages.length <= 1) {
       setErrorToast({
-        title: lang === 'en' ? 'Cannot Delete Last Page' : 'Tidak Bisa Menghapus Halaman Terakhir',
-        message: lang === 'en' ? 'A PDF document must have at least one page.' : 'Dokumen PDF harus memiliki minimal satu halaman.',
+        title:
+          lang === 'en' ? 'Cannot Delete Last Page' : 'Tidak Bisa Menghapus Halaman Terakhir',
+        message:
+          lang === 'en'
+            ? 'A PDF document must have at least one page.'
+            : 'Dokumen PDF harus memiliki minimal satu halaman.',
       });
       return;
     }
@@ -163,15 +212,11 @@ export const OrganizePagesWorkspace: React.FC<OrganizePagesWorkspaceProps> = ({
         if (p.rotation !== 0) rotations[p.originalPageNumber] = p.rotation;
       });
 
-      const result = await organizePdfDocument(
-        file,
-        { pageOrder, rotations },
-        (curr, tot, msg) => {
-          setCurrentStep(curr);
-          setTotalSteps(tot);
-          setProgressMsg(msg);
-        }
-      );
+      const result = await organizePdfDocument(file, { pageOrder, rotations }, (curr, tot, msg) => {
+        setCurrentStep(curr);
+        setTotalSteps(tot);
+        setProgressMsg(msg);
+      });
 
       setIsProcessing(false);
       setOrganizeResult({
@@ -201,6 +246,7 @@ export const OrganizePagesWorkspace: React.FC<OrganizePagesWorkspaceProps> = ({
           setFile(null);
           setPageCount(0);
           setPages([]);
+          setThumbnails({});
         }}
         onSelectTool={(toolId: ViewMode) => {
           setOrganizeResult(null);
@@ -219,7 +265,7 @@ export const OrganizePagesWorkspace: React.FC<OrganizePagesWorkspaceProps> = ({
       <button
         type="button"
         onClick={onBack}
-        className="inline-flex items-center gap-2 text-xs font-black text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-sky-400 transition-colors btn-press-effect"
+        className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full glass-pill text-xs font-extrabold btn-press-effect"
       >
         <ArrowLeft className="w-4 h-4" />
         <span>{t.backToAllTools}</span>
@@ -227,12 +273,16 @@ export const OrganizePagesWorkspace: React.FC<OrganizePagesWorkspaceProps> = ({
 
       {/* Hero Header */}
       <div className="text-center space-y-2 py-2 max-w-lg mx-auto">
-        <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900 dark:text-white">
+        <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#0A1128] dark:text-white">
           {mode === 'remove'
-            ? lang === 'en' ? 'Remove PDF Pages' : 'Hapus Halaman PDF'
-            : lang === 'en' ? 'Organize PDF Pages' : 'Atur & Urutkan Halaman PDF'}
+            ? lang === 'en'
+              ? 'Remove PDF Pages'
+              : 'Hapus Halaman PDF'
+            : lang === 'en'
+              ? 'Organize PDF Pages'
+              : 'Atur & Urutkan Halaman PDF'}
         </h2>
-        <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 font-medium leading-relaxed">
+        <p className="text-xs sm:text-sm text-[#0A1128]/65 dark:text-white/60 font-normal leading-relaxed">
           {lang === 'en'
             ? 'Rotate, reorder, or delete pages visually inside your PDF document.'
             : 'Putar, atur ulang urutan, atau hapus halaman secara visual pada dokumen PDF Anda.'}
@@ -241,7 +291,7 @@ export const OrganizePagesWorkspace: React.FC<OrganizePagesWorkspaceProps> = ({
 
       {/* Error Toast */}
       {errorToast && (
-        <div className="w-full p-4 rounded-2xl bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-800 text-rose-900 dark:text-rose-200 flex items-start justify-between gap-3 shadow-md animate-fade-in">
+        <div className="w-full p-4 rounded-2xl bg-rose-50/90 dark:bg-rose-950/70 backdrop-blur-xl border border-rose-200 dark:border-rose-500/35 text-rose-900 dark:text-rose-200 flex items-start justify-between gap-3 shadow-lg animate-fade-in">
           <div className="flex items-start gap-3">
             <AlertCircle className="w-5 h-5 text-rose-600 dark:text-rose-400 shrink-0 mt-0.5" />
             <div>
@@ -263,30 +313,36 @@ export const OrganizePagesWorkspace: React.FC<OrganizePagesWorkspaceProps> = ({
 
       {/* Upload CTA or Workspace */}
       {!file ? (
-        <FileDropzone onFilesSelected={handleFileChange} disabled={isProcessing} t={t} colorTheme="purple" />
+        <FileDropzone
+          onFilesSelected={handleFileChange}
+          disabled={isProcessing}
+          t={t}
+          multiple={false}
+        />
       ) : (
         <div className="space-y-6">
           {/* File Toolbar Header */}
-          <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border-2 border-slate-300 dark:border-slate-800 flex flex-wrap items-center justify-between gap-3 shadow-sm">
-            <div className="flex items-center gap-3 min-w-0">
-              <div className="p-2.5 rounded-xl bg-purple-50 dark:bg-purple-950/80 text-purple-600 dark:text-purple-400 border border-purple-200 dark:border-purple-900 shrink-0">
-                <FileText className="w-5 h-5" />
+          <div className="glass-card p-4 sm:p-5 rounded-2xl flex flex-wrap items-center justify-between gap-3">
+            <div className="relative z-10 flex items-center gap-3 min-w-0">
+              <div className="w-10 h-10 rounded-xl bg-black/[0.04] dark:bg-white/[0.08] border border-black/[0.08] dark:border-white/[0.18] flex items-center justify-center shrink-0">
+                <FileText className="w-5 h-5 text-[#0A1128]/80 dark:text-white/85" />
               </div>
               <div className="min-w-0">
-                <h4 className="text-xs font-black text-slate-900 dark:text-white truncate">
+                <h4 className="text-xs sm:text-sm font-bold text-[#0A1128] dark:text-white truncate">
                   {file.name}
                 </h4>
-                <p className="text-[11px] font-medium text-slate-500 dark:text-slate-400">
-                  {pages.length} / {pageCount} {lang === 'en' ? 'Pages Kept' : 'Halaman Disimpan'} • {formatFileSize(file.size)}
+                <p className="text-[11px] font-medium text-[#0A1128]/60 dark:text-white/55">
+                  {pages.length} / {pageCount} {lang === 'en' ? 'Pages Kept' : 'Halaman Disimpan'} •{' '}
+                  {formatFileSize(file.size)}
                 </p>
               </div>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="relative z-10 flex items-center gap-2">
               <button
                 type="button"
                 onClick={handleResetPages}
-                className="px-3 py-1.5 rounded-xl text-xs font-extrabold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-300 dark:border-slate-700 transition-colors flex items-center gap-1.5 btn-press-effect"
+                className="px-3.5 py-1.5 rounded-full glass-pill text-xs font-bold flex items-center gap-1.5 btn-press-effect"
               >
                 <RefreshCw className="w-3.5 h-3.5" />
                 <span>{lang === 'en' ? 'Reset' : 'Reset'}</span>
@@ -298,8 +354,9 @@ export const OrganizePagesWorkspace: React.FC<OrganizePagesWorkspaceProps> = ({
                   setFile(null);
                   setPageCount(0);
                   setPages([]);
+                  setThumbnails({});
                 }}
-                className="p-1.5 rounded-xl text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/50 transition-colors btn-press-effect"
+                className="p-2 rounded-full text-rose-600 dark:text-rose-400 hover:bg-rose-500/15 transition-colors btn-press-effect"
                 title="Remove File"
               >
                 <Trash2 className="w-4 h-4" />
@@ -309,78 +366,97 @@ export const OrganizePagesWorkspace: React.FC<OrganizePagesWorkspaceProps> = ({
 
           {/* Interactive Page Thumbnails Grid */}
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3.5">
-            {pages.map((item, idx) => (
-              <div
-                key={item.id}
-                className="p-3 rounded-2xl bg-white dark:bg-slate-900 border-2 border-slate-300 dark:border-slate-800 shadow-sm flex flex-col items-center justify-between gap-3 group hover:border-purple-500 transition-all relative"
-              >
-                {/* Visual Thumbnail Frame */}
+            {pages.map((item, idx) => {
+              const thumbData = thumbnails[item.originalPageNumber];
+              return (
                 <div
-                  className="w-full aspect-[3/4] rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex flex-col items-center justify-center p-2 transition-transform duration-200"
-                  style={{ transform: `rotate(${item.rotation}deg)` }}
+                  key={item.id}
+                  className="glass-card p-3 rounded-2xl flex flex-col items-center justify-between gap-3 group relative"
                 >
-                  <FileText className="w-8 h-8 text-slate-400 dark:text-slate-500" />
-                  <span className="text-[10px] font-black text-slate-500 dark:text-slate-400 mt-2">
-                    {lang === 'en' ? 'Page' : 'Hal'} {item.originalPageNumber}
+                  {/* Visual Thumbnail Frame */}
+                  <div className="relative z-10 w-full aspect-[3/4] rounded-xl bg-white dark:bg-white/[0.06] border border-black/[0.08] dark:border-white/[0.14] flex flex-col items-center justify-center overflow-hidden p-1.5">
+                    {thumbData ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={thumbData}
+                        alt={`Page ${item.originalPageNumber}`}
+                        className="w-full h-full object-contain transition-transform duration-200"
+                        style={{ transform: `rotate(${item.rotation}deg)` }}
+                      />
+                    ) : (
+                      <div
+                        className="flex flex-col items-center justify-center transition-transform duration-200"
+                        style={{ transform: `rotate(${item.rotation}deg)` }}
+                      >
+                        <FileText className="w-8 h-8 text-[#0A1128]/40 dark:text-white/45" />
+                        <span className="text-[10px] font-bold text-[#0A1128]/60 dark:text-white/60 mt-2">
+                          {lang === 'en' ? 'Page' : 'Hal'} {item.originalPageNumber}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Page Action Controls */}
+                  <div className="relative z-10 w-full flex items-center justify-between gap-1 pt-1 border-t border-black/[0.06] dark:border-white/[0.10]">
+                    <div className="flex items-center gap-0.5">
+                      <button
+                        type="button"
+                        onClick={() => handleMoveLeft(idx)}
+                        disabled={idx === 0}
+                        className="p-1 rounded-lg hover:bg-black/[0.05] dark:hover:bg-white/10 disabled:opacity-25 transition-colors"
+                        title="Move Left"
+                      >
+                        <MoveLeft className="w-3.5 h-3.5 text-[#0A1128]/70 dark:text-white/75" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleMoveRight(idx)}
+                        disabled={idx === pages.length - 1}
+                        className="p-1 rounded-lg hover:bg-black/[0.05] dark:hover:bg-white/10 disabled:opacity-25 transition-colors"
+                        title="Move Right"
+                      >
+                        <MoveRight className="w-3.5 h-3.5 text-[#0A1128]/70 dark:text-white/75" />
+                      </button>
+                    </div>
+
+                    <span className="text-[10px] font-bold text-[#0A1128]/65 dark:text-white/65">
+                      P.{item.originalPageNumber}
+                    </span>
+
+                    <div className="flex items-center gap-0.5">
+                      <button
+                        type="button"
+                        onClick={() => handleRotatePage(idx)}
+                        className="p-1.5 rounded-lg hover:bg-black/[0.05] dark:hover:bg-white/10 text-[#0A1128] dark:text-white transition-colors"
+                        title="Rotate 90°"
+                      >
+                        <RotateCw className="w-3.5 h-3.5" />
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => handleRemovePage(idx)}
+                        className="p-1.5 rounded-lg hover:bg-rose-500/15 text-rose-500 transition-colors"
+                        title="Delete Page"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Position Index Badge */}
+                  <span className="absolute top-2 left-2 z-20 px-2 py-0.5 rounded-md bg-[#0A1128]/85 text-white text-[9px] font-bold shadow-sm">
+                    #{idx + 1}
                   </span>
                 </div>
-
-                {/* Page Action Controls */}
-                <div className="w-full flex items-center justify-between gap-1 pt-1 border-t border-slate-100 dark:border-slate-800">
-                  <div className="flex items-center gap-0.5">
-                    <button
-                      type="button"
-                      onClick={() => handleMoveLeft(idx)}
-                      disabled={idx === 0}
-                      className="p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-30 transition-colors"
-                      title="Move Left"
-                    >
-                      <MoveLeft className="w-3.5 h-3.5 text-slate-600 dark:text-slate-400" />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => handleMoveRight(idx)}
-                      disabled={idx === pages.length - 1}
-                      className="p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-30 transition-colors"
-                      title="Move Right"
-                    >
-                      <MoveRight className="w-3.5 h-3.5 text-slate-600 dark:text-slate-400" />
-                    </button>
-                  </div>
-
-                  <div className="flex items-center gap-0.5">
-                    <button
-                      type="button"
-                      onClick={() => handleRotatePage(idx)}
-                      className="p-1.5 rounded-lg hover:bg-purple-50 dark:hover:bg-purple-950/50 text-purple-600 dark:text-purple-400 transition-colors"
-                      title="Rotate 90°"
-                    >
-                      <RotateCw className="w-3.5 h-3.5" />
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => handleRemovePage(idx)}
-                      className="p-1.5 rounded-lg hover:bg-rose-50 dark:hover:bg-rose-950/50 text-rose-600 dark:text-rose-400 transition-colors"
-                      title="Delete Page"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
-                </div>
-
-                {/* Position Index Badge */}
-                <span className="absolute top-2 left-2 px-2 py-0.5 rounded-md bg-slate-900/80 text-white text-[9px] font-extrabold shadow-sm">
-                  #{idx + 1}
-                </span>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
           {/* Action CTA Button */}
           <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-2 text-xs font-semibold text-slate-600 dark:text-slate-400">
-              <ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+            <div className="flex items-center gap-2 text-xs font-medium text-[#0A1128]/65 dark:text-white/60">
+              <ShieldCheck className="w-4 h-4 text-[#0A1128] dark:text-white shrink-0" />
               <span>{t.ramProcessing}</span>
             </div>
 
@@ -388,16 +464,19 @@ export const OrganizePagesWorkspace: React.FC<OrganizePagesWorkspaceProps> = ({
               type="button"
               onClick={handleExecuteOrganize}
               disabled={isProcessing || pages.length === 0}
-              className="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-gradient-to-r from-purple-600 to-indigo-500 hover:from-purple-500 hover:to-indigo-400 text-white font-black text-sm shadow-xl shadow-purple-500/30 transition-all btn-press-effect flex items-center justify-center gap-2"
+              className="w-full sm:w-auto px-8 py-3.5 rounded-2xl glass-cta font-bold text-sm transition-all btn-press-effect flex items-center justify-center gap-2"
             >
               <LayoutGrid className="w-4 h-4" />
-              <span>{lang === 'en' ? 'Save & Download Organized PDF' : 'Simpan & Unduh PDF Organisasi'}</span>
+              <span>
+                {lang === 'en'
+                  ? 'Save & Download Organized PDF'
+                  : 'Simpan & Unduh PDF Organisasi'}
+              </span>
             </button>
           </div>
         </div>
       )}
 
-      {/* Progress Modal */}
       <ProcessingProgress
         isOpen={isProcessing}
         progressMessage={progressMsg}

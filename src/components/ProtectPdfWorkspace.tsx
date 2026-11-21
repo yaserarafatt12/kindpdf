@@ -10,18 +10,15 @@ import ProcessingProgress from './ProcessingProgress';
 import FileDropzone from './FileDropzone';
 import {
   Lock,
-  UploadCloud,
   FileText,
   Trash2,
   AlertCircle,
   X,
-  ArrowRight,
   ShieldCheck,
   ArrowLeft,
   Eye,
   EyeOff,
 } from 'lucide-react';
-
 import SuccessDownloadScreen from './SuccessDownloadScreen';
 import { ViewMode } from '@/components/Header';
 
@@ -79,7 +76,10 @@ export const ProtectPdfWorkspace: React.FC<ProtectPdfWorkspaceProps> = ({
     if (!password || !password.trim()) {
       setErrorToast({
         title: lang === 'en' ? 'Empty Password' : 'Kata Sandi Kosong',
-        message: lang === 'en' ? 'Please enter a password to protect your PDF.' : 'Masukkan kata sandi untuk melindungi PDF Anda.',
+        message:
+          lang === 'en'
+            ? 'Please enter a password to protect your PDF.'
+            : 'Masukkan kata sandi untuk melindungi PDF Anda.',
       });
       return;
     }
@@ -87,7 +87,10 @@ export const ProtectPdfWorkspace: React.FC<ProtectPdfWorkspaceProps> = ({
     if (password !== confirmPassword) {
       setErrorToast({
         title: lang === 'en' ? 'Password Mismatch' : 'Kata Sandi Tidak Cocok',
-        message: lang === 'en' ? 'Passwords do not match. Please try again.' : 'Kata sandi tidak cocok. Silakan coba lagi.',
+        message:
+          lang === 'en'
+            ? 'Passwords do not match. Please try again.'
+            : 'Kata sandi tidak cocok. Silakan coba lagi.',
       });
       return;
     }
@@ -95,14 +98,20 @@ export const ProtectPdfWorkspace: React.FC<ProtectPdfWorkspaceProps> = ({
     setIsProcessing(true);
     setCurrentStep(1);
     setTotalSteps(2);
-    setProgressMsg(lang === 'en' ? 'Applying password protection...' : 'Menerapkan enkripsi kata sandi...');
+    setProgressMsg(
+      lang === 'en' ? 'Applying password protection...' : 'Menerapkan enkripsi kata sandi...'
+    );
 
     try {
-      const result = await protectPdfDocument(file, { userPassword: password }, (curr, tot, msg) => {
-        setCurrentStep(curr);
-        setTotalSteps(tot);
-        setProgressMsg(msg);
-      });
+      const result = await protectPdfDocument(
+        file,
+        { userPassword: password },
+        (curr, tot, msg) => {
+          setCurrentStep(curr);
+          setTotalSteps(tot);
+          setProgressMsg(msg);
+        }
+      );
 
       setIsProcessing(false);
       setCompletedResult({
@@ -121,7 +130,9 @@ export const ProtectPdfWorkspace: React.FC<ProtectPdfWorkspaceProps> = ({
   if (completedResult) {
     return (
       <SuccessDownloadScreen
-        title={lang === 'en' ? 'PDF Protected Successfully!' : 'Dokumen PDF Berhasil Dilindungi!'}
+        title={
+          lang === 'en' ? 'PDF Protected Successfully!' : 'Dokumen PDF Berhasil Dilindungi!'
+        }
         downloadFileName={completedResult.filename}
         downloadButtonText={lang === 'en' ? 'Download Protected PDF' : 'Unduh PDF Terenkripsi'}
         onDownload={(customName?: string) =>
@@ -150,7 +161,7 @@ export const ProtectPdfWorkspace: React.FC<ProtectPdfWorkspaceProps> = ({
       <button
         type="button"
         onClick={onBack}
-        className="inline-flex items-center gap-2 text-xs font-black text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-sky-400 transition-colors btn-press-effect"
+        className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full glass-pill text-xs font-extrabold btn-press-effect"
       >
         <ArrowLeft className="w-4 h-4" />
         <span>{t.backToAllTools}</span>
@@ -158,10 +169,10 @@ export const ProtectPdfWorkspace: React.FC<ProtectPdfWorkspaceProps> = ({
 
       {/* Hero Header */}
       <div className="text-center space-y-2 py-2 max-w-lg mx-auto">
-        <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900 dark:text-white">
+        <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#0A1128] dark:text-white">
           {lang === 'en' ? 'Protect PDF File' : 'Proteksi Berkas PDF'}
         </h2>
-        <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 font-medium leading-relaxed">
+        <p className="text-xs sm:text-sm text-[#0A1128]/65 dark:text-white/60 font-normal leading-relaxed">
           {lang === 'en'
             ? 'Encrypt your PDF document with a strong password to prevent unauthorized access.'
             : 'Enkripsi dokumen PDF Anda dengan kata sandi kuat untuk mencegah akses tanpa izin.'}
@@ -170,7 +181,7 @@ export const ProtectPdfWorkspace: React.FC<ProtectPdfWorkspaceProps> = ({
 
       {/* Error Toast */}
       {errorToast && (
-        <div className="w-full p-4 rounded-2xl bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-800 text-rose-900 dark:text-rose-200 flex items-start justify-between gap-3 shadow-md animate-fade-in">
+        <div className="w-full p-4 rounded-2xl bg-rose-50/90 dark:bg-rose-950/70 backdrop-blur-xl border border-rose-200 dark:border-rose-500/35 text-rose-900 dark:text-rose-200 flex items-start justify-between gap-3 shadow-lg animate-fade-in">
           <div className="flex items-start gap-3">
             <AlertCircle className="w-5 h-5 text-rose-600 dark:text-rose-400 shrink-0 mt-0.5" />
             <div>
@@ -192,20 +203,25 @@ export const ProtectPdfWorkspace: React.FC<ProtectPdfWorkspaceProps> = ({
 
       {/* Upload CTA or Workspace */}
       {!file ? (
-        <FileDropzone onFilesSelected={handleFileChange} disabled={isProcessing} t={t} colorTheme="slate" />
+        <FileDropzone
+          onFilesSelected={handleFileChange}
+          disabled={isProcessing}
+          t={t}
+          multiple={false}
+        />
       ) : (
         <div className="space-y-6">
           {/* Active File Summary Box */}
-          <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border-2 border-slate-300 dark:border-slate-800 flex items-center justify-between gap-3 shadow-sm min-w-0">
-            <div className="flex items-center gap-3 min-w-0 flex-1">
-              <div className="p-3 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-300 dark:border-slate-700 shrink-0">
-                <FileText className="w-6 h-6" />
+          <div className="glass-card p-4 sm:p-5 rounded-2xl flex items-center justify-between gap-3 min-w-0">
+            <div className="relative z-10 flex items-center gap-3 min-w-0 flex-1">
+              <div className="w-10 h-10 rounded-xl bg-black/[0.04] dark:bg-white/[0.08] border border-black/[0.08] dark:border-white/[0.18] flex items-center justify-center shrink-0">
+                <FileText className="w-5 h-5 text-[#0A1128]/80 dark:text-white/85" />
               </div>
               <div className="min-w-0 flex-1">
-                <h4 className="text-sm font-black text-slate-900 dark:text-white truncate">
+                <h4 className="text-sm font-bold text-[#0A1128] dark:text-white truncate">
                   {file.name}
                 </h4>
-                <p className="text-xs font-medium text-slate-500 dark:text-slate-400 truncate">
+                <p className="text-xs font-medium text-[#0A1128]/60 dark:text-white/55 truncate">
                   {pageCount} {lang === 'en' ? 'Pages' : 'Halaman'} • {formatFileSize(file.size)}
                 </p>
               </div>
@@ -217,7 +233,7 @@ export const ProtectPdfWorkspace: React.FC<ProtectPdfWorkspaceProps> = ({
                 setFile(null);
                 setPageCount(0);
               }}
-              className="p-2 rounded-xl text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/50 transition-colors btn-press-effect shrink-0"
+              className="relative z-10 p-2 rounded-xl text-rose-600 dark:text-rose-400 hover:bg-rose-500/15 transition-colors btn-press-effect shrink-0"
               title="Remove File"
             >
               <Trash2 className="w-5 h-5" />
@@ -225,15 +241,17 @@ export const ProtectPdfWorkspace: React.FC<ProtectPdfWorkspaceProps> = ({
           </div>
 
           {/* Password Input Box */}
-          <div className="p-6 rounded-3xl bg-white dark:bg-slate-900 border-2 border-slate-300 dark:border-slate-800 space-y-4 shadow-sm">
-            <h3 className="text-xs font-black text-slate-900 dark:text-white flex items-center gap-2">
-              <Lock className="w-4 h-4 text-slate-700 dark:text-slate-300" />
-              <span>{lang === 'en' ? 'Set Password Encryption' : 'Atur Kata Sandi Enkripsi'}</span>
+          <div className="glass-card p-6 rounded-3xl space-y-4">
+            <h3 className="relative z-10 text-xs font-bold text-[#0A1128] dark:text-white flex items-center gap-2">
+              <Lock className="w-4 h-4" />
+              <span>
+                {lang === 'en' ? 'Set Password Encryption' : 'Atur Kata Sandi Enkripsi'}
+              </span>
             </h3>
 
-            <div className="space-y-3">
+            <div className="relative z-10 space-y-3">
               <div className="space-y-1">
-                <label className="text-xs font-extrabold text-slate-800 dark:text-slate-200">
+                <label className="text-xs font-bold text-[#0A1128] dark:text-white">
                   {lang === 'en' ? 'Set Password' : 'Kata Sandi'}
                 </label>
                 <div className="relative">
@@ -242,20 +260,24 @@ export const ProtectPdfWorkspace: React.FC<ProtectPdfWorkspaceProps> = ({
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Enter password..."
-                    className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-700 text-xs font-bold text-slate-900 dark:text-white focus:outline-none focus:border-slate-800"
+                    className="w-full px-4 py-2.5 rounded-xl bg-white/80 dark:bg-white/[0.07] border border-black/[0.10] dark:border-white/[0.16] text-xs font-bold text-[#0A1128] dark:text-white outline-none focus:border-[#00A3FF] dark:focus:border-[#38BDF8]"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[#0A1128]/50 dark:text-white/50 hover:text-[#0A1128] dark:hover:text-white"
                   >
-                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    {showPassword ? (
+                      <EyeOff className="w-4 h-4" />
+                    ) : (
+                      <Eye className="w-4 h-4" />
+                    )}
                   </button>
                 </div>
               </div>
 
               <div className="space-y-1">
-                <label className="text-xs font-extrabold text-slate-800 dark:text-slate-200">
+                <label className="text-xs font-bold text-[#0A1128] dark:text-white">
                   {lang === 'en' ? 'Repeat Password' : 'Ulangi Kata Sandi'}
                 </label>
                 <input
@@ -263,7 +285,7 @@ export const ProtectPdfWorkspace: React.FC<ProtectPdfWorkspaceProps> = ({
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="Confirm password..."
-                  className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-700 text-xs font-bold text-slate-900 dark:text-white focus:outline-none focus:border-slate-800"
+                  className="w-full px-4 py-2.5 rounded-xl bg-white/80 dark:bg-white/[0.07] border border-black/[0.10] dark:border-white/[0.16] text-xs font-bold text-[#0A1128] dark:text-white outline-none focus:border-[#00A3FF] dark:focus:border-[#38BDF8]"
                 />
               </div>
             </div>
@@ -271,8 +293,8 @@ export const ProtectPdfWorkspace: React.FC<ProtectPdfWorkspaceProps> = ({
 
           {/* Action CTA Button */}
           <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-2 text-xs font-semibold text-slate-600 dark:text-slate-400">
-              <ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+            <div className="flex items-center gap-2 text-xs font-medium text-[#0A1128]/65 dark:text-white/60">
+              <ShieldCheck className="w-4 h-4 text-[#0A1128] dark:text-white shrink-0" />
               <span>{t.ramProcessing}</span>
             </div>
 
@@ -280,17 +302,15 @@ export const ProtectPdfWorkspace: React.FC<ProtectPdfWorkspaceProps> = ({
               type="button"
               onClick={handleExecuteProtect}
               disabled={isProcessing}
-              className="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-gradient-to-r from-slate-800 to-slate-900 hover:from-slate-700 hover:to-slate-800 text-white font-black text-sm shadow-xl shadow-slate-900/30 transition-all btn-press-effect flex items-center justify-center gap-2"
+              className="w-full sm:w-auto px-8 py-3.5 rounded-2xl glass-cta font-bold text-sm transition-all btn-press-effect flex items-center justify-center gap-2"
             >
               <Lock className="w-4 h-4" />
               <span>{lang === 'en' ? 'Protect PDF Now' : 'Proteksi PDF Sekarang'}</span>
-              
             </button>
           </div>
         </div>
       )}
 
-      {/* Progress Modal */}
       <ProcessingProgress
         isOpen={isProcessing}
         progressMessage={progressMsg}

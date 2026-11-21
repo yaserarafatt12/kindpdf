@@ -1,4 +1,5 @@
 import { zipSync } from 'fflate';
+import { loadPdfJs } from './pdfjsWorker';
 
 export interface PdfToImagesOptions {
   format: 'png' | 'jpeg';
@@ -14,13 +15,7 @@ export async function renderPdfToImages(
   options: PdfToImagesOptions = { format: 'png', quality: 0.92, dpiScale: 1.5 },
   onProgress?: (current: number, total: number, message: string) => void
 ): Promise<{ isZip: boolean; blob: Blob; filename: string }> {
-  // Dynamically import pdfjs-dist on client side
-  const pdfjsLib = await import('pdfjs-dist');
-
-  // Configure worker src
-  if (typeof window !== 'undefined' && !pdfjsLib.GlobalWorkerOptions.workerSrc) {
-    pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
-  }
+  const pdfjsLib = await loadPdfJs();
 
   const arrayBuffer = await file.arrayBuffer();
   const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
@@ -45,7 +40,6 @@ export async function renderPdfToImages(
     const page = await pdfDoc.getPage(i);
     const viewport = page.getViewport({ scale: options.dpiScale });
 
-    // Create offscreen canvas
     const canvas = document.createElement('canvas');
     const context = canvas.getContext('2d');
     if (!context) {
@@ -55,14 +49,15 @@ export async function renderPdfToImages(
     canvas.width = viewport.width;
     canvas.height = viewport.height;
 
-    const renderContext = {
+    // Fill white background so transparent PDFs render cleanly in JPEG & PNG
+    context.fillStyle = '#FFFFFF';
+    context.fillRect(0, 0, canvas.width, canvas.height);
+
+    await page.render({
       canvasContext: context,
-      viewport: viewport,
-    };
+      viewport,
+    }).promise;
 
-    await page.render(renderContext).promise;
-
-    // Convert canvas to binary data
     const dataUrl = canvas.toDataURL(mimeType, options.quality);
     const base64Data = dataUrl.split(',')[1];
     const binaryStr = atob(base64Data);

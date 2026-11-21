@@ -1,4 +1,5 @@
 import { PDFDocument, StandardFonts, rgb, degrees } from 'pdf-lib';
+import { sanitizeWinAnsi } from './sanitizeText';
 
 export type PageNumberPosition =
   | 'top-left'
@@ -20,7 +21,12 @@ export interface PageNumberOptions {
  */
 export async function addPageNumbersToPdf(
   file: File,
-  options: PageNumberOptions = { position: 'bottom-center', format: 'page_of_total', fontSize: 10, margin: 20 },
+  options: PageNumberOptions = {
+    position: 'bottom-center',
+    format: 'page_of_total',
+    fontSize: 10,
+    margin: 20,
+  },
   onProgress?: (current: number, total: number, message: string) => void
 ): Promise<{ blob: Blob; filename: string }> {
   const arrayBuffer = await file.arrayBuffer();
@@ -37,9 +43,7 @@ export async function addPageNumbersToPdf(
     const { width, height } = page.getSize();
 
     const pageNumText =
-      options.format === 'page_of_total'
-        ? `Page ${i + 1} of ${totalPages}`
-        : `${i + 1}`;
+      options.format === 'page_of_total' ? `Page ${i + 1} of ${totalPages}` : `${i + 1}`;
 
     const textWidth = font.widthOfTextAtSize(pageNumText, options.fontSize);
     const textHeight = font.heightAtSize(options.fontSize);
@@ -108,7 +112,8 @@ export async function addWatermarkToPdf(
   options: WatermarkOptions = { text: 'CONFIDENTIAL', fontSize: 50, opacity: 0.2, rotation: 45 },
   onProgress?: (current: number, total: number, message: string) => void
 ): Promise<{ blob: Blob; filename: string }> {
-  if (!options.text || !options.text.trim()) {
+  const safeWatermarkText = sanitizeWinAnsi(options.text || '').trim();
+  if (!safeWatermarkText) {
     throw new Error('Watermark text cannot be empty.');
   }
 
@@ -125,13 +130,13 @@ export async function addWatermarkToPdf(
     const page = pdfDoc.getPage(i);
     const { width, height } = page.getSize();
 
-    const textWidth = font.widthOfTextAtSize(options.text, options.fontSize);
+    const textWidth = font.widthOfTextAtSize(safeWatermarkText, options.fontSize);
     const textHeight = font.heightAtSize(options.fontSize);
 
     const x = (width - textWidth) / 2;
     const y = (height - textHeight) / 2;
 
-    page.drawText(options.text, {
+    page.drawText(safeWatermarkText, {
       x,
       y,
       size: options.fontSize,

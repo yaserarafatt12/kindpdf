@@ -21,12 +21,20 @@ interface FileDropzoneProps {
   disabled?: boolean;
   t: TranslationDictionary;
   colorTheme?: DropzoneColorTheme;
+  accept?: string;
+  multiple?: boolean;
+  buttonLabel?: string;
+  helperText?: string;
 }
 
 export const FileDropzone: React.FC<FileDropzoneProps> = ({
   onFilesSelected,
   disabled = false,
   t,
+  accept = '.pdf,application/pdf',
+  multiple = true,
+  buttonLabel,
+  helperText,
 }) => {
   const [isDragOver, setIsDragOver] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -51,14 +59,14 @@ export const FileDropzone: React.FC<FileDropzoneProps> = ({
 
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
       const droppedFiles = Array.from(e.dataTransfer.files);
-      onFilesSelected(droppedFiles);
+      onFilesSelected(multiple ? droppedFiles : [droppedFiles[0]]);
     }
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const selectedFiles = Array.from(e.target.files);
-      onFilesSelected(selectedFiles);
+      onFilesSelected(multiple ? selectedFiles : [selectedFiles[0]]);
       if (fileInputRef.current) fileInputRef.current.value = '';
     }
   };
@@ -82,8 +90,8 @@ export const FileDropzone: React.FC<FileDropzoneProps> = ({
       <input
         ref={fileInputRef}
         type="file"
-        accept=".pdf"
-        multiple
+        accept={accept}
+        multiple={multiple}
         onChange={handleFileChange}
         className="hidden"
         disabled={disabled}
@@ -110,11 +118,11 @@ export const FileDropzone: React.FC<FileDropzoneProps> = ({
           className="w-full sm:w-auto px-8 py-3.5 rounded-2xl glass-cta font-bold text-sm sm:text-base btn-press-effect flex items-center justify-center gap-2.5"
         >
           <UploadCloud className="w-5 h-5" strokeWidth={2} />
-          <span>{t.dropzoneClick}</span>
+          <span>{buttonLabel || t.dropzoneClick}</span>
         </button>
 
         <p className="text-xs text-[#0A1128]/60 dark:text-white/60 font-medium pt-0.5">
-          {t.dropzoneTitle}
+          {helperText || t.dropzoneTitle}
         </p>
       </div>
     </div>

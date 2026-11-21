@@ -1,17 +1,18 @@
+import { zipSync, strToU8 } from 'fflate';
+import { loadPdfJs } from './pdfjsWorker';
+
 /**
- * Client-side PDF to Word (.docx) text extraction & document packaging engine.
- * Extracts real text content streams from PDF pages using pdfjs-dist and packages into .docx XML format.
+ * Client-side PDF to Word (.docx) text extraction & OpenXML ZIP packaging engine.
+ * Extracts real text content streams from PDF pages using pdfjs-dist and packages
+ * a standards-compliant OpenXML .docx archive (ZIP container with [Content_Types].xml,
+ * _rels/.rels, word/_rels/document.xml.rels, and word/document.xml).
  */
 export async function pdfToWord(
   file: File,
   onProgress?: (msg: string) => void
 ): Promise<Blob> {
   onProgress?.('Loading PDF for text extraction...');
-  const pdfjsLib = await import('pdfjs-dist');
-
-  if (typeof window !== 'undefined' && !pdfjsLib.GlobalWorkerOptions.workerSrc) {
-    pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
-  }
+  const pdfjsLib = await loadPdfJs();
 
   const arrayBuffer = await file.arrayBuffer();
   const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
@@ -28,11 +29,11 @@ export async function pdfToWord(
     onProgress?.(`Extracting text from page ${i} of ${totalPages}...`);
     const page = await pdfDoc.getPage(i);
     const textContent = await page.getTextContent();
-    
-    // Extract actual string tokens from page text items
+
     const pageText = textContent.items
       .map((item: any) => item.str || '')
       .join(' ')
+      .replace(/\s+/g, ' ')
       .trim();
 
     docxXmlContent += `
@@ -44,12 +45,33 @@ export async function pdfToWord(
   </w:body>
 </w:document>`;
 
-  onProgress?.('Packaging Word document...');
-  const textBlob = new Blob([docxXmlContent], {
-    type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  const contentTypesXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
+  <Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>
+  <Default Extension="xml" ContentType="application/xml"/>
+  <Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/>
+</Types>`;
+
+  const rootRelsXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+  <Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/>
+</Relationships>`;
+
+  const documentRelsXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+</Relationships>`;
+
+  onProgress?.('Packaging OpenXML Word (.docx) container...');
+  const zippedBytes = zipSync({
+    '[Content_Types].xml': strToU8(contentTypesXml),
+    '_rels/.rels': strToU8(rootRelsXml),
+    'word/_rels/document.xml.rels': strToU8(documentRelsXml),
+    'word/document.xml': strToU8(docxXmlContent),
   });
 
-  return textBlob;
+  return new Blob([zippedBytes.buffer as ArrayBuffer], {
+    type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  });
 }
 
 function escapeXml(unsafe: string): string {
