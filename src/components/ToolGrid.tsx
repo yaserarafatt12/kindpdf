@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef, useLayoutEffect, useEffect, useCallback } from 'react';
+import React, { useState } from 'react';
 import { TranslationDictionary } from '@/lib/i18n/translations';
 import { tools, ToolDefinition, ToolCategory } from '@/lib/tools/manifest';
 import {
@@ -21,7 +21,6 @@ import {
   Archive,
   FileText,
   ScanText,
-  ShieldCheck,
   Layers,
   Split,
   RotateCw,
@@ -32,12 +31,14 @@ import {
   ArrowUpRight,
 } from 'lucide-react';
 import { ViewMode } from './Header';
+import LiquidGlassPillBar from './LiquidGlassPillBar';
 
 export type ToolId = ViewMode;
 
 interface ToolGridProps {
   onSelectTool: (toolId: ViewMode) => void;
   t: TranslationDictionary;
+  isDarkMode?: boolean;
 }
 
 type CategoryFilter = 'all' | 'popular' | ToolCategory;
@@ -127,17 +128,9 @@ const renderStatusBadge = (status: 'stable' | 'beta' | 'experimental') => {
   return null;
 };
 
-export const ToolGrid: React.FC<ToolGridProps> = ({ onSelectTool, t }) => {
+export const ToolGrid: React.FC<ToolGridProps> = ({ onSelectTool, t, isDarkMode }) => {
   const [activeFilter, setActiveFilter] = useState<CategoryFilter>('all');
   const [searchQuery, setSearchQuery] = useState('');
-  const [isPressingTab, setIsPressingTab] = useState(false);
-
-  const tabRefs = useRef<Record<string, HTMLButtonElement | null>>({});
-  const [lensRect, setLensRect] = useState<{ left: number; width: number; ready: boolean }>({
-    left: 0,
-    width: 0,
-    ready: false,
-  });
 
   const filterTabs: { id: CategoryFilter; label: string }[] = [
     { id: 'all', label: t.categories.all.shortLabel },
@@ -147,33 +140,6 @@ export const ToolGrid: React.FC<ToolGridProps> = ({ onSelectTool, t }) => {
       label: t.categories[key].shortLabel,
     })),
   ];
-
-  const measureActiveTab = useCallback(() => {
-    const activeEl = tabRefs.current[activeFilter];
-    if (!activeEl) return;
-    setLensRect({
-      left: activeEl.offsetLeft,
-      width: activeEl.offsetWidth,
-      ready: true,
-    });
-  }, [activeFilter]);
-
-  useLayoutEffect(() => {
-    measureActiveTab();
-  }, [measureActiveTab, t]);
-
-  useEffect(() => {
-    window.addEventListener('resize', measureActiveTab);
-    return () => window.removeEventListener('resize', measureActiveTab);
-  }, [measureActiveTab]);
-
-  const handleSelectTab = (id: CategoryFilter) => {
-    setActiveFilter(id);
-    const el = tabRefs.current[id];
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
-    }
-  };
 
   const normalizedQuery = searchQuery.trim().toLowerCase();
 
@@ -237,58 +203,18 @@ export const ToolGrid: React.FC<ToolGridProps> = ({ onSelectTool, t }) => {
 
   return (
     <div className="space-y-6 py-1">
-      {/* iOS 26 Liquid Glass Category Pill Bar + Search */}
+      {/* iOS 26 Liquid Glass Hold-and-Scrub Category Pill Bar + Search */}
       <div className="space-y-2.5">
         <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3">
-          {/* Scrollable iOS 26 Liquid Glass Segmented Pill Rail */}
-          <div className="liquid-glass-rail rounded-full p-1.5 overflow-x-auto no-scrollbar max-w-full">
-            <div
-              role="tablist"
-              aria-label="Filter PDF tools by category"
-              className="relative inline-flex items-center gap-0.5 min-w-max"
-            >
-              {/* Sliding Refractive Liquid Glass Lens */}
-              {lensRect.ready && (
-                <div
-                  aria-hidden="true"
-                  className="liquid-glass-lens pointer-events-none absolute top-0 bottom-0 left-0 rounded-full"
-                  style={{
-                    width: `${lensRect.width}px`,
-                    transform: `translate3d(${lensRect.left}px, 0, 0) scale(${
-                      isPressingTab ? '1.03, 1.07' : '1, 1'
-                    })`,
-                  }}
-                />
-              )}
-
-              {filterTabs.map((tab) => {
-                const isActive = activeFilter === tab.id;
-                return (
-                  <button
-                    key={tab.id}
-                    ref={(el) => {
-                      tabRefs.current[tab.id] = el;
-                    }}
-                    type="button"
-                    role="tab"
-                    aria-selected={isActive}
-                    onClick={() => handleSelectTab(tab.id)}
-                    onPointerDown={() => setIsPressingTab(true)}
-                    onPointerUp={() => setIsPressingTab(false)}
-                    onPointerLeave={() => setIsPressingTab(false)}
-                    onPointerCancel={() => setIsPressingTab(false)}
-                    className={`relative z-10 px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#00A3FF]/70 dark:focus-visible:ring-[#38BDF8]/70 ${
-                      isActive
-                        ? 'text-[#0A1128] dark:text-white'
-                        : 'text-[#0A1128]/60 dark:text-white/60 hover:text-[#0A1128] dark:hover:text-white/90'
-                    }`}
-                  >
-                    {tab.label}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
+          {/* Quest-grade iOS 26 Liquid Glass Hold-and-Scrub Category Rail */}
+          <LiquidGlassPillBar<CategoryFilter>
+            options={filterTabs}
+            value={activeFilter}
+            onChange={setActiveFilter}
+            ariaLabel="Filter PDF tools by category"
+            scrollable
+            isDarkMode={isDarkMode}
+          />
 
           {/* Compact Frosted Search Pill */}
           <div className="relative w-full lg:w-64 shrink-0">
@@ -317,19 +243,12 @@ export const ToolGrid: React.FC<ToolGridProps> = ({ onSelectTool, t }) => {
           </div>
         </div>
 
-        {/* Plain-Language 1-Line Category Helper Banner for Everyday Users */}
-        <div className="flex items-center gap-2.5 px-3.5 py-2 rounded-2xl bg-white/[0.45] dark:bg-white/[0.04] border border-black/[0.06] dark:border-white/[0.10] backdrop-blur-xl">
-          <span
-            aria-hidden="true"
-            className="w-1.5 h-1.5 rounded-full bg-[#00A3FF] dark:bg-[#38BDF8] shrink-0"
-          />
-          <p className="text-xs text-[#0A1128]/70 dark:text-white/70 font-medium leading-snug">
-            <span className="font-semibold text-[#0A1128] dark:text-white">
-              {activeCategoryMeta.title}:
-            </span>{' '}
+        {/* Subtle plain 1-line subtitle ONLY when a specific category is selected */}
+        {activeFilter !== 'all' && (
+          <p className="text-xs text-[#0A1128]/55 dark:text-white/50 font-medium px-1">
             {activeCategoryMeta.helper}
           </p>
-        </div>
+        )}
       </div>
 
       {/* Empty Search State */}
@@ -347,14 +266,10 @@ export const ToolGrid: React.FC<ToolGridProps> = ({ onSelectTool, t }) => {
       {/* 1. POPULAR SHORTCUTS SECTION */}
       {(activeFilter === 'all' || activeFilter === 'popular') && popularTools.length > 0 && (
         <section className="space-y-3.5 animate-fade-in">
-          <div className="flex items-center justify-between gap-2 px-0.5">
+          <div className="px-0.5">
             <h2 className="text-sm sm:text-base font-bold tracking-tight text-[#0A1128] dark:text-white">
               {t.popularTools}
             </h2>
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-semibold bg-black/[0.04] dark:bg-white/[0.07] text-[#0A1128]/70 dark:text-white/75 border border-black/[0.08] dark:border-white/[0.16]">
-              <ShieldCheck className="w-3 h-3" strokeWidth={1.85} />
-              {t.localProcessing}
-            </span>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-4">

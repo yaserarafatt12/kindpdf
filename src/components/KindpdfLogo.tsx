@@ -6,58 +6,85 @@ interface KindpdfLogoProps {
   size?: 'sm' | 'md';
   showWordmark?: boolean;
   suffix?: string;
+  isDarkMode?: boolean;
 }
 
 export const KindpdfLogo: React.FC<KindpdfLogoProps> = ({
   size = 'md',
   showWordmark = true,
   suffix,
+  isDarkMode,
 }) => {
   const isSm = size === 'sm';
 
+  const badgeClass =
+    isDarkMode === true
+      ? 'bg-white/[0.10] border border-white/[0.22] shadow-[inset_0_1px_0_rgba(255,255,255,0.3),0_6px_16px_rgba(0,0,0,0.32)] text-white'
+      : isDarkMode === false
+        ? 'bg-white/85 border border-[#0A1128]/[0.12] shadow-[inset_0_1px_0_rgba(255,255,255,0.95),0_4px_12px_rgba(10,17,40,0.08)] text-[#0A1128]'
+        : 'bg-white/85 dark:bg-white/[0.10] border border-[#0A1128]/[0.12] dark:border-white/[0.22] shadow-[inset_0_1px_0_rgba(255,255,255,0.95),0_4px_12px_rgba(10,17,40,0.08)] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.3),0_6px_16px_rgba(0,0,0,0.32)] text-[#0A1128] dark:text-white';
+
+  const primaryTextClass =
+    isDarkMode === true
+      ? 'text-white'
+      : isDarkMode === false
+        ? 'text-[#0A1128]'
+        : 'text-[#0A1128] dark:text-white';
+
+  const secondaryTextClass =
+    isDarkMode === true
+      ? 'text-white/60'
+      : isDarkMode === false
+        ? 'text-[#0A1128]/55'
+        : 'text-[#0A1128]/55 dark:text-white/60';
+
   return (
     <div className="inline-flex items-center gap-2.5 select-none">
-      {/* Frosted Tempered-Glass Squircle Emblem */}
+      {/* Precision Tempered-Glass Squircle Emblem */}
       <div
-        className={`${
-          isSm ? 'w-7 h-7 rounded-[10px]' : 'w-8 h-8 sm:w-9 sm:h-9 rounded-[12px]'
-        } bg-white/80 dark:bg-white/[0.12] border border-[#0A1128]/[0.12] dark:border-white/25 shadow-[inset_0_1px_0_rgba(255,255,255,0.95),0_4px_12px_rgba(10,17,40,0.08)] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_6px_16px_rgba(0,0,0,0.28)] backdrop-blur-xl flex items-center justify-center shrink-0 text-[#0A1128] dark:text-white transition-transform duration-200 group-hover:scale-[1.04]`}
+        className={`relative overflow-hidden ${
+          isSm ? 'w-7 h-7 rounded-[9px]' : 'w-8 h-8 sm:w-9 sm:h-9 rounded-[11px]'
+        } ${badgeClass} backdrop-blur-xl flex items-center justify-center shrink-0 transition-transform duration-200 group-hover:scale-[1.04]`}
       >
-        {/* Minimal Apple-grade geometric folded-page / prism mark */}
+        {/* Subtle top specular glass sheen */}
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-1 top-0 h-[42%] rounded-b-full bg-gradient-to-b from-white/25 to-transparent"
+        />
+
+        {/* Custom Geometric K-Fold / Layered Sheet Mark */}
         <svg
           viewBox="0 0 24 24"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
-          className={isSm ? 'w-4 h-4' : 'w-[18px] h-[18px] sm:w-5 sm:h-5'}
+          className={`relative z-10 ${isSm ? 'w-4 h-4' : 'w-[18px] h-[18px] sm:w-[20px] sm:h-[20px]'}`}
           aria-hidden="true"
         >
-          {/* Main folded sheet silhouette */}
+          {/* Back layered sheet corner (depth facet) */}
           <path
-            d="M6.5 4.25C6.5 3.55964 7.05964 3 7.75 3H13.6C13.9315 3 14.2495 3.1317 14.4839 3.36612L18.1339 7.01612C18.3683 7.25054 18.5 7.56848 18.5 7.9V19.75C18.5 20.4404 17.9404 21 17.25 21H7.75C7.05964 21 6.5 20.4404 6.5 19.75V4.25Z"
-            stroke="currentColor"
-            strokeWidth="1.65"
-            strokeLinejoin="round"
-          />
-          {/* Geometric prism fold corner */}
-          <path
-            d="M13.75 3.25V7.25C13.75 7.66421 14.0858 8 14.5 8H18.25"
-            stroke="currentColor"
-            strokeWidth="1.65"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          {/* Subtle translucent facet fill inside fold */}
-          <path
-            d="M14 3.5L18 7.5H14.5C14.2239 7.5 14 7.27614 14 7V3.5Z"
+            d="M11.2 4.5H17.6C18.37 4.5 19 5.13 19 5.9V9.6L11.2 13.8V4.5Z"
             fill="currentColor"
-            fillOpacity="0.18"
+            fillOpacity="0.22"
           />
-          {/* Clean horizontal document rhythm lines */}
+          {/* Left precision vertical spine (forms the stem of K & bound page spine) */}
+          <rect
+            x="5.2"
+            y="4.2"
+            width="3.2"
+            height="15.6"
+            rx="1.2"
+            fill="currentColor"
+          />
+          {/* Upper origami K-fold wing */}
           <path
-            d="M9.5 12.25H15.5M9.5 15.75H13.25"
-            stroke="currentColor"
-            strokeWidth="1.65"
-            strokeLinecap="round"
+            d="M9.6 11.4L15.4 4.7C15.72 4.33 16.2 4.2 16.68 4.2H18.45C18.92 4.2 19.16 4.77 18.84 5.12L12.7 11.95L9.6 11.4Z"
+            fill="currentColor"
+            fillOpacity="0.92"
+          />
+          {/* Lower crisp folded sheet wing */}
+          <path
+            d="M9.6 11.95L12.75 11.95L18.9 18.88C19.22 19.24 18.97 19.8 18.49 19.8H16.25C15.75 19.8 15.27 19.58 14.95 19.2L9.6 12.85V11.95Z"
+            fill="currentColor"
           />
         </svg>
       </div>
@@ -65,13 +92,13 @@ export const KindpdfLogo: React.FC<KindpdfLogoProps> = ({
       {showWordmark && (
         <span
           className={`${
-            isSm ? 'text-[15px]' : 'text-[18px] sm:text-[20px]'
-          } tracking-tight leading-none flex items-baseline`}
+            isSm ? 'text-[15px]' : 'text-[18px] sm:text-[19px]'
+          } tracking-[-0.03em] leading-none flex items-baseline`}
         >
-          <span className="font-bold text-[#0A1128] dark:text-white">Kind</span>
-          <span className="font-medium text-[#0A1128]/55 dark:text-white/65">PDF</span>
+          <span className={`font-extrabold ${primaryTextClass}`}>Kind</span>
+          <span className={`font-medium ${secondaryTextClass}`}>PDF</span>
           {suffix && (
-            <span className="ml-1.5 text-xs font-medium text-[#0A1128]/45 dark:text-white/50">
+            <span className={`ml-1.5 text-[11px] font-semibold tracking-normal ${secondaryTextClass}`}>
               {suffix}
             </span>
           )}

@@ -15,6 +15,7 @@ import {
   CheckCircle2,
 } from 'lucide-react';
 import { Language, TranslationDictionary } from '@/lib/i18n/translations';
+import LiquidGlassPillBar from './LiquidGlassPillBar';
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -204,46 +205,66 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
 
             {/* Theme Toggle Option */}
             <div className="p-3.5 rounded-2xl border border-black/[0.08] dark:border-white/[0.12] bg-white/55 dark:bg-white/[0.04] flex items-center justify-between gap-3">
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 min-w-0">
                 {isDarkMode ? (
-                  <Moon className="w-4 h-4 text-[#0A1128]/80 dark:text-white/80" strokeWidth={1.85} />
+                  <Moon className="w-4 h-4 shrink-0 text-[#0A1128]/80 dark:text-white/80" strokeWidth={1.85} />
                 ) : (
-                  <Sun className="w-4 h-4 text-[#0A1128]/80 dark:text-white/80" strokeWidth={1.85} />
+                  <Sun className="w-4 h-4 shrink-0 text-[#0A1128]/80 dark:text-white/80" strokeWidth={1.85} />
                 )}
-                <span className="text-xs font-semibold text-[#0A1128] dark:text-white">
-                  {lang === 'en' ? 'Appearance & Theme' : 'Tampilan & Tema'}
+                <span className="text-xs font-semibold text-[#0A1128] dark:text-white truncate">
+                  {lang === 'en' ? 'Appearance' : 'Tampilan'}
                 </span>
               </div>
-              <button
-                type="button"
-                onClick={onThemeToggle}
-                className="px-3.5 py-1.5 rounded-full glass-pill text-xs font-semibold btn-press-effect"
-              >
-                {isDarkMode
-                  ? lang === 'en'
-                    ? 'Dark Mode'
-                    : 'Mode Gelap'
-                  : lang === 'en'
-                  ? 'Light Mode'
-                  : 'Mode Terang'}
-              </button>
+              <div className="w-[152px] shrink-0">
+                <LiquidGlassPillBar<'dark' | 'light'>
+                  size="sm"
+                  equalWidth
+                  isDarkMode={isDarkMode}
+                  ariaLabel="Choose theme"
+                  value={isDarkMode ? 'dark' : 'light'}
+                  onChange={(next) => {
+                    if ((next === 'dark') !== isDarkMode) {
+                      onThemeToggle();
+                    }
+                  }}
+                  options={[
+                    {
+                      id: 'dark',
+                      label: lang === 'en' ? 'Dark' : 'Gelap',
+                      icon: <Moon className="w-3 h-3" strokeWidth={2} />,
+                    },
+                    {
+                      id: 'light',
+                      label: lang === 'en' ? 'Light' : 'Terang',
+                      icon: <Sun className="w-3 h-3" strokeWidth={2} />,
+                    },
+                  ]}
+                />
+              </div>
             </div>
 
             {/* Language Switch Option */}
             <div className="p-3.5 rounded-2xl border border-black/[0.08] dark:border-white/[0.12] bg-white/55 dark:bg-white/[0.04] flex items-center justify-between gap-3">
-              <div className="flex items-center gap-3">
-                <Globe className="w-4 h-4 text-[#0A1128]/80 dark:text-white/80" strokeWidth={1.85} />
-                <span className="text-xs font-semibold text-[#0A1128] dark:text-white">
-                  {lang === 'en' ? 'App Language' : 'Bahasa Aplikasi'}
+              <div className="flex items-center gap-3 min-w-0">
+                <Globe className="w-4 h-4 shrink-0 text-[#0A1128]/80 dark:text-white/80" strokeWidth={1.85} />
+                <span className="text-xs font-semibold text-[#0A1128] dark:text-white truncate">
+                  {lang === 'en' ? 'Language' : 'Bahasa'}
                 </span>
               </div>
-              <button
-                type="button"
-                onClick={() => onLangChange(lang === 'en' ? 'id' : 'en')}
-                className="px-3.5 py-1.5 rounded-full glass-pill text-xs font-semibold btn-press-effect"
-              >
-                {lang === 'en' ? 'English' : 'Indonesia'}
-              </button>
+              <div className="w-[152px] shrink-0">
+                <LiquidGlassPillBar<Language>
+                  size="sm"
+                  equalWidth
+                  isDarkMode={isDarkMode}
+                  ariaLabel="Choose language"
+                  value={lang}
+                  onChange={onLangChange}
+                  options={[
+                    { id: 'en', label: 'EN' },
+                    { id: 'id', label: 'ID' },
+                  ]}
+                />
+              </div>
             </div>
           </div>
 

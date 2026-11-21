@@ -46,7 +46,6 @@ import {
   AlertCircle,
   X,
   ArrowRight,
-  ShieldCheck,
   ArrowLeft,
 } from 'lucide-react';
 
@@ -233,11 +232,7 @@ export default function Home() {
         {activeView === 'grid' && (
           <div className="space-y-6">
             {/* Main Landing Hero */}
-            <div className="text-center space-y-3 py-3 sm:py-5 max-w-2xl mx-auto">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/[0.60] dark:bg-white/[0.07] border border-black/[0.08] dark:border-white/[0.16] backdrop-blur-xl text-[11px] font-semibold text-[#0A1128]/75 dark:text-white/75 shadow-[inset_0_1px_0_rgba(255,255,255,0.75)] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.20)]">
-                <ShieldCheck className="w-3.5 h-3.5" strokeWidth={1.85} />
-                <span>{t.noServerUpload} • {t.localProcessing}</span>
-              </div>
+            <div className="text-center space-y-2.5 py-2 sm:py-4 max-w-2xl mx-auto">
               <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-[#0A1128] dark:text-white leading-tight">
                 {t.heroTitle}
               </h2>
@@ -247,7 +242,11 @@ export default function Home() {
             </div>
 
             {/* Tool Grid Cards */}
-            <ToolGrid onSelectTool={(toolId: ToolId) => setActiveView(toolId)} t={t} />
+            <ToolGrid
+              onSelectTool={(toolId: ToolId) => setActiveView(toolId)}
+              t={t}
+              isDarkMode={isDarkMode}
+            />
           </div>
         )}
 
